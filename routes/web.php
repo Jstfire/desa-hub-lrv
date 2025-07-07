@@ -1,0 +1,89 @@
+<?php
+
+use App\Http\Controllers\Frontend\DesaController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TinyMceController;
+use Illuminate\Support\Facades\Route;
+
+// Ruta raíz que redirige - pilih desa
+Route::get('/', [DesaController::class, 'index'])->name('home');
+
+// TinyMCE routes
+Route::post('/tinymce/upload', [TinyMceController::class, 'upload'])->middleware(['auth'])->name('tinymce.upload');
+
+// Rutas para panel de control (dashboard)
+// Dashboard adalah panel Filament untuk admin roles - dihandle langsung oleh Filament
+// Middleware validasi sudah ada di FilamentServiceProvider (EnsureUserHasFilamentAccess)
+
+// Blokir akses registrasi - sistem khusus untuk admin
+Route::get('/register', function () {
+    return view('auth.register-blocked');
+});
+
+Route::post('/register', function () {
+    return redirect()->route('login')->withErrors([
+        'email' => 'Registrasi tidak diizinkan. Sistem ini khusus untuk admin yang sudah ditentukan.'
+    ]);
+});
+
+// Rutas para frontend desa
+Route::prefix('{uri}')->group(function () {
+    // Beranda desa
+    Route::get('/', [DesaController::class, 'beranda'])->name('desa.beranda');
+
+    // Berita
+    Route::get('/berita', [DesaController::class, 'berita'])->name('desa.berita');
+    Route::get('/berita/{slug}', [DesaController::class, 'showBerita'])->name('desa.berita.show');
+
+    // Layanan Publik
+    Route::get('/layanan-publik', [DesaController::class, 'layananPublik'])->name('desa.layanan-publik');
+
+    // Profil Desa
+    Route::get('/profil', [DesaController::class, 'profil'])->name('desa.profil');
+
+    // Publikasi
+    Route::get('/publikasi', [DesaController::class, 'publikasi'])->name('desa.publikasi');
+
+    // Data Sektoral
+    Route::get('/data-sektoral', [DesaController::class, 'dataSektoral'])->name('desa.data-sektoral');
+
+    // Metadata Statistik
+    Route::get('/metadata', [DesaController::class, 'metadata'])->name('desa.metadata');
+    Route::get('/metadata/{jenis}', [DesaController::class, 'metadata'])->name('desa.metadata.jenis');
+
+    // PPID
+    Route::get('/ppid', [DesaController::class, 'ppid'])->name('desa.ppid');
+
+    // Galeri
+    Route::get('/galeri', [DesaController::class, 'galeri'])->name('desa.galeri');
+
+    // Pengaduan
+    Route::get('/pengaduan', [DesaController::class, 'pengaduan'])->name('desa.pengaduan');
+    Route::post('/pengaduan', [DesaController::class, 'storePengaduan'])->name('desa.pengaduan.store');
+
+    // Statistik Pengunjung API
+    Route::get('/api/visitor-stats', [DesaController::class, 'visitor'])->name('desa.visitor.stats');
+
+    // API untuk increment download count publikasi
+    Route::post('/api/publikasi/{id}/download', function ($uri, $id) {
+        $publikasi = \App\Models\Publikasi::findOrFail($id);
+        $publikasi->increment('download_count');
+        return response()->json(['success' => true]);
+    })->name('desa.publikasi.download');
+
+    // API untuk increment view count data sektoral
+    Route::post('/api/data-sektoral/{id}/view', function ($uri, $id) {
+        $dataSektoral = \App\Models\DataSektoral::findOrFail($id);
+        $dataSektoral->increment('view_count');
+        return response()->json(['success' => true]);
+    })->name('desa.data-sektoral.view');
+});
+
+// Temporary test route to check the hasRole method
+Route::get('/test-role', function () {
+    $user = App\Models\User::find(1);
+    if ($user) {
+        return $user->hasRole('superadmin') ? 'Has role' : 'Does not have role';
+    }
+    return 'User not found';
+});
