@@ -148,7 +148,6 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
         ];
     }
-
     /**
      * Determine if the user can access the Filament panel.
      *
@@ -158,9 +157,9 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'superadmin') {
-            return $this->hasRole('superadmin');
+            // Allow access for superadmin, admin_desa, and operator_desa roles
+            return $this->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
         }
-
         return true;
     }
 

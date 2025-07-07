@@ -22,8 +22,8 @@ class RedirectToDashboard
             // Hanya superadmin, admin desa, dan operator yang bisa mengakses dashboard
             if ($user->hasRole(['superadmin', 'admin_desa', 'operator_desa'])) {
                 // Redirect ke Filament dashboard
-                if ($request->is('dashboard') || $request->is('/')) {
-                    return redirect('/admin');
+                if ($request->is('admin') || $request->is('/')) {
+                    return redirect('/dashboard');
                 }
             } else {
                 // User tidak memiliki role yang diizinkan, logout

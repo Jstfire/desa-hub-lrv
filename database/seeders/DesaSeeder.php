@@ -32,6 +32,14 @@ class DesaSeeder extends Seeder
             return;
         }
 
+        // Mendapatkan operator desa dari seeder
+        $operatorDesa = User::where('email', 'operator@mail.id')->first();
+
+        if (!$operatorDesa) {
+            $this->command->error('User operator desa tidak ditemukan. Jalankan RolesAndPermissionsSeeder terlebih dahulu.');
+            return;
+        }
+
         // Data desa
         $desa = [
             [
@@ -41,6 +49,7 @@ class DesaSeeder extends Seeder
                 'kode_desa' => '7401021001',
                 'uri' => 'bangun',
                 'admin_id' => $adminDesa->id,
+                'operator_id' => $operatorDesa->id,
                 'font_family' => 'Inter',
                 'color_primary' => '#4B5563',
                 'color_secondary' => '#1F2937',
@@ -55,6 +64,7 @@ class DesaSeeder extends Seeder
                 'kode_desa' => '7401021002',
                 'uri' => 'matanauwe',
                 'admin_id' => $superadmin->id,
+                'operator_id' => null,
                 'font_family' => 'Poppins',
                 'color_primary' => '#3B82F6',
                 'color_secondary' => '#1E40AF',
@@ -65,6 +75,13 @@ class DesaSeeder extends Seeder
         ];
 
         foreach ($desa as $desaData) {
+            // Cek apakah desa dengan URI ini sudah ada
+            $existingDesa = Desa::where('uri', $desaData['uri'])->first();
+            if ($existingDesa) {
+                $this->command->info($desaData['jenis'] . ' ' . $desaData['nama'] . ' sudah ada, melewati.');
+                continue;
+            }
+
             // Buat tim untuk desa
             $team = Team::create([
                 'name' => $desaData['jenis'] . ' ' . $desaData['nama'],
@@ -78,8 +95,23 @@ class DesaSeeder extends Seeder
             // Buat record desa
             $desaModel = Desa::create($desaData);
 
-            // Tambahkan admin sebagai anggota tim
-            $team->users()->attach($desaData['admin_id'], ['role' => 'admin']);
+            // Tambahkan admin sebagai anggota tim jika belum menjadi owner
+            if ($desaData['admin_id'] != $team->user_id) {
+                // Periksa apakah admin sudah menjadi anggota tim
+                $adminExists = $team->users()->where('user_id', $desaData['admin_id'])->exists();
+                if (!$adminExists) {
+                    $team->users()->attach($desaData['admin_id'], ['role' => 'admin']);
+                }
+            }
+
+            // Tambahkan operator desa sebagai anggota tim
+            if ($desaData['operator_id'] && $desaData['operator_id'] != $team->user_id) {
+                // Periksa apakah operator sudah menjadi anggota tim
+                $operatorExists = $team->users()->where('user_id', $desaData['operator_id'])->exists();
+                if (!$operatorExists) {
+                    $team->users()->attach($desaData['operator_id'], ['role' => 'operator']);
+                }
+            }
 
             $this->command->info($desaData['jenis'] . ' ' . $desaData['nama'] . ' berhasil dibuat.');
         }

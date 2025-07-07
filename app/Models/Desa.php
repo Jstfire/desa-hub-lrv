@@ -100,6 +100,14 @@ class Desa extends Model implements HasMedia
     }
 
     /**
+     * Get the user that operates the desa.
+     */
+    public function operator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'operator_id');
+    }
+
+    /**
      * Get the team that owns the desa.
      */
     public function team(): BelongsTo
