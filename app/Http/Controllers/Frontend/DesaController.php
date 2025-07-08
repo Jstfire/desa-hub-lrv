@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Desa;
+use App\Models\Beranda;
 use App\Models\Berita;
 use App\Models\LayananPublik;
 use App\Models\Publikasi;
@@ -34,11 +35,15 @@ class DesaController extends Controller
         // Record visitor
         $this->recordVisitor($desa);
 
-        // Get berita terbaru
+        // Get beranda settings
+        $beranda = $desa->beranda;
+
+        // Get berita terbaru based on beranda settings
+        $beritaLimit = $beranda && $beranda->show_berita ? $beranda->jumlah_berita : 6;
         $beritaTerbaru = Berita::where('desa_id', $desa->id)
             ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
             ->orderBy('published_at', 'desc')
-            ->limit(6)
+            ->limit($beritaLimit)
             ->get();
 
         // Get berita utama
@@ -55,13 +60,14 @@ class DesaController extends Controller
             ->limit(6)
             ->get();
 
-        // Get galeri
+        // Get galeri based on beranda settings
+        $galeriLimit = $beranda && $beranda->show_galeri ? $beranda->jumlah_galeri : 8;
         $galeri = Galeri::where('desa_id', $desa->id)
             ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
-            ->limit(8)
+            ->limit($galeriLimit)
             ->get();
 
-        return view('frontend.beranda', compact('desa', 'beritaTerbaru', 'beritaUtama', 'layananPublik', 'galeri'));
+        return view('frontend.beranda', compact('desa', 'beranda', 'beritaTerbaru', 'beritaUtama', 'layananPublik', 'galeri'));
     }
 
     public function berita($uri)

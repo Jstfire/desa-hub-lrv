@@ -37,7 +37,7 @@ class DesaResource extends Resource
 
     protected static ?string $navigationGroup = 'Manajemen Desa';
 
-    protected static ?string $navigationLabel = 'Profil Desa';
+    protected static ?string $navigationLabel = 'Pengaturan Desa';
 
     protected static ?string $modelLabel = 'Desa';
 

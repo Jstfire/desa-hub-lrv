@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             Auth\RolesAndPermissionsSeeder::class,
             DesaSeeder::class, // Seeder untuk data desa
+            BerandaSeeder::class, // Seeder untuk data beranda
             KontenSeeder::class, // Seeder untuk konten (berita, publikasi, data sektoral)
         ]);
 

@@ -180,6 +180,14 @@ class Desa extends Model implements HasMedia
     }
 
     /**
+     * Get the beranda for the desa.
+     */
+    public function beranda(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Beranda::class);
+    }
+
+    /**
      * Register media collections
      */
     public function registerMediaCollections(): void
