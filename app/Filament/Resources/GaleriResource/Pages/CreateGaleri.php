@@ -25,13 +25,10 @@ class CreateGaleri extends CreateRecord
         // Set current user as creator
         $data['user_id'] = $user->id;
 
-        // Check if user is not superadmin, restrict to their desa
-        $isSuperAdmin = Role::where('name', 'superadmin')
-            ->whereHas('users', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
-            })
-            ->exists();
+        // Always use the User model's hasRole method which is PostgreSQL compatible
+        $isSuperAdmin = $user->hasRole('superadmin');
 
+        // If user is not superadmin and desa_id is not set, use their current team
         if ($user && !$isSuperAdmin && !isset($data['desa_id'])) {
             $data['desa_id'] = $user->currentTeam->id;
         }

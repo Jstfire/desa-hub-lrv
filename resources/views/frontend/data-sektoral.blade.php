@@ -18,9 +18,116 @@
             </div>
         </section>
 
+        {{-- Search and Filter Section --}}
+        <section class="bg-gray-50 dark:bg-gray-800 py-8">
+            <div class="mx-auto px-4 container">
+                <div class="bg-white dark:bg-gray-900 shadow-lg p-6 rounded-lg">
+                    <div class="gap-4 grid grid-cols-1 md:grid-cols-4">
+                        {{-- Search --}}
+                        <div class="md:col-span-2">
+                            <label for="search" class="block mb-2 font-medium text-gray-700 dark:text-gray-300 text-sm">
+                                Cari Data Sektoral
+                            </label>
+                            <div class="relative">
+                                <input type="text" id="search" name="search" value="{{ request('search') }}"
+                                    placeholder="Cari berdasarkan judul..."
+                                    class="dark:bg-gray-700 px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 focus:border-transparent rounded-lg focus:ring-2 focus:ring-indigo-500 w-full dark:text-white">
+                                <div class="right-0 absolute inset-y-0 flex items-center pr-3">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Sektor Filter --}}
+                        <div>
+                            <label for="kategori" class="block mb-2 font-medium text-gray-700 dark:text-gray-300 text-sm">
+                                Sektor
+                            </label>
+                            <select id="kategori" name="kategori"
+                                class="dark:bg-gray-700 px-4 py-2 border border-gray-300 dark:border-gray-600 focus:border-transparent rounded-lg focus:ring-2 focus:ring-indigo-500 w-full dark:text-white">
+                                <option value="">Semua Sektor</option>
+                                <option value="pendidikan" {{ request('kategori') == 'pendidikan' ? 'selected' : '' }}>
+                                    Pendidikan</option>
+                                <option value="kesehatan" {{ request('kategori') == 'kesehatan' ? 'selected' : '' }}>
+                                    Kesehatan</option>
+                                <option value="ekonomi" {{ request('kategori') == 'ekonomi' ? 'selected' : '' }}>
+                                    Ekonomi</option>
+                                <option value="pertanian" {{ request('kategori') == 'pertanian' ? 'selected' : '' }}>
+                                    Pertanian</option>
+                                <option value="infrastruktur"
+                                    {{ request('kategori') == 'infrastruktur' ? 'selected' : '' }}>
+                                    Infrastruktur</option>
+                                <option value="sosial" {{ request('kategori') == 'sosial' ? 'selected' : '' }}>
+                                    Sosial</option>
+                            </select>
+                        </div>
+
+                        {{-- Year Filter --}}
+                        <div>
+                            <label for="tahun" class="block mb-2 font-medium text-gray-700 dark:text-gray-300 text-sm">
+                                Tahun
+                            </label>
+                            <select id="tahun" name="tahun"
+                                class="dark:bg-gray-700 px-4 py-2 border border-gray-300 dark:border-gray-600 focus:border-transparent rounded-lg focus:ring-2 focus:ring-indigo-500 w-full dark:text-white">
+                                <option value="">Semua Tahun</option>
+                                @for ($year = date('Y'); $year >= 2020; $year--)
+                                    <option value="{{ $year }}" {{ request('tahun') == $year ? 'selected' : '' }}>
+                                        {{ $year }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Filter Buttons --}}
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <button onclick="applyFilters()"
+                            class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-medium text-white transition-colors duration-200">
+                            <svg class="inline-block mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+                                </path>
+                            </svg>
+                            Terapkan Filter
+                        </button>
+                        <button onclick="resetFilters()"
+                            class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg font-medium text-white transition-colors duration-200">
+                            <svg class="inline-block mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                </path>
+                            </svg>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         {{-- Main Content --}}
         <section class="py-16">
             <div class="mx-auto px-4 container">
+                {{-- Results Info --}}
+                @if (request()->hasAny(['search', 'kategori', 'tahun']))
+                    <div class="mb-6">
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Menampilkan {{ $dataSektoral->total() }} hasil
+                            @if (request('search'))
+                                untuk pencarian "<strong>{{ request('search') }}</strong>"
+                            @endif
+                            @if (request('kategori'))
+                                dalam sektor "<strong>{{ ucfirst(request('kategori')) }}</strong>"
+                            @endif
+                            @if (request('tahun'))
+                                untuk tahun "<strong>{{ request('tahun') }}</strong>"
+                            @endif
+                        </p>
+                    </div>
+                @endif
+
                 @if ($dataSektoral->count() > 0)
                     <div class="gap-8 grid grid-cols-1 lg:grid-cols-2">
                         @foreach ($dataSektoral as $data)
@@ -111,7 +218,8 @@
                                         </div>
                                     @endif
 
-                                    <div class="flex justify-between items-center text-gray-500 dark:text-gray-400 text-sm">
+                                    <div
+                                        class="flex justify-between items-center text-gray-500 dark:text-gray-400 text-sm">
                                         <span>{{ $data->view_count }} kali dilihat</span>
                                         <span>{{ $data->published_at->format('d M Y') }}</span>
                                     </div>
@@ -160,5 +268,39 @@
             // Could implement modal or expand functionality here
             console.log('Show more data for ID:', dataId);
         }
+
+        function applyFilters() {
+            const search = document.getElementById('search').value;
+            const kategori = document.getElementById('kategori').value;
+            const tahun = document.getElementById('tahun').value;
+
+            const params = new URLSearchParams(window.location.search);
+
+            if (search) params.set('search', search);
+            else params.delete('search');
+
+            if (kategori) params.set('kategori', kategori);
+            else params.delete('kategori');
+
+            if (tahun) params.set('tahun', tahun);
+            else params.delete('tahun');
+
+            window.location.search = params.toString();
+        }
+
+        function resetFilters() {
+            window.location.href = window.location.pathname;
+        }
+
+        // Apply filters on Enter key
+        document.getElementById('search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+
+        // Auto-apply filters on select change
+        document.getElementById('kategori').addEventListener('change', applyFilters);
+        document.getElementById('tahun').addEventListener('change', applyFilters);
     </script>
 @endsection

@@ -19,11 +19,7 @@ class VisitorStats extends BaseWidget
         $query = Visitor::query();
 
         // Filter by desa if user is not superadmin
-        $isSuperAdmin = Role::where('name', 'superadmin')
-            ->whereHas('users', function ($q) use ($user) {
-                $q->where('model_id', $user->id);
-            })
-            ->exists();
+        $isSuperAdmin = $user->hasRole('superadmin');
 
         if (!$isSuperAdmin) {
             $desaIds = $user->ownedTeams->pluck('id')->merge(

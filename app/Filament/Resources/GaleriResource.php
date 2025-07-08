@@ -24,6 +24,7 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
@@ -217,51 +218,6 @@ class GaleriResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
-
-        try {
-            $user = Auth::user();
-
-            // If no user is authenticated, return the base query
-            if (!$user) {
-                return $query;
-            }
-
-            // For IDE static analysis, we'll check using database queries rather than the trait methods
-            // Note: This should work at runtime with the hasRole method, but the IDE doesn't recognize it
-
-            // Check if user is superadmin
-            $isSuperAdmin = Role::where('name', 'superadmin')
-                ->whereHas('users', function ($q) use ($user) {
-                    $q->where('user_id', $user->id);
-                })
-                ->exists();
-
-            if ($isSuperAdmin) {
-                return $query;
-            }
-
-            // Check if user is admin_desa or operator_desa
-            $isDesaAdmin = Role::whereIn('name', ['admin_desa', 'operator_desa'])
-                ->whereHas('users', function ($q) use ($user) {
-                    $q->where('user_id', $user->id);
-                })
-                ->exists();
-
-            if ($isDesaAdmin) {
-                // Get desa IDs for the user
-                $desaIds = $user->ownedTeams->pluck('id')->merge(
-                    $user->teams->pluck('id')
-                )->unique()->toArray();
-
-                // Return query filtered by desa
-                return $query->whereIn('desa_id', $desaIds);
-            }
-        } catch (\Exception $e) {
-            // Log the error but don't crash
-            Log::error('Error in GaleriResource query: ' . $e->getMessage());
-        }
-
-        // Default fallback
-        return $query;
+        return \App\Helpers\FilamentResourceHelper::getScopedResourceQuery($query);
     }
 }

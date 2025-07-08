@@ -39,7 +39,8 @@ Route::prefix('{uri}')->group(function () {
     Route::get('/layanan-publik', [DesaController::class, 'layananPublik'])->name('desa.layanan-publik');
 
     // Profil Desa
-    Route::get('/profil', [DesaController::class, 'profil'])->name('desa.profil');
+    Route::get('/profil/{jenis?}', [\App\Http\Controllers\Frontend\ProfilDesaController::class, 'show'])->name('desa.profil');
+    Route::get('/profil/dokumen/{id}/download', [\App\Http\Controllers\Frontend\ProfilDesaController::class, 'download'])->name('desa.profil.dokumen.download');
 
     // Publikasi
     Route::get('/publikasi', [DesaController::class, 'publikasi'])->name('desa.publikasi');

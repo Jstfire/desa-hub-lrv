@@ -42,12 +42,8 @@ class CreateMetadata extends CreateRecord
         // If user is not superadmin, restrict to their desa
         $user = Auth::user();
 
-        // Check if user is superadmin using direct query instead of trait method
-        $isSuperAdmin = \Spatie\Permission\Models\Role::where('name', 'superadmin')
-            ->whereHas('users', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
-            })
-            ->exists();
+        // Always use the User model's hasRole method which is PostgreSQL compatible
+        $isSuperAdmin = $user->hasRole('superadmin');
 
         if ($user && !$isSuperAdmin && !isset($data['desa_id'])) {
             $data['desa_id'] = $user->currentTeam->id;

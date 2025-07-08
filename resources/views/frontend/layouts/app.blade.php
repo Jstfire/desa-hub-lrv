@@ -312,7 +312,7 @@
 
     <!-- Fixed Buttons -->
     <!-- Visitor Stats Button -->
-    <div class="right-4 bottom-4 z-50 fixed">
+    {{-- <div class="right-4 bottom-4 z-50 fixed">
         <button id="visitorStatsButton"
             class="bg-primary hover:bg-opacity-90 shadow-lg p-3 rounded-full text-white transition-all">
             <i class="fas fa-chart-line"></i>
@@ -325,7 +325,7 @@
             class="inline-block bg-secondary hover:bg-opacity-90 shadow-lg p-3 rounded-full text-white transition-all">
             <i class="fas fa-comment-dots"></i>
         </a>
-    </div>
+    </div> --}}
 
     <!-- Visitor Stats Modal -->
     <div id="visitorStatsModal" class="hidden z-50 fixed inset-0 bg-black bg-opacity-50">
@@ -465,6 +465,11 @@
 
     <!-- Toast Component -->
     <x-toast />
+
+    <!-- Fixed Buttons for Visitor Stats & Pengaduan -->
+    @if (isset($desa))
+        <x-fixed-buttons :desa="$desa" />
+    @endif
 
     @stack('scripts')
 </body>

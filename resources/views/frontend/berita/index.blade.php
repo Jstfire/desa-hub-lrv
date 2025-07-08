@@ -18,15 +18,107 @@
     <!-- Search & Filter -->
     <section class="bg-white dark:bg-gray-900 py-8">
         <div class="mx-auto px-4 container">
-            <div class="flex md:flex-row flex-col justify-between items-center gap-4">
-                <div class="flex-1 max-w-md">
-                    <div class="relative">
-                        <input type="text" id="searchBerita" placeholder="Cari berita..."
-                            class="dark:bg-gray-800 py-2 pr-4 pl-10 border border-gray-300 dark:border-gray-600 focus:border-transparent rounded-lg focus:ring-2 focus:ring-primary w-full dark:text-white">
-                        <i class="top-3 left-3 absolute text-gray-400 fas fa-search"></i>
+            {{-- Advanced Search & Filter --}}
+            <div class="bg-gray-50 dark:bg-gray-800 mb-6 p-6 rounded-lg">
+                <div class="gap-4 grid grid-cols-1 md:grid-cols-4">
+                    {{-- Search --}}
+                    <div class="md:col-span-2">
+                        <label for="search" class="block mb-2 font-medium text-gray-700 dark:text-gray-300 text-sm">
+                            Cari Berita
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="search" name="search" value="{{ request('search') }}"
+                                placeholder="Cari berdasarkan judul atau konten..."
+                                class="dark:bg-gray-700 px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 focus:border-transparent rounded-lg focus:ring-2 focus:ring-primary w-full dark:text-white">
+                            <div class="right-0 absolute inset-y-0 flex items-center pr-3">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Category Filter --}}
+                    <div>
+                        <label for="kategori" class="block mb-2 font-medium text-gray-700 dark:text-gray-300 text-sm">
+                            Kategori
+                        </label>
+                        <select id="kategori" name="kategori"
+                            class="dark:bg-gray-700 px-4 py-2 border border-gray-300 dark:border-gray-600 focus:border-transparent rounded-lg focus:ring-2 focus:ring-primary w-full dark:text-white">
+                            <option value="">Semua Kategori</option>
+                            <option value="umum" {{ request('kategori') == 'umum' ? 'selected' : '' }}>Umum</option>
+                            <option value="pengumuman" {{ request('kategori') == 'pengumuman' ? 'selected' : '' }}>
+                                Pengumuman</option>
+                            <option value="kegiatan" {{ request('kategori') == 'kegiatan' ? 'selected' : '' }}>Kegiatan
+                            </option>
+                            <option value="pembangunan" {{ request('kategori') == 'pembangunan' ? 'selected' : '' }}>
+                                Pembangunan</option>
+                        </select>
+                    </div>
+
+                    {{-- Highlight Filter --}}
+                    <div>
+                        <label for="highlight" class="block mb-2 font-medium text-gray-700 dark:text-gray-300 text-sm">
+                            Jenis
+                        </label>
+                        <select id="highlight" name="highlight"
+                            class="dark:bg-gray-700 px-4 py-2 border border-gray-300 dark:border-gray-600 focus:border-transparent rounded-lg focus:ring-2 focus:ring-primary w-full dark:text-white">
+                            <option value="">Semua Berita</option>
+                            <option value="1" {{ request('highlight') == '1' ? 'selected' : '' }}>Berita Utama</option>
+                            <option value="0" {{ request('highlight') == '0' ? 'selected' : '' }}>Berita Biasa</option>
+                        </select>
                     </div>
                 </div>
 
+                {{-- Filter Buttons --}}
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button onclick="applyFilters()"
+                        class="bg-primary hover:bg-opacity-90 px-4 py-2 rounded-lg font-medium text-white transition-colors duration-200">
+                        <svg class="inline-block mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+                            </path>
+                        </svg>
+                        Terapkan Filter
+                    </button>
+                    <button onclick="resetFilters()"
+                        class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg font-medium text-white transition-colors duration-200">
+                        <svg class="inline-block mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            {{-- Results Info and Layout Toggle --}}
+            <div class="flex md:flex-row flex-col justify-between items-center gap-4">
+                {{-- Results Info --}}
+                <div>
+                    @if (request()->hasAny(['search', 'kategori', 'highlight']))
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Menampilkan {{ $berita->total() }} hasil
+                            @if (request('search'))
+                                untuk pencarian "<strong>{{ request('search') }}</strong>"
+                            @endif
+                            @if (request('kategori'))
+                                dalam kategori "<strong>{{ ucfirst(request('kategori')) }}</strong>"
+                            @endif
+                            @if (request('highlight') !== null)
+                                dari "<strong>{{ request('highlight') == '1' ? 'Berita Utama' : 'Berita Biasa' }}</strong>"
+                            @endif
+                        </p>
+                    @else
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Menampilkan {{ $berita->total() }} berita
+                        </p>
+                    @endif
+                </div>
+
+                {{-- Layout Toggle --}}
                 <div class="flex gap-2">
                     <button
                         class="bg-primary hover:bg-opacity-90 px-4 py-2 rounded-lg text-white transition-colors layout-toggle active"
@@ -91,7 +183,7 @@
                                     <span>{{ $item->user->name ?? 'Admin' }}</span>
                                     <span class="mx-2">•</span>
                                     <i class="mr-2 fas fa-eye"></i>
-                                    <span>{{ $item->views ?? 0 }}</span>
+                                    <span>{{ $item->view_count ?? 0 }}</span>
                                 </div>
 
                                 <h3 class="mb-3 font-bold text-gray-800 dark:text-white text-xl berita-title">
@@ -286,6 +378,42 @@
                     });
                 }
             });
+
+            // Filter functions
+            function applyFilters() {
+                const search = document.getElementById('search').value;
+                const kategori = document.getElementById('kategori').value;
+                const highlight = document.getElementById('highlight').value;
+
+                const params = new URLSearchParams(window.location.search);
+
+                if (search) params.set('search', search);
+                else params.delete('search');
+
+                if (kategori) params.set('kategori', kategori);
+                else params.delete('kategori');
+
+                if (highlight) params.set('highlight', highlight);
+                else params.delete('highlight');
+
+                window.location.search = params.toString();
+            }
+
+            function resetFilters() {
+                window.location.href = window.location.pathname;
+            }
+
+            // Apply filters on Enter key
+            document.getElementById('search').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    applyFilters();
+                }
+            });
+
+            // Auto-apply filters on select change
+            document.getElementById('kategori').addEventListener('change', applyFilters);
+            document.getElementById('highlight').addEventListener('change', applyFilters);
         });
+    </script>
     </script>
 @endpush

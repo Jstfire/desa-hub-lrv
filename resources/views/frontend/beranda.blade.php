@@ -71,7 +71,7 @@
                                     <span>{{ $berita->tanggal_publikasi->format('d M Y') }}</span>
                                     <span class="mx-2">•</span>
                                     <i class="mr-2 fas fa-eye"></i>
-                                    <span>{{ $berita->views ?? 0 }} views</span>
+                                    <span>{{ $berita->view_count ?? 0 }} views</span>
                                 </div>
 
                                 <h3 class="mb-3 font-bold text-gray-800 dark:text-white text-xl">

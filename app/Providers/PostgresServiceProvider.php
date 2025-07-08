@@ -43,9 +43,15 @@ class PostgresServiceProvider extends ServiceProvider
                     strpos($query, 'model_has_roles') !== false &&
                     strpos($query, '"user_id"') !== false
                 ) {
-                    // Replace user_id with the correct model_id column reference
-                    $query = str_replace('"user_id"', '"users"."id"', $query);
-                    Log::info('Fixed Spatie Permission query: ' . $query);
+                    // Replace unqualified user_id with proper model_id reference
+                    $query = str_replace('"user_id"', '"model_has_roles"."model_id"', $query);
+                    Log::info('Fixed Spatie Permission query user_id reference: ' . $query);
+                }
+
+                // Fix other model_has_roles user_id references
+                if (strpos($query, '"user_id" = ?') !== false && strpos($query, 'model_has_roles') !== false) {
+                    $query = str_replace('"user_id" = ?', '"model_has_roles"."model_id" = ?', $query);
+                    Log::info('Fixed model_has_roles user_id reference: ' . $query);
                 }
 
                 return [$query, $bindings];

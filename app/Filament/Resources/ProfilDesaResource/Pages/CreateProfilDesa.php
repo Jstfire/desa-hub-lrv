@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\FooterResource\Pages;
+namespace App\Filament\Resources\ProfilDesaResource\Pages;
 
-use App\Filament\Resources\FooterResource;
+use App\Filament\Resources\ProfilDesaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
 
-class CreateFooter extends CreateRecord
+class CreateProfilDesa extends CreateRecord
 {
-    protected static string $resource = FooterResource::class;
+    protected static string $resource = ProfilDesaResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -25,6 +23,7 @@ class CreateFooter extends CreateRecord
         // Always use the User model's hasRole method which is PostgreSQL compatible
         $isSuperAdmin = $user->hasRole('superadmin');
 
+        // If user is not superadmin and desa_id is not set, use their current team
         if ($user && !$isSuperAdmin && !isset($data['desa_id'])) {
             $data['desa_id'] = $user->currentTeam->id;
         }

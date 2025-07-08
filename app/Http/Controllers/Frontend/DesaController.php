@@ -13,6 +13,7 @@ use App\Models\Galeri;
 use App\Models\Visitor;
 use App\Models\Pengaduan;
 use App\Models\Metadata;
+use App\Models\ProfilDesa;
 use App\Models\Ppid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -74,10 +75,37 @@ class DesaController extends Controller
     {
         $desa = $this->getDesaByUri($uri);
 
-        $berita = Berita::where('desa_id', $desa->id)
-            ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
-            ->orderBy('published_at', 'desc')
-            ->paginate(12);
+        $query = Berita::where('desa_id', $desa->id)
+            ->where('is_published', 1); // Use 1 instead of true for PostgreSQL compatibility
+
+        // Search filter
+        if (request('search')) {
+            $query->where(function ($q) {
+                $q->where('judul', 'ILIKE', '%' . request('search') . '%')
+                    ->orWhere('konten', 'ILIKE', '%' . request('search') . '%')
+                    ->orWhere('excerpt', 'ILIKE', '%' . request('search') . '%');
+            });
+        }
+
+        // Category filter
+        if (request('kategori')) {
+            $query->where('kategori', request('kategori'));
+        }
+
+        // Highlight filter
+        if (request('highlight') !== null) {
+            $query->where('is_highlight', request('highlight') ? 1 : 0);
+        }
+
+        // Date range filter
+        if (request('dari') && request('sampai')) {
+            $query->whereBetween('published_at', [request('dari'), request('sampai')]);
+        }
+
+        $berita = $query->orderBy('published_at', 'desc')->paginate(12);
+
+        // Preserve query parameters in pagination links
+        $berita->appends(request()->query());
 
         return view('frontend.berita.index', compact('desa', 'berita'));
     }
@@ -91,8 +119,8 @@ class DesaController extends Controller
             ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
             ->firstOrFail();
 
-        // Increment view count
-        $berita->increment('views');
+        // Increment view count using the correct column name (view_count)
+        $berita->increment('view_count');
 
         // Get berita terkait
         $beritaTerkait = Berita::where('desa_id', $desa->id)
@@ -121,17 +149,57 @@ class DesaController extends Controller
     {
         $desa = $this->getDesaByUri($uri);
 
-        return view('frontend.profil', compact('desa'));
+        // Get profil desa data
+        $tentang = ProfilDesa::where('desa_id', $desa->id)
+            ->where('jenis', 'tentang')
+            ->where('is_published', true)
+            ->first();
+
+        $visiMisi = ProfilDesa::where('desa_id', $desa->id)
+            ->where('jenis', 'visi_misi')
+            ->where('is_published', true)
+            ->first();
+
+        $struktur = ProfilDesa::where('desa_id', $desa->id)
+            ->where('jenis', 'struktur')
+            ->where('is_published', true)
+            ->first();
+
+        $monografi = ProfilDesa::where('desa_id', $desa->id)
+            ->where('jenis', 'monografi')
+            ->where('is_published', true)
+            ->orderBy('urutan')
+            ->get();
+
+        return view('frontend.profil', compact('desa', 'tentang', 'visiMisi', 'struktur', 'monografi'));
     }
 
     public function publikasi($uri)
     {
         $desa = $this->getDesaByUri($uri);
 
-        $publikasi = Publikasi::where('desa_id', $desa->id)
-            ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
-            ->orderBy('published_at', 'desc')
-            ->paginate(12);
+        $query = Publikasi::where('desa_id', $desa->id)
+            ->where('is_published', 1); // Use 1 instead of true for PostgreSQL compatibility
+
+        // Search filter
+        if (request('search')) {
+            $query->where('judul', 'ILIKE', '%' . request('search') . '%');
+        }
+
+        // Category filter
+        if (request('kategori')) {
+            $query->where('kategori', request('kategori'));
+        }
+
+        // Year filter
+        if (request('tahun')) {
+            $query->whereYear('published_at', request('tahun'));
+        }
+
+        $publikasi = $query->orderBy('published_at', 'desc')->paginate(12);
+
+        // Preserve query parameters in pagination links
+        $publikasi->appends(request()->query());
 
         return view('frontend.publikasi', compact('desa', 'publikasi'));
     }
@@ -140,10 +208,28 @@ class DesaController extends Controller
     {
         $desa = $this->getDesaByUri($uri);
 
-        $dataSektoral = DataSektoral::where('desa_id', $desa->id)
-            ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
-            ->orderBy('published_at', 'desc')
-            ->paginate(12);
+        $query = DataSektoral::where('desa_id', $desa->id)
+            ->where('is_published', 1); // Use 1 instead of true for PostgreSQL compatibility
+
+        // Search filter
+        if (request('search')) {
+            $query->where('judul', 'ILIKE', '%' . request('search') . '%');
+        }
+
+        // Category filter
+        if (request('kategori')) {
+            $query->where('kategori', request('kategori'));
+        }
+
+        // Year filter
+        if (request('tahun')) {
+            $query->whereYear('published_at', request('tahun'));
+        }
+
+        $dataSektoral = $query->orderBy('published_at', 'desc')->paginate(12);
+
+        // Preserve query parameters in pagination links
+        $dataSektoral->appends(request()->query());
 
         return view('frontend.data-sektoral', compact('desa', 'dataSektoral'));
     }
@@ -155,8 +241,23 @@ class DesaController extends Controller
         $query = Metadata::where('desa_id', $desa->id)
             ->where('is_active', 1); // Use 1 instead of true for PostgreSQL compatibility
 
+        // Search filter
+        if (request('search')) {
+            $query->where(function ($q) {
+                $q->where('judul', 'ILIKE', '%' . request('search') . '%')
+                    ->orWhere('konten', 'ILIKE', '%' . request('search') . '%');
+            });
+        }
+
+        // Type filter from route parameter
         if ($jenis) {
             $query->where('jenis', $jenis);
+        }
+
+        // Type filter from query parameter (takes precedence)
+        if (request('jenis')) {
+            $query->where('jenis', request('jenis'));
+            $jenis = request('jenis'); // Update the $jenis variable for the view
         }
 
         $metadata = $query->orderBy('urutan')->get();
@@ -168,10 +269,23 @@ class DesaController extends Controller
     {
         $desa = $this->getDesaByUri($uri);
 
-        $ppid = Ppid::where('desa_id', $desa->id)
-            ->where('is_active', 1) // Use 1 instead of true for PostgreSQL compatibility
-            ->orderBy('urutan')
-            ->get();
+        $query = Ppid::where('desa_id', $desa->id)
+            ->where('is_active', 1); // Use 1 instead of true for PostgreSQL compatibility
+
+        // Search filter
+        if (request('search')) {
+            $query->where(function ($q) {
+                $q->where('judul', 'ILIKE', '%' . request('search') . '%')
+                    ->orWhere('konten', 'ILIKE', '%' . request('search') . '%');
+            });
+        }
+
+        // Category filter
+        if (request('kategori')) {
+            $query->where('kategori', request('kategori'));
+        }
+
+        $ppid = $query->orderBy('urutan')->get();
 
         return view('frontend.ppid', compact('desa', 'ppid'));
     }
@@ -180,10 +294,28 @@ class DesaController extends Controller
     {
         $desa = $this->getDesaByUri($uri);
 
-        $galeri = Galeri::where('desa_id', $desa->id)
-            ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
-            ->orderBy('published_at', 'desc')
-            ->paginate(24);
+        $query = Galeri::where('desa_id', $desa->id)
+            ->where('is_published', 1); // Use 1 instead of true for PostgreSQL compatibility
+
+        // Search filter
+        if (request('search')) {
+            $query->where('judul', 'ILIKE', '%' . request('search') . '%');
+        }
+
+        // Type filter (foto/video)
+        if (request('jenis')) {
+            $query->where('jenis', request('jenis'));
+        }
+
+        // Year filter
+        if (request('tahun')) {
+            $query->whereYear('published_at', request('tahun'));
+        }
+
+        $galeri = $query->orderBy('published_at', 'desc')->paginate(24);
+
+        // Preserve query parameters in pagination links
+        $galeri->appends(request()->query());
 
         return view('frontend.galeri', compact('desa', 'galeri'));
     }
@@ -254,22 +386,22 @@ class DesaController extends Controller
         $lastMonth = now()->subMonth()->startOfMonth();
 
         $stats = [
-            'hari_ini' => Visitor::where('desa_id', $desa->id)
+            'today' => Visitor::where('desa_id', $desa->id)
                 ->whereDate('created_at', $today)
                 ->count(),
-            'kemarin' => Visitor::where('desa_id', $desa->id)
+            'yesterday' => Visitor::where('desa_id', $desa->id)
                 ->whereDate('created_at', $yesterday)
                 ->count(),
-            'minggu_ini' => Visitor::where('desa_id', $desa->id)
+            'week' => Visitor::where('desa_id', $desa->id)
                 ->where('created_at', '>=', $thisWeek)
                 ->count(),
-            'minggu_lalu' => Visitor::where('desa_id', $desa->id)
+            'lastWeek' => Visitor::where('desa_id', $desa->id)
                 ->whereBetween('created_at', [$lastWeek, $thisWeek])
                 ->count(),
-            'bulan_ini' => Visitor::where('desa_id', $desa->id)
+            'month' => Visitor::where('desa_id', $desa->id)
                 ->where('created_at', '>=', $thisMonth)
                 ->count(),
-            'bulan_lalu' => Visitor::where('desa_id', $desa->id)
+            'lastMonth' => Visitor::where('desa_id', $desa->id)
                 ->whereBetween('created_at', [$lastMonth, $thisMonth])
                 ->count(),
             'total' => Visitor::where('desa_id', $desa->id)->count(),

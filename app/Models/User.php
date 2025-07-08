@@ -169,21 +169,57 @@ class User extends Authenticatable implements FilamentUser
     public function hasRole($roles, $guard = null): bool
     {
         if (config('database.default') === 'pgsql') {
+            // For PostgreSQL, use a more reliable method that avoids the problematic query
             if (is_string($roles)) {
                 return $this->roles->contains('name', $roles);
             }
 
             if (is_array($roles)) {
-                foreach ($roles as $role) {
-                    if ($this->roles->contains('name', $role)) {
-                        return true;
-                    }
-                }
-                return false;
+                $roleNames = $this->roles->pluck('name')->toArray();
+                return !empty(array_intersect($roles, $roleNames));
             }
+
+            if ($roles instanceof \Spatie\Permission\Contracts\Role) {
+                return $this->roles->contains('id', $roles->id);
+            }
+
+            return false;
         }
 
         // Call the parent hasRole method from the HasRoles trait for other database drivers
         return parent::hasRole($roles, $guard);
+    }
+
+    /**
+     * Override hasAnyRole for PostgreSQL compatibility
+     */
+    public function hasAnyRole($roles): bool
+    {
+        if (config('database.default') === 'pgsql') {
+            return $this->hasRole($roles);
+        }
+
+        return parent::hasAnyRole($roles);
+    }
+
+    /**
+     * Override hasAllRoles for PostgreSQL compatibility
+     */
+    public function hasAllRoles($roles, $guard = null): bool
+    {
+        if (config('database.default') === 'pgsql') {
+            if (is_string($roles)) {
+                return $this->hasRole($roles, $guard);
+            }
+
+            if (is_array($roles)) {
+                $roleNames = $this->roles->pluck('name')->toArray();
+                return empty(array_diff($roles, $roleNames));
+            }
+
+            return false;
+        }
+
+        return parent::hasAllRoles($roles, $guard);
     }
 }
