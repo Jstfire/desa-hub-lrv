@@ -110,15 +110,15 @@
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
     <!-- Navigation -->
     <nav class="top-0 z-50 sticky bg-white dark:bg-gray-800 shadow-lg">
-        <div class="mx-auto px-4 container">
+        <div class="mx-auto px-4 py-3 container">
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
                 <div class="flex items-center">
                     <a href="{{ route('desa.beranda', $desa->uri) }}" class="flex items-center">
-                        <i class="mr-3 text-primary text-2xl fas fa-home"></i>
+                        <img src="{{ asset('images/logo_busel.png') }}" alt="Logo" class="mr-3 w-14">
                         <div>
-                            <h1 class="font-bold text-gray-800 dark:text-white text-xl">{{ $desa->nama }}</h1>
-                            <p class="text-gray-500 dark:text-gray-400 text-xs">{{ ucfirst($desa->jenis) }}</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-base">{{ ucfirst($desa->jenis) }}</p>
+                            <h1 class="font-bold text-gray-800 dark:text-white text-2xl">{{ $desa->nama }}</h1>
                         </div>
                     </a>
                 </div>

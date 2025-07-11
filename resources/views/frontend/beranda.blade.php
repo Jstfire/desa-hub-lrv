@@ -6,7 +6,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative bg-primary overflow-hidden text-white">
+    <section class="relative bg-primary h-screen overflow-hidden text-white">
         <div class="absolute inset-0 bg-black opacity-20"></div>
         @if ($beranda && $beranda->banner_image)
             <div class="absolute inset-0">
@@ -14,30 +14,32 @@
                 <div class="absolute inset-0 bg-black opacity-60"></div>
             </div>
         @endif
-        <div class="relative mx-auto px-4 py-24 text-center container">
-            <h1 class="mb-6 font-bold text-4xl md:text-6xl">
-                {!! $beranda
-                    ? $beranda->judul_welcome
-                    : 'Selamat Datang di<br>' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama !!}
-            </h1>
-            <div class="mx-auto mb-8 max-w-3xl text-xl md:text-2xl">
-                {!! $beranda
-                    ? $beranda->deskripsi_welcome
-                    : 'Situs resmi ' .
-                        ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') .
-                        ' ' .
-                        $desa->nama .
-                        ' yang menyediakan informasi lengkap tentang kegiatan, layanan, dan berita terkini.' !!}
-            </div>
-            <div class="flex sm:flex-row flex-col justify-center gap-4">
-                <a href="{{ route('desa.layanan-publik', $desa->uri) }}"
-                    class="bg-white hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold text-primary transition-colors">
-                    Layanan Publik
-                </a>
-                <a href="{{ route('desa.berita', $desa->uri) }}"
-                    class="hover:bg-white px-8 py-3 border-2 border-white rounded-lg font-semibold text-white hover:text-primary transition-colors">
-                    Berita Terbaru
-                </a>
+        <div class="relative flex justify-center items-center mx-auto px-4 py-24 h-full text-center container">
+            <div>
+                <h1 class="mb-6 font-bold text-4xl md:text-6xl">
+                    {!! $beranda
+                        ? $beranda->judul_welcome
+                        : 'Selamat Datang di<br>' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama !!}
+                </h1>
+                <div class="mx-auto mb-8 max-w-3xl text-xl md:text-2xl">
+                    {!! $beranda
+                        ? $beranda->deskripsi_welcome
+                        : 'Situs resmi ' .
+                            ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') .
+                            ' ' .
+                            $desa->nama .
+                            ' yang menyediakan informasi lengkap tentang kegiatan, layanan, dan berita terkini.' !!}
+                </div>
+                <div class="flex sm:flex-row flex-col justify-center gap-4">
+                    <a href="{{ route('desa.layanan-publik', $desa->uri) }}"
+                        class="bg-white hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold text-primary transition-colors">
+                        Layanan Publik
+                    </a>
+                    <a href="{{ route('desa.berita', $desa->uri) }}"
+                        class="hover:bg-white px-8 py-3 border-2 border-white rounded-lg font-semibold text-white hover:text-primary transition-colors">
+                        Berita Terbaru
+                    </a>
+                </div>
             </div>
         </div>
     </section>
