@@ -150,7 +150,8 @@
                             <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                                 @foreach ($desas as $desa)
                                     <a href="/{{ $desa->uri }}"
-                                        class="group block bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl p-6 border border-gray-200 dark:border-gray-700 rounded-xl transition-all hover:-translate-y-1 duration-300 transform">
+                                        class="group block bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl p-6 border border-gray-200 dark:border-gray-700 rounded-xl transition-all hover:-translate-y-1 duration-300 transform"
+                                        data-spa-ignore>
                                         <div class="flex items-start space-x-4">
                                             <div
                                                 class="bg-gradient-to-br from-green-500 to-green-600 shadow-lg p-3 rounded-lg">

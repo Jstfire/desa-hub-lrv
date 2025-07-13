@@ -118,24 +118,33 @@
                     <div class="hidden md:flex items-center space-x-4 overflow-x-auto">
                         <a href="{{ route('desa.index', $desa->uri) }}"
                             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Beranda</a>
-                        <a href="{{ route('desa.berita', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Berita</a>
-                        <a href="{{ route('desa.layanan-publik', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Layanan
-                            Publik</a>
-                        <a href="{{ route('desa.profil', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Profil</a>
                         <a href="{{ route('desa.publikasi', $desa->uri) }}"
                             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Publikasi</a>
                         <a href="{{ route('desa.data-sektoral', $desa->uri) }}"
                             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Data
                             Sektoral</a>
-                        <a href="{{ route('desa.metadata', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Metadata</a>
-                        <a href="{{ route('desa.ppid', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">PPID</a>
+
+                        <!-- Informasi Dropdown -->
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors flex items-center">
+                                Informasi
+                                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div x-show="open" @click.away="open = false" class="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="py-1">
+                                    <a href="{{ route('desa.profil', $desa->uri) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Profil Desa</a>
+                                    <a href="{{ route('desa.layanan-publik', $desa->uri) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Layanan Publik</a>
+                                    <a href="{{ route('desa.ppid', $desa->uri) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">PPID</a>
+                                    <a href="{{ route('desa.berita', $desa->uri) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Berita</a>
+                                    <a href="{{ route('desa.metadata', $desa->uri) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Metadata</a>
+                                </div>
+                            </div>
+                        </div>
+
                         <a href="{{ route('desa.galeri', $desa->uri) }}"
                             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Galeri</a>
+                        <a href="{{ route('desa.pengaduan', $desa->uri) }}"
+                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Pengaduan</a>
                     </div>
 
                     <!-- Mobile menu button -->
@@ -154,24 +163,31 @@
                     <div class="flex flex-col space-y-2">
                         <a href="{{ route('desa.index', $desa->uri) }}"
                             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Beranda</a>
-                        <a href="{{ route('desa.berita', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Berita</a>
-                        <a href="{{ route('desa.layanan-publik', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Layanan
-                            Publik</a>
-                        <a href="{{ route('desa.profil', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Profil</a>
                         <a href="{{ route('desa.publikasi', $desa->uri) }}"
                             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Publikasi</a>
                         <a href="{{ route('desa.data-sektoral', $desa->uri) }}"
                             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Data
                             Sektoral</a>
-                        <a href="{{ route('desa.metadata', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Metadata</a>
-                        <a href="{{ route('desa.ppid', $desa->uri) }}"
-                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">PPID</a>
+
+                        <!-- Informasi Dropdown for Mobile -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors w-full text-left flex items-center justify-between">
+                                Informasi
+                                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div x-show="open" class="pl-4 pt-2 space-y-2">
+                                <a href="{{ route('desa.profil', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">Profil Desa</a>
+                                <a href="{{ route('desa.layanan-publik', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">Layanan Publik</a>
+                                <a href="{{ route('desa.ppid', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">PPID</a>
+                                <a href="{{ route('desa.berita', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">Berita</a>
+                                <a href="{{ route('desa.metadata', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">Metadata</a>
+                            </div>
+                        </div>
+
                         <a href="{{ route('desa.galeri', $desa->uri) }}"
                             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Galeri</a>
+                        <a href="{{ route('desa.pengaduan', $desa->uri) }}"
+                            class="hover:bg-primary-700 px-3 py-2 rounded-md text-white transition-colors">Pengaduan</a>
                     </div>
                 </div>
             </div>
@@ -204,22 +220,30 @@
                 <div class="space-y-1 px-2 pt-2 pb-3">
                     <a href="{{ route('desa.index', $desa->uri) }}"
                         class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Beranda</a>
-                    <a href="{{ route('desa.berita', $desa->uri) }}"
-                        class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Berita</a>
-                    <a href="{{ route('desa.layanan-publik', $desa->uri) }}"
-                        class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Layanan Publik</a>
-                    <a href="{{ route('desa.profil', $desa->uri) }}"
-                        class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Profil</a>
                     <a href="{{ route('desa.publikasi', $desa->uri) }}"
                         class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Publikasi</a>
                     <a href="{{ route('desa.data-sektoral', $desa->uri) }}"
                         class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Data Sektoral</a>
-                    <a href="{{ route('desa.metadata', $desa->uri) }}"
-                        class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Metadata</a>
-                    <a href="{{ route('desa.ppid', $desa->uri) }}"
-                        class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">PPID</a>
+
+                    <!-- Informasi Dropdown for Mobile (third section) -->
+                    <div x-data="{ open: false }">
+                        <button @click="open = !open" class="hover:bg-primary-800 px-3 py-2 rounded-md text-white w-full text-left flex items-center justify-between">
+                            Informasi
+                            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="open" class="pl-4 pt-2 space-y-2">
+                            <a href="{{ route('desa.profil', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">Profil Desa</a>
+                            <a href="{{ route('desa.layanan-publik', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">Layanan Publik</a>
+                            <a href="{{ route('desa.ppid', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">PPID</a>
+                            <a href="{{ route('desa.berita', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">Berita</a>
+                            <a href="{{ route('desa.metadata', $desa->uri) }}" class="block px-3 py-2 text-sm text-white hover:bg-primary-800 rounded-md">Metadata</a>
+                        </div>
+                    </div>
+
                     <a href="{{ route('desa.galeri', $desa->uri) }}"
                         class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Galeri</a>
+                    <a href="{{ route('desa.pengaduan', $desa->uri) }}"
+                        class="block hover:bg-primary-800 px-3 py-2 rounded-md text-white">Pengaduan</a>
                 </div>
             </div>
         </nav>
