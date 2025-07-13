@@ -14,112 +14,15 @@
         </div>
 
         <!-- Filter Section -->
-        <div class="bg-card border border-border shadow-sm mb-8 p-4 rounded-lg">
-            <form action="{{ route('desa.berita', $desa->uri) }}" method="GET" class="flex flex-wrap gap-4">
-                <div class="w-full md:w-auto">
-                    <label for="search"
-                        class="block mb-1 font-medium text-card-foreground text-sm">Cari</label>
-                    <input type="text" id="search" name="search" value="{{ request('search') }}"
-                        placeholder="Cari berita..."
-                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                </div>
-
-                <div class="w-full md:w-auto">
-                    <label for="kategori"
-                        class="block mb-1 font-medium text-card-foreground text-sm">Kategori</label>
-                    <select id="kategori" name="kategori"
-                        class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                        <option value="">Semua Kategori</option>
-                        <option value="berita" {{ request('kategori') == 'berita' ? 'selected' : '' }}>Berita</option>
-                        <option value="pengumuman" {{ request('kategori') == 'pengumuman' ? 'selected' : '' }}>Pengumuman
-                        </option>
-                        <option value="kegiatan" {{ request('kategori') == 'kegiatan' ? 'selected' : '' }}>Kegiatan</option>
-                        <option value="program" {{ request('kategori') == 'program' ? 'selected' : '' }}>Program</option>
-                    </select>
-                </div>
-
-                <div class="flex items-end w-full md:w-auto">
-                    <button type="submit"
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Filter</button>
-                    @if (request('search') || request('kategori'))
-                        <a href="{{ route('desa.berita', $desa->uri) }}"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 ml-2">Reset</a>
-                    @endif
-                </div>
-            </form>
-        </div>
+        <x-frontend.desa.components.filter-section :desa="$desa" :kategori="$kategori" :q="$q" :kategoriBerita="$kategoriBerita" />
 
         <!-- Layout Toggle -->
-        <div class="flex justify-end mb-6">
-            <div class="bg-card border border-border shadow-sm rounded-lg overflow-hidden">
-                <button id="grid-view" class="px-4 py-2 text-card-foreground hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Tampilan Grid">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                    </svg>
-                </button>
-                <button id="list-view" class="px-4 py-2 text-card-foreground hover:bg-accent hover:text-accent-foreground transition-colors" aria-label="Tampilan List">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+        <x-frontend.desa.components.layout-toggle />
 
         <!-- Grid View (Default) -->
         <div id="grid-container" class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @forelse($berita as $item)
-                <article class="bg-card border border-border shadow-sm hover:shadow-md transition-shadow rounded-lg overflow-hidden">
-                    <a href="{{ route('desa.berita.detail', ['uri' => $desa->uri, 'slug' => $item->slug]) }}" class="block">
-                        @if ($item->getFirstMediaUrl('thumbnail'))
-                            <div class="aspect-video overflow-hidden">
-                                <img src="{{ $item->getFirstMediaUrl('thumbnail') }}" alt="{{ $item->judul }}"
-                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                            </div>
-                        @else
-                            <div class="aspect-video bg-muted flex items-center justify-center">
-                                <svg class="w-12 h-12 text-muted-foreground" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                            </div>
-                        @endif
-
-                        <div class="p-4">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
-                                    {{ ucfirst($item->kategori) }}
-                                </span>
-                                <span class="text-muted-foreground text-sm">
-                                    {{ $item->published_at->format('d M Y') }}
-                                </span>
-                            </div>
-
-                            <h3 class="font-semibold text-card-foreground text-lg mb-2 line-clamp-2">
-                                {{ $item->judul }}
-                            </h3>
-
-                            <p class="text-muted-foreground text-sm line-clamp-3 mb-4">
-                                {{ Str::limit(strip_tags($item->konten), 120) }}
-                            </p>
-
-                            <div class="flex items-center justify-between">
-                                <span class="text-primary text-sm font-medium">
-                                    Baca Selengkapnya
-                                </span>
-                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </a>
-                </article>
+                <x-frontend.desa.components.berita-card :item="$item" :desa="$desa" view="grid" />
             @empty
                 <div class="col-span-full py-12 text-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-4 w-12 h-12 text-muted-foreground"
@@ -136,57 +39,7 @@
         <!-- List View (Hidden by default) -->
         <div id="list-container" class="hidden space-y-6">
             @forelse($berita as $item)
-                <article class="bg-card border border-border shadow-sm hover:shadow-md transition-shadow rounded-lg overflow-hidden">
-                    <a href="{{ route('desa.berita.detail', ['uri' => $desa->uri, 'slug' => $item->slug]) }}" class="block">
-                        <div class="flex flex-col md:flex-row">
-                            @if ($item->getFirstMediaUrl('thumbnail'))
-                                <div class="md:w-1/3 aspect-video md:aspect-square overflow-hidden">
-                                    <img src="{{ $item->getFirstMediaUrl('thumbnail') }}" alt="{{ $item->judul }}"
-                                        class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                                </div>
-                            @else
-                                <div class="md:w-1/3 aspect-video md:aspect-square bg-muted flex items-center justify-center">
-                                    <svg class="w-12 h-12 text-muted-foreground" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            @endif
-
-                            <div class="flex-1 p-6">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
-                                        {{ ucfirst($item->kategori) }}
-                                    </span>
-                                    <span class="text-muted-foreground text-sm">
-                                        {{ $item->published_at->format('d M Y') }}
-                                    </span>
-                                </div>
-
-                                <h3 class="font-semibold text-card-foreground text-xl mb-3">
-                                    {{ $item->judul }}
-                                </h3>
-
-                                <p class="text-muted-foreground mb-4 line-clamp-3">
-                                    {{ Str::limit(strip_tags($item->konten), 200) }}
-                                </p>
-
-                                <div class="flex items-center justify-between">
-                                    <span class="text-primary text-sm font-medium">
-                                        Baca Selengkapnya
-                                    </span>
-                                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </article>
+                <x-frontend.desa.components.berita-card :item="$item" :desa="$desa" view="list" />
             @empty
                 <div class="py-12 text-center">
                     <svg xmlns="http://www.w3.org/2000/svg"

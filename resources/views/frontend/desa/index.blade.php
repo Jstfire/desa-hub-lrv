@@ -25,28 +25,7 @@
 
         <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @forelse($beritaTerbaru as $berita)
-                <div class="bg-card border border-border shadow-sm rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                    @if ($berita->getFirstMediaUrl('thumbnail'))
-                        <div class="bg-muted h-48">
-                            <img src="{{ $berita->getFirstMediaUrl('thumbnail') }}" alt="{{ $berita->judul }}"
-                                class="w-full h-full object-cover">
-                        </div>
-                    @else
-                        <div class="flex justify-center items-center bg-muted h-48">
-                            <span class="text-muted-foreground">Tidak ada gambar</span>
-                        </div>
-                    @endif
-                    <div class="p-6">
-                        <h4 class="mb-2 font-semibold text-card-foreground text-xl">{{ $berita->judul }}</h4>
-                        <div class="flex items-center mb-4 text-muted-foreground text-sm">
-                            <span>{{ $berita->published_at->format('d M Y') }}</span>
-                            <span class="mx-2">•</span>
-                            <span>{{ $berita->user->name }}</span>
-                        </div>
-                        <a href="{{ route('desa.berita.detail', [$desa->uri, $berita->slug]) }}"
-                            class="text-primary hover:text-primary/80 transition-colors">Baca Selengkapnya</a>
-                    </div>
-                </div>
+                <x-frontend.desa.components.berita-card :item="$berita" :desa="$desa" view="grid" />
             @empty
                 <div class="col-span-3 py-12 text-center">
                     <p class="text-muted-foreground">Belum ada berita yang dipublikasikan.</p>

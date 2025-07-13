@@ -1,9 +1,24 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ darkMode: $persist(false) }" :class="{ 'dark': darkMode }" x-init="
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('_x_darkMode')) {
-        darkMode = true;
+<html lang="id" x-data="{
+    theme: localStorage.getItem('theme') || 'system',
+    init() {
+        this.setTheme(this.theme, false);
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (this.theme === 'system') this.setTheme('system', false);
+        });
+    },
+    setTheme(newTheme, store = true) {
+        if (store) {
+            this.theme = newTheme;
+            localStorage.setItem('theme', newTheme);
+        }
+        if (newTheme === 'system') {
+            document.documentElement.classList.toggle('dark', window.matchMedia('(prefers-color-scheme: dark)').matches);
+        } else {
+            document.documentElement.classList.toggle('dark', newTheme === 'dark');
+        }
     }
-">
+}" x-init="init()">
 
 <head>
     <meta charset="UTF-8">
@@ -59,7 +74,28 @@
     @yield('head')
 </head>
 
-<body class="bg-background text-foreground">
+<body class="bg-background text-foreground" x-cloak>
+    <svg class="hidden">
+        <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </symbol>
+        <symbol id="icon-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+        </symbol>
+    </svg>
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="hidden z-50 fixed inset-0 bg-white dark:bg-gray-900">
         <div class="flex justify-center items-center h-full">
@@ -76,86 +112,91 @@
     <div data-toast-container class="top-4 right-4 z-50 fixed space-y-4"></div>
 
     <!-- Header Section -->
-    <header class="bg-card border-b border-border shadow-sm">
-        <div class="mx-auto px-4 py-6 container">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="font-bold text-card-foreground text-2xl">
-                        {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
-                    </h1>
-                    <p class="text-muted-foreground text-sm">
-                        {{ $desa->alamat ?? 'Kecamatan ' . $desa->kecamatan . ', ' . $desa->kabupaten }}
-                    </p>
-                </div>
+    <header class="bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b border-border">
+        <div class="mx-auto px-4 container">
+            <div class="flex justify-between items-center h-20">
                 <div class="flex items-center space-x-4">
-                    <!-- Theme Toggle -->
-                    <button @click="darkMode = !darkMode"
-                        class="text-muted-foreground hover:text-foreground transition-colors">
-                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                            </path>
-                        </svg>
-                        <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
-                            </path>
-                        </svg>
-                    </button>
-
                     <!-- Logo -->
                     @if ($desa->getFirstMediaUrl('logo'))
                         <img src="{{ $desa->getFirstMediaUrl('logo') }}" alt="Logo {{ $desa->nama }}"
-                            class="rounded-full w-16 h-16 object-cover">
+                            class="rounded-full w-12 h-12 object-cover">
                     @else
                         <div
-                            class="flex justify-center items-center bg-gray-200 dark:bg-gray-700 rounded-full w-16 h-16">
-                            <span class="font-bold text-xl">Logo</span>
+                            class="flex justify-center items-center bg-muted rounded-full w-12 h-12">
+                            <span class="font-bold text-lg text-muted-foreground">Logo</span>
                         </div>
                     @endif
+                    <div>
+                        <h1 class="font-bold text-foreground text-xl">
+                            {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
+                        </h1>
+                        <p class="text-muted-foreground text-xs">
+                            {{ $desa->alamat ?? 'Kecamatan ' . $desa->kecamatan . ', ' . $desa->kabupaten }}
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Navigation -->
-        <nav class="bg-primary text-primary-foreground">
-            <div class="mx-auto px-4 container">
-                <div class="flex justify-between items-center h-16">
-                    <div class="hidden md:flex items-center space-x-4 overflow-x-auto">
-                        <a href="{{ route('desa.index', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Beranda</a>
-                        <a href="{{ route('desa.publikasi', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Publikasi</a>
-                        <a href="{{ route('desa.data-sektoral', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Data
-                            Sektoral</a>
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-2">
+                    <a href="{{ route('desa.index', $desa->uri) }}"
+                        class="text-foreground hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Beranda</a>
+                    <a href="{{ route('desa.publikasi', $desa->uri) }}"
+                        class="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Publikasi</a>
+                    <a href="{{ route('desa.data-sektoral', $desa->uri) }}"
+                        class="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Data Sektoral</a>
 
-                        <!-- Informasi Dropdown -->
-                        <div x-data="{ open: false }" class="relative">
-                            <button @click="open = !open" class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors flex items-center">
-                                Informasi
-                                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
-                            <div x-show="open" @click.away="open = false" class="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-popover border border-border focus:outline-none">
-                                <div class="py-1">
-                                    <a href="{{ route('desa.profil', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">Profil Desa</a>
-                                    <a href="{{ route('desa.layanan-publik', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">Layanan Publik</a>
-                                    <a href="{{ route('desa.ppid', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">PPID</a>
-                                    <a href="{{ route('desa.berita', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">Berita</a>
-                                    <a href="{{ route('desa.metadata', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">Metadata</a>
-                                </div>
+                    <!-- Informasi Dropdown -->
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                            Informasi
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="open" @click.away="open = false" class="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-popover border border-border focus:outline-none">
+                            <div class="py-1">
+                                <a href="{{ route('desa.profil', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">Profil Desa</a>
+                                <a href="{{ route('desa.layanan-publik', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">Layanan Publik</a>
+                                <a href="{{ route('desa.ppid', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">PPID</a>
+                                <a href="{{ route('desa.berita', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">Berita</a>
+                                <a href="{{ route('desa.metadata', $desa->uri) }}" class="block px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">Metadata</a>
                             </div>
                         </div>
+                    </div>
 
-                        <a href="{{ route('desa.galeri', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Galeri</a>
-                        <a href="{{ route('desa.pengaduan', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Pengaduan</a>
+                    <a href="{{ route('desa.galeri', $desa->uri) }}"
+                        class="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Galeri</a>
+                    <a href="{{ route('desa.pengaduan', $desa->uri) }}"
+                        class="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Pengaduan</a>
+                </nav>
+
+                <div class="flex items-center space-x-2">
+                    <!-- Theme Toggle -->
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" class="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><use :href="theme === 'light' ? '#icon-sun' : (theme === 'dark' ? '#icon-moon' : '#icon-system')" /></svg>
+                        </button>
+                        <template x-if="open">
+                            <div @click.away="open = false" class="absolute z-10 mt-2 w-32 rounded-md shadow-lg bg-popover border border-border focus:outline-none right-0">
+                                <div class="py-1">
+                                    <button @click="setTheme('light'); open = false;" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                                        <svg class="w-4 h-4"><use href="#icon-sun" /></svg>
+                                        Light
+                                    </button>
+                                    <button @click="setTheme('dark'); open = false;" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                                        <svg class="w-4 h-4"><use href="#icon-moon" /></svg>
+                                        Dark
+                                    </button>
+                                    <button @click="setTheme('system'); open = false;" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground">
+                                        <svg class="w-4 h-4"><use href="#icon-system" /></svg>
+                                        System
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
                     </div>
 
                     <!-- Mobile menu button -->
                     <div class="md:hidden">
-                        <button data-mobile-menu-toggle class="text-primary-foreground hover:text-primary-foreground/80 transition-colors">
+                        <button data-mobile-menu-toggle class="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 6h16M4 12h16M4 18h16"></path>
@@ -163,40 +204,40 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Mobile Navigation -->
-                <div data-mobile-menu class="hidden md:hidden pb-4">
-                    <div class="flex flex-col space-y-2">
-                        <a href="{{ route('desa.index', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Beranda</a>
-                        <a href="{{ route('desa.publikasi', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Publikasi</a>
-                        <a href="{{ route('desa.data-sektoral', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Data
-                            Sektoral</a>
+        <!-- Mobile Navigation -->
+        <div data-mobile-menu class="hidden md:hidden pb-4 px-4">
+            <div class="flex flex-col space-y-2">
+                <a href="{{ route('desa.index', $desa->uri) }}"
+                    class="block text-foreground hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-md text-base font-medium transition-colors">Beranda</a>
+                <a href="{{ route('desa.publikasi', $desa->uri) }}"
+                    class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-base font-medium transition-colors">Publikasi</a>
+                <a href="{{ route('desa.data-sektoral', $desa->uri) }}"
+                    class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-base font-medium transition-colors">Data Sektoral</a>
 
-                        <!-- Informasi Dropdown for Mobile -->
-                        <div x-data="{ open: false }">
-                            <button @click="open = !open" class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors w-full text-left flex items-center justify-between">
-                                Informasi
-                                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
-                            <div x-show="open" class="pl-4 pt-2 space-y-2">
-                                <a href="{{ route('desa.profil', $desa->uri) }}" class="block px-3 py-2 text-sm text-primary-foreground hover:bg-primary/80 rounded-md">Profil Desa</a>
-                                <a href="{{ route('desa.layanan-publik', $desa->uri) }}" class="block px-3 py-2 text-sm text-primary-foreground hover:bg-primary/80 rounded-md">Layanan Publik</a>
-                                <a href="{{ route('desa.ppid', $desa->uri) }}" class="block px-3 py-2 text-sm text-primary-foreground hover:bg-primary/80 rounded-md">PPID</a>
-                                <a href="{{ route('desa.berita', $desa->uri) }}" class="block px-3 py-2 text-sm text-primary-foreground hover:bg-primary/80 rounded-md">Berita</a>
-                                <a href="{{ route('desa.metadata', $desa->uri) }}" class="block px-3 py-2 text-sm text-primary-foreground hover:bg-primary/80 rounded-md">Metadata</a>
-                            </div>
-                        </div>
-
-                        <a href="{{ route('desa.galeri', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Galeri</a>
-                        <a href="{{ route('desa.pengaduan', $desa->uri) }}"
-                            class="hover:bg-primary/90 px-3 py-2 rounded-md text-primary-foreground transition-colors">Pengaduan</a>
+                <!-- Informasi Dropdown for Mobile -->
+                <div x-data="{ open: false }">
+                    <button @click="open = !open" class="w-full text-left text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center justify-between">
+                        Informasi
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div x-show="open" class="pl-4 pt-2 space-y-2">
+                        <a href="{{ route('desa.profil', $desa->uri) }}" class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Profil Desa</a>
+                        <a href="{{ route('desa.layanan-publik', $desa->uri) }}" class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Layanan Publik</a>
+                        <a href="{{ route('desa.ppid', $desa->uri) }}" class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">PPID</a>
+                        <a href="{{ route('desa.berita', $desa->uri) }}" class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Berita</a>
+                        <a href="{{ route('desa.metadata', $desa->uri) }}" class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium transition-colors">Metadata</a>
                     </div>
                 </div>
+
+                <a href="{{ route('desa.galeri', $desa->uri) }}"
+                    class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-base font-medium transition-colors">Galeri</a>
+                <a href="{{ route('desa.pengaduan', $desa->uri) }}"
+                    class="block text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-base font-medium transition-colors">Pengaduan</a>
             </div>
+        </div>
             class="hover:bg-primary-700 px-3 py-2 rounded-md text-white">Publikasi</a>
             <a href="{{ route('desa.data-sektoral', $desa->uri) }}"
                 class="hover:bg-primary-700 px-3 py-2 rounded-md text-white">Data Sektoral</a>
