@@ -3,24 +3,24 @@
 @section('title', 'PPID - ' . $desa->nama)
 
 @section('content')
-    <div class="bg-white dark:bg-gray-900 py-8">
+    <div class="bg-background py-8">
         <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <h1 class="font-bold text-gray-900 dark:text-white text-2xl">Pejabat Pengelola Informasi dan Dokumentasi
+                    <h1 class="font-bold text-foreground text-2xl">Pejabat Pengelola Informasi dan Dokumentasi
                         (PPID)</h1>
-                    <p class="text-gray-500 dark:text-gray-400">{{ $desa->nama }}</p>
+                    <p class="text-muted-foreground">{{ $desa->nama }}</p>
                 </div>
 
                 <div class="flex space-x-2">
-                    <button id="grid-view" class="bg-blue-600 hover:bg-blue-700 p-2 rounded text-white">
+                    <button id="grid-view" class="bg-primary hover:bg-primary/90 p-2 rounded text-primary-foreground">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                             <path
                                 d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                         </svg>
                     </button>
                     <button id="list-view"
-                        class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 p-2 rounded text-gray-700 dark:text-white">
+                        class="bg-muted hover:bg-muted/80 p-2 rounded text-muted-foreground">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -30,21 +30,21 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 shadow-md mb-6 p-6 rounded-lg">
+            <div class="bg-card border border-border shadow-sm mb-6 p-6 rounded-lg">
                 <form action="{{ route('desa.ppid', $desa->uri) }}" method="GET" class="flex md:flex-row flex-col gap-4">
                     <div class="flex-1">
-                        <label for="search" class="block mb-1 font-medium text-gray-700 dark:text-gray-300 text-sm">Cari
+                        <label for="search" class="block mb-1 font-medium text-foreground text-sm">Cari
                             Dokumen</label>
                         <input type="text" id="search" name="search" value="{{ request('search') }}"
                             placeholder="Cari judul atau deskripsi"
-                            class="dark:bg-gray-800 focus:ring-opacity-50 shadow-sm border-gray-300 dark:border-gray-700 focus:border-blue-500 rounded-md focus:ring focus:ring-blue-500 w-full dark:text-white">
+                            class="bg-background border border-input px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 w-full text-foreground placeholder:text-muted-foreground">
                     </div>
 
                     <div class="w-full md:w-1/4">
                         <label for="kategori"
-                            class="block mb-1 font-medium text-gray-700 dark:text-gray-300 text-sm">Kategori</label>
+                            class="block mb-1 font-medium text-foreground text-sm">Kategori</label>
                         <select id="kategori" name="kategori"
-                            class="dark:bg-gray-800 focus:ring-opacity-50 shadow-sm border-gray-300 dark:border-gray-700 focus:border-blue-500 rounded-md focus:ring focus:ring-blue-500 w-full dark:text-white">
+                            class="bg-background border border-input px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 w-full text-foreground">
                             <option value="">Semua Kategori</option>
                             <option value="informasi_berkala"
                                 {{ request('kategori') == 'informasi_berkala' ? 'selected' : '' }}>Informasi Berkala
@@ -65,7 +65,7 @@
 
                     <div class="self-end w-full md:w-1/6">
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded w-full font-semibold text-white">
+                            class="bg-primary hover:bg-primary/90 px-4 py-2 rounded w-full font-semibold text-primary-foreground">
                             Cari
                         </button>
                     </div>
@@ -75,38 +75,38 @@
             <!-- Grid View (default) -->
             <div id="grid-container" class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 @forelse($ppid as $dokumen)
-                    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                    <div class="bg-card border border-border shadow-sm rounded-lg overflow-hidden">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-3">
                                 @php
                                     $badgeClasses = [
                                         'informasi_berkala' =>
-                                            'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+                                            'bg-blue-100 text-blue-800',
                                         'informasi_serta_merta' =>
-                                            'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+                                            'bg-green-100 text-green-800',
                                         'informasi_setiap_saat' =>
-                                            'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
+                                            'bg-yellow-100 text-yellow-800',
                                         'informasi_dikecualikan' =>
-                                            'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200',
+                                            'bg-red-100 text-red-800',
                                     ];
                                     $badgeClass =
                                         $badgeClasses[$dokumen->kategori] ??
-                                        'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200';
+                                        'bg-muted text-muted-foreground';
                                 @endphp
                                 <span class="px-3 py-1 rounded-full font-semibold text-xs {{ $badgeClass }}">
                                     {{ str_replace('_', ' ', ucwords($dokumen->kategori, '_')) }}
                                 </span>
                                 <span
-                                    class="text-gray-500 dark:text-gray-400 text-sm">{{ $dokumen->published_at->format('d M Y') }}</span>
+                                    class="text-muted-foreground text-sm">{{ $dokumen->published_at->format('d M Y') }}</span>
                             </div>
 
-                            <h2 class="mb-2 font-semibold text-gray-900 dark:text-white text-xl">{{ $dokumen->judul }}</h2>
+                            <h2 class="mb-2 font-semibold text-card-foreground text-xl">{{ $dokumen->judul }}</h2>
 
-                            <p class="mb-4 text-gray-600 dark:text-gray-300 line-clamp-3">{{ $dokumen->deskripsi }}</p>
+                            <p class="mb-4 text-muted-foreground line-clamp-3">{{ $dokumen->deskripsi }}</p>
 
                             <div
-                                class="flex justify-between items-center mt-4 pt-4 border-gray-200 dark:border-gray-700 border-t">
-                                <span class="flex items-center text-gray-500 dark:text-gray-400 text-sm">
+                                class="flex justify-between items-center mt-4 pt-4 border-border border-t">
+                                <span class="flex items-center text-muted-foreground text-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 w-4 h-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -115,7 +115,7 @@
                                     {{ $dokumen->download_count }} unduhan
                                 </span>
                                 <a href="{{ route('desa.ppid.download', ['uri' => $desa->uri, 'id' => $dokumen->id]) }}"
-                                    class="inline-flex items-center bg-blue-600 hover:bg-blue-700 px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium text-white text-sm leading-4">
+                                    class="inline-flex items-center bg-primary hover:bg-primary/90 px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 font-medium text-primary-foreground text-sm leading-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 w-4 h-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -127,8 +127,8 @@
                         </div>
                     </div>
                 @empty
-                    <div class="col-span-full bg-white dark:bg-gray-800 shadow-md p-6 rounded-lg">
-                        <p class="text-gray-500 dark:text-gray-400">Belum ada dokumen PPID yang tersedia.</p>
+                    <div class="col-span-full bg-card border border-border shadow-sm p-6 rounded-lg">
+                        <p class="text-muted-foreground">Belum ada dokumen PPID yang tersedia.</p>
                     </div>
                 @endforelse
             </div>
@@ -136,7 +136,7 @@
             <!-- List View (hidden by default) -->
             <div id="list-container" class="hidden space-y-4">
                 @forelse($ppid as $dokumen)
-                    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                    <div class="bg-card border border-border shadow-sm rounded-lg overflow-hidden">
                         <div class="p-6">
                             <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4">
                                 <div class="flex-1">
@@ -144,33 +144,33 @@
                                         @php
                                             $badgeClasses = [
                                                 'informasi_berkala' =>
-                                                    'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+                                                    'bg-blue-100 text-blue-800',
                                                 'informasi_serta_merta' =>
-                                                    'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+                                                    'bg-green-100 text-green-800',
                                                 'informasi_setiap_saat' =>
-                                                    'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
+                                                    'bg-yellow-100 text-yellow-800',
                                                 'informasi_dikecualikan' =>
-                                                    'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200',
+                                                    'bg-red-100 text-red-800',
                                             ];
                                             $badgeClass =
                                                 $badgeClasses[$dokumen->kategori] ??
-                                                'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200';
+                                                'bg-muted text-muted-foreground';
                                         @endphp
                                         <span class="px-3 py-1 rounded-full font-semibold text-xs {{ $badgeClass }}">
                                             {{ str_replace('_', ' ', ucwords($dokumen->kategori, '_')) }}
                                         </span>
                                         <span
-                                            class="text-gray-500 dark:text-gray-400 text-sm">{{ $dokumen->published_at->format('d M Y') }}</span>
+                                            class="text-muted-foreground text-sm">{{ $dokumen->published_at->format('d M Y') }}</span>
                                     </div>
 
-                                    <h2 class="mb-2 font-semibold text-gray-900 dark:text-white text-xl">
+                                    <h2 class="mb-2 font-semibold text-card-foreground text-xl">
                                         {{ $dokumen->judul }}</h2>
 
-                                    <p class="text-gray-600 dark:text-gray-300">{{ $dokumen->deskripsi }}</p>
+                                    <p class="text-muted-foreground">{{ $dokumen->deskripsi }}</p>
                                 </div>
 
                                 <div class="flex items-center gap-4">
-                                    <span class="flex items-center text-gray-500 dark:text-gray-400 text-sm">
+                                    <span class="flex items-center text-muted-foreground text-sm">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 w-4 h-4" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -179,7 +179,7 @@
                                         {{ $dokumen->download_count }} unduhan
                                     </span>
                                     <a href="{{ route('desa.ppid.download', ['uri' => $desa->uri, 'id' => $dokumen->id]) }}"
-                                        class="inline-flex items-center bg-blue-600 hover:bg-blue-700 px-4 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium text-white text-sm">
+                                        class="inline-flex items-center bg-primary hover:bg-primary/90 px-4 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 font-medium text-primary-foreground text-sm">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 w-4 h-4" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -192,8 +192,8 @@
                         </div>
                     </div>
                 @empty
-                    <div class="bg-white dark:bg-gray-800 shadow-md p-6 rounded-lg">
-                        <p class="text-gray-500 dark:text-gray-400">Belum ada dokumen PPID yang tersedia.</p>
+                    <div class="bg-card border border-border shadow-sm p-6 rounded-lg">
+                        <p class="text-muted-foreground">Belum ada dokumen PPID yang tersedia.</p>
                     </div>
                 @endforelse
             </div>
@@ -217,27 +217,19 @@
                     if (view === 'grid') {
                         gridContainer.classList.remove('hidden');
                         listContainer.classList.add('hidden');
-                        gridView.classList.replace('bg-gray-200', 'bg-blue-600');
-                        gridView.classList.replace('text-gray-700', 'text-white');
-                        listView.classList.replace('bg-blue-600', 'bg-gray-200');
-                        listView.classList.replace('text-white', 'text-gray-700');
-
-                        // For dark mode
-                        gridView.classList.replace('dark:bg-gray-700', 'dark:bg-blue-600');
-                        listView.classList.replace('dark:bg-blue-600', 'dark:bg-gray-700');
+                        gridView.classList.remove('bg-muted', 'hover:bg-muted/80', 'text-muted-foreground');
+                        gridView.classList.add('bg-primary', 'hover:bg-primary/90', 'text-primary-foreground');
+                        listView.classList.remove('bg-primary', 'hover:bg-primary/90', 'text-primary-foreground');
+                        listView.classList.add('bg-muted', 'hover:bg-muted/80', 'text-muted-foreground');
 
                         localStorage.setItem('ppidViewPreference', 'grid');
                     } else {
                         gridContainer.classList.add('hidden');
                         listContainer.classList.remove('hidden');
-                        gridView.classList.replace('bg-blue-600', 'bg-gray-200');
-                        gridView.classList.replace('text-white', 'text-gray-700');
-                        listView.classList.replace('bg-gray-200', 'bg-blue-600');
-                        listView.classList.replace('text-gray-700', 'text-white');
-
-                        // For dark mode
-                        gridView.classList.replace('dark:bg-blue-600', 'dark:bg-gray-700');
-                        listView.classList.replace('dark:bg-gray-700', 'dark:bg-blue-600');
+                        listView.classList.remove('bg-muted', 'hover:bg-muted/80', 'text-muted-foreground');
+                        listView.classList.add('bg-primary', 'hover:bg-primary/90', 'text-primary-foreground');
+                        gridView.classList.remove('bg-primary', 'hover:bg-primary/90', 'text-primary-foreground');
+                        gridView.classList.add('bg-muted', 'hover:bg-muted/80', 'text-muted-foreground');
 
                         localStorage.setItem('ppidViewPreference', 'list');
                     }

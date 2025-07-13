@@ -4,12 +4,12 @@
 
 @section('content')
     <!-- Banner Section -->
-    <section class="bg-gray-200 dark:bg-gray-800 mx-auto mb-12 p-8 px-4 rounded-lg container">
+    <section class="bg-card border border-border mx-auto mb-12 p-8 px-4 rounded-lg container shadow-sm">
         <div class="mx-auto max-w-4xl text-center">
-            <h2 class="mb-4 font-bold text-gray-900 dark:text-white text-4xl">
+            <h2 class="mb-4 font-bold text-card-foreground text-4xl">
                 Selamat Datang di Situs Resmi {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
             </h2>
-            <p class="text-gray-700 dark:text-gray-300 text-lg">
+            <p class="text-muted-foreground text-lg">
                 {{ $desa->deskripsi ?? 'Website resmi yang menyediakan informasi terkait pemerintahan desa, kegiatan, layanan publik, dan data statistik untuk masyarakat.' }}
             </p>
         </div>
@@ -18,38 +18,38 @@
     <!-- Latest News Section -->
     <section class="mx-auto mb-12 px-4 container">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="font-bold text-gray-900 dark:text-white text-2xl">Berita Terbaru</h3>
+            <h3 class="font-bold text-foreground text-2xl">Berita Terbaru</h3>
             <a href="{{ route('desa.berita', $desa->uri) }}"
-                class="text-primary-600 dark:text-primary-400 hover:underline">Lihat Semua</a>
+                class="text-primary hover:text-primary/80 transition-colors">Lihat Semua</a>
         </div>
 
         <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @forelse($beritaTerbaru as $berita)
-                <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+                <div class="bg-card border border-border shadow-sm rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                     @if ($berita->getFirstMediaUrl('thumbnail'))
-                        <div class="bg-gray-300 dark:bg-gray-700 h-48">
+                        <div class="bg-muted h-48">
                             <img src="{{ $berita->getFirstMediaUrl('thumbnail') }}" alt="{{ $berita->judul }}"
                                 class="w-full h-full object-cover">
                         </div>
                     @else
-                        <div class="flex justify-center items-center bg-gray-300 dark:bg-gray-700 h-48">
-                            <span class="text-gray-500 dark:text-gray-400">Tidak ada gambar</span>
+                        <div class="flex justify-center items-center bg-muted h-48">
+                            <span class="text-muted-foreground">Tidak ada gambar</span>
                         </div>
                     @endif
                     <div class="p-6">
-                        <h4 class="mb-2 font-semibold text-gray-900 dark:text-white text-xl">{{ $berita->judul }}</h4>
-                        <div class="flex items-center mb-4 text-gray-500 dark:text-gray-400 text-sm">
+                        <h4 class="mb-2 font-semibold text-card-foreground text-xl">{{ $berita->judul }}</h4>
+                        <div class="flex items-center mb-4 text-muted-foreground text-sm">
                             <span>{{ $berita->published_at->format('d M Y') }}</span>
                             <span class="mx-2">•</span>
                             <span>{{ $berita->user->name }}</span>
                         </div>
                         <a href="{{ route('desa.berita.detail', [$desa->uri, $berita->slug]) }}"
-                            class="text-primary-600 dark:text-primary-400 hover:underline">Baca Selengkapnya</a>
+                            class="text-primary hover:text-primary/80 transition-colors">Baca Selengkapnya</a>
                     </div>
                 </div>
             @empty
                 <div class="col-span-3 py-12 text-center">
-                    <p class="text-gray-500 dark:text-gray-400">Belum ada berita yang dipublikasikan.</p>
+                    <p class="text-muted-foreground">Belum ada berita yang dipublikasikan.</p>
                 </div>
             @endforelse
         </div>
@@ -57,70 +57,70 @@
 
     <!-- Map Section -->
     <section class="mb-12">
-        <h3 class="mb-6 font-bold text-gray-900 dark:text-white text-2xl">Lokasi Desa</h3>
-        <div class="bg-gray-300 dark:bg-gray-700 rounded-lg h-96">
+        <h3 class="mb-6 font-bold text-foreground text-2xl">Lokasi Desa</h3>
+        <div class="bg-muted border border-border rounded-lg h-96">
             <!-- Placeholder for map iframe -->
             <div class="flex justify-center items-center w-full h-full">
-                <p class="text-gray-600 dark:text-gray-400">Peta akan ditampilkan di sini</p>
+                <p class="text-muted-foreground">Peta akan ditampilkan di sini</p>
             </div>
         </div>
     </section>
 
     <!-- Organization Structure -->
     <section class="mb-12">
-        <h3 class="mb-6 font-bold text-gray-900 dark:text-white text-2xl">Struktur Organisasi</h3>
-        <div class="bg-white dark:bg-gray-800 shadow p-6 rounded-lg">
+        <h3 class="mb-6 font-bold text-foreground text-2xl">Struktur Organisasi</h3>
+        <div class="bg-card border border-border shadow-sm p-6 rounded-lg">
             <!-- Placeholder for organization structure -->
             <div class="flex justify-center items-center h-64">
-                <p class="text-gray-600 dark:text-gray-400">Struktur organisasi akan ditampilkan di sini</p>
+                <p class="text-muted-foreground">Struktur organisasi akan ditampilkan di sini</p>
             </div>
         </div>
     </section>
 
     <!-- Population Stats -->
     <section class="mb-12">
-        <h3 class="mb-6 font-bold text-gray-900 dark:text-white text-2xl">Jumlah Penduduk</h3>
+        <h3 class="mb-6 font-bold text-foreground text-2xl">Jumlah Penduduk</h3>
         <div class="gap-6 grid grid-cols-1 md:grid-cols-3">
-            <div class="bg-white dark:bg-gray-800 shadow p-6 rounded-lg text-center">
-                <h4 class="mb-2 text-gray-600 dark:text-gray-400 text-lg">Total Penduduk</h4>
-                <p class="font-bold text-gray-900 dark:text-white text-3xl">5.328</p>
+            <div class="bg-card border border-border shadow-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+                <h4 class="mb-2 text-muted-foreground text-lg">Total Penduduk</h4>
+                <p class="font-bold text-card-foreground text-3xl">5.328</p>
             </div>
-            <div class="bg-white dark:bg-gray-800 shadow p-6 rounded-lg text-center">
-                <h4 class="mb-2 text-gray-600 dark:text-gray-400 text-lg">Penduduk Laki-laki</h4>
-                <p class="font-bold text-gray-900 dark:text-white text-3xl">2.756</p>
+            <div class="bg-card border border-border shadow-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+                <h4 class="mb-2 text-muted-foreground text-lg">Penduduk Laki-laki</h4>
+                <p class="font-bold text-card-foreground text-3xl">2.756</p>
             </div>
-            <div class="bg-white dark:bg-gray-800 shadow p-6 rounded-lg text-center">
-                <h4 class="mb-2 text-gray-600 dark:text-gray-400 text-lg">Penduduk Perempuan</h4>
-                <p class="font-bold text-gray-900 dark:text-white text-3xl">2.572</p>
+            <div class="bg-card border border-border shadow-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+                <h4 class="mb-2 text-muted-foreground text-lg">Penduduk Perempuan</h4>
+                <p class="font-bold text-card-foreground text-3xl">2.572</p>
             </div>
         </div>
     </section>
 
     <!-- APBDesa -->
     <section class="mb-12">
-        <h3 class="mb-6 font-bold text-gray-900 dark:text-white text-2xl">APBDesa 2025</h3>
+        <h3 class="mb-6 font-bold text-foreground text-2xl">APBDesa 2025</h3>
         <div class="gap-6 grid grid-cols-1 md:grid-cols-2">
-            <div class="bg-white dark:bg-gray-800 shadow p-6 rounded-lg">
-                <h4 class="mb-4 text-gray-900 dark:text-white text-lg">Pendapatan Desa</h4>
+            <div class="bg-card border border-border shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
+                <h4 class="mb-4 text-card-foreground text-lg font-semibold">Pendapatan Desa</h4>
                 <div class="mb-2">
                     <div class="flex justify-between mb-1">
-                        <span class="text-gray-600 dark:text-gray-400">Rp 850.000.000</span>
-                        <span class="text-gray-600 dark:text-gray-400">85%</span>
+                        <span class="text-muted-foreground">Rp 850.000.000</span>
+                        <span class="text-muted-foreground">85%</span>
                     </div>
-                    <div class="bg-gray-200 dark:bg-gray-700 rounded-full w-full h-2.5">
-                        <div class="bg-primary-600 rounded-full h-2.5" style="width: 85%"></div>
+                    <div class="bg-secondary rounded-full w-full h-2.5">
+                        <div class="bg-primary rounded-full h-2.5 transition-all duration-300" style="width: 85%"></div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-gray-800 shadow p-6 rounded-lg">
-                <h4 class="mb-4 text-gray-900 dark:text-white text-lg">Belanja Desa</h4>
+            <div class="bg-card border border-border shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
+                <h4 class="mb-4 text-card-foreground text-lg font-semibold">Belanja Desa</h4>
                 <div class="mb-2">
                     <div class="flex justify-between mb-1">
-                        <span class="text-gray-600 dark:text-gray-400">Rp 650.000.000</span>
-                        <span class="text-gray-600 dark:text-gray-400">65%</span>
+                        <span class="text-muted-foreground">Rp 650.000.000</span>
+                        <span class="text-muted-foreground">65%</span>
                     </div>
-                    <div class="bg-gray-200 dark:bg-gray-700 rounded-full w-full h-2.5">
-                        <div class="bg-primary-600 rounded-full h-2.5" style="width: 65%"></div>
+                    <div class="bg-secondary rounded-full w-full h-2.5">
+                        <div class="bg-primary rounded-full h-2.5 transition-all duration-300" style="width: 65%"></div>
                     </div>
                 </div>
             </div>
@@ -130,16 +130,16 @@
     <!-- Gallery Highlights -->
     <section class="mb-12">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="font-bold text-gray-900 dark:text-white text-2xl">Highlight Galeri</h3>
+            <h3 class="font-bold text-foreground text-2xl">Highlight Galeri</h3>
             <a href="{{ route('desa.galeri', $desa->uri) }}"
-                class="text-primary-600 dark:text-primary-400 hover:underline">Lihat Semua</a>
+                class="text-primary hover:text-primary/80 transition-colors">Lihat Semua</a>
         </div>
 
         <div class="gap-4 grid grid-cols-2 md:grid-cols-4">
-            <div class="bg-gray-300 dark:bg-gray-700 rounded-lg h-40"></div>
-            <div class="bg-gray-300 dark:bg-gray-700 rounded-lg h-40"></div>
-            <div class="bg-gray-300 dark:bg-gray-700 rounded-lg h-40"></div>
-            <div class="bg-gray-300 dark:bg-gray-700 rounded-lg h-40"></div>
+            <div class="bg-muted border border-border rounded-lg h-40 hover:shadow-md transition-shadow"></div>
+            <div class="bg-muted border border-border rounded-lg h-40 hover:shadow-md transition-shadow"></div>
+            <div class="bg-muted border border-border rounded-lg h-40 hover:shadow-md transition-shadow"></div>
+            <div class="bg-muted border border-border rounded-lg h-40 hover:shadow-md transition-shadow"></div>
         </div>
     </section>
     </main>
@@ -263,7 +263,7 @@
 
     <!-- Fixed Buttons -->
     <div class="right-6 bottom-6 fixed">
-        <button class="bg-primary-600 hover:bg-primary-700 shadow-lg p-3 rounded-full text-white">
+        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-12 w-12 shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -275,7 +275,7 @@
 
     <div class="bottom-6 left-6 fixed">
         <a href="{{ route('desa.pengaduan', $desa->uri) }}"
-            class="flex justify-center items-center bg-red-600 hover:bg-red-700 shadow-lg p-3 rounded-full text-white">
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-12 w-12 shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
