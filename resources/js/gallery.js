@@ -55,45 +55,62 @@ function setModalInfo(data) {
     document.getElementById('modalTitle').textContent = data.title || 'Tanpa Judul';
     document.getElementById('modalDescription').textContent = data.description || 'Tidak ada deskripsi tersedia.';
 
-    const typeCategoryEl = document.getElementById('modalTypeCategory');
-    if (data.type && data.category) {
-        typeCategoryEl.textContent = `${data.type} / ${data.category}`;
-        typeCategoryEl.parentElement.style.display = 'flex';
+    // Set type and category
+    const typeEl = document.getElementById('modalType');
+    const categoryEl = document.getElementById('modalCategory');
+    
+    if (data.type) {
+        typeEl.textContent = data.type;
+        typeEl.style.display = 'inline-flex';
     } else {
-        typeCategoryEl.parentElement.style.display = 'none';
+        typeEl.style.display = 'none';
+    }
+    
+    if (data.category) {
+        categoryEl.textContent = data.category;
+        categoryEl.style.display = 'inline-flex';
+    } else {
+        categoryEl.style.display = 'none';
     }
 
-    const dateEl = document.getElementById('modalDate');
+    // Set date
+    const dateTextEl = document.getElementById('modalDateText');
+    const dateContainerEl = document.getElementById('modalDate');
     if (data.date) {
-        dateEl.textContent = data.date;
-        dateEl.parentElement.style.display = 'flex';
+        dateTextEl.textContent = data.date;
+        dateContainerEl.style.display = 'flex';
     } else {
-        dateEl.parentElement.style.display = 'none';
+        dateContainerEl.style.display = 'none';
     }
 
-    const authorEl = document.getElementById('modalAuthor');
+    // Set author
+    const authorTextEl = document.getElementById('modalAuthorText');
+    const authorContainerEl = document.getElementById('modalAuthor');
     if (data.author) {
-        authorEl.textContent = data.author;
-        authorEl.parentElement.style.display = 'flex';
+        authorTextEl.textContent = data.author;
+        authorContainerEl.style.display = 'flex';
     } else {
-        authorEl.parentElement.style.display = 'none';
+        authorContainerEl.style.display = 'none';
     }
 
-    const viewsEl = document.getElementById('modalViews');
+    // Set view count
+    const viewsTextEl = document.getElementById('modalViewsText');
+    const viewsContainerEl = document.getElementById('modalViews');
     if (data.viewCount !== undefined && data.viewCount !== null) {
-        viewsEl.textContent = `${data.viewCount} kali dilihat`;
-        viewsEl.parentElement.style.display = 'flex';
+        viewsTextEl.textContent = `${data.viewCount} kali`;
+        viewsContainerEl.style.display = 'flex';
     } else {
-        viewsEl.parentElement.style.display = 'none';
+        viewsContainerEl.style.display = 'none';
     }
 
-    const sourceContainer = document.getElementById('source-container');
-    const sourceLink = document.getElementById('modalSourceLink');
+    // Set source link
+    const sourceContainerEl = document.getElementById('modalSource');
+    const sourceLinkEl = document.getElementById('modalSourceLink');
     if (data.sourceUrl) {
-        sourceLink.href = data.sourceUrl;
-        sourceContainer.style.display = 'flex';
+        sourceLinkEl.href = data.sourceUrl;
+        sourceContainerEl.style.display = 'flex';
     } else {
-        sourceContainer.style.display = 'none';
+        sourceContainerEl.style.display = 'none';
     }
 }
 

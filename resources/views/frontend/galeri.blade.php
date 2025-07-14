@@ -296,42 +296,59 @@
     </div>
 
     <style>
-        /* Masonry Grid CSS */
+        /* Horizontal Masonry Grid CSS */
         .masonry-grid {
-            column-count: 1;
-            column-gap: 1.5rem;
-            column-fill: balance;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .masonry-item {
+            flex: 1 1 100%;
+            min-width: 0;
         }
 
         @media (min-width: 640px) {
-            .masonry-grid {
-                column-count: 2;
+            .masonry-item {
+                flex: 1 1 calc(50% - 0.75rem);
             }
         }
 
         @media (min-width: 768px) {
-            .masonry-grid {
-                column-count: 3;
+            .masonry-item {
+                flex: 1 1 calc(33.333% - 1rem);
             }
         }
 
         @media (min-width: 1024px) {
-            .masonry-grid {
-                column-count: 4;
+            .masonry-item {
+                flex: 1 1 calc(25% - 1.125rem);
             }
         }
 
         @media (min-width: 1280px) {
-            .masonry-grid {
-                column-count: 5;
+            .masonry-item {
+                flex: 1 1 calc(20% - 1.2rem);
             }
         }
 
-        .masonry-item {
-            break-inside: avoid;
-            margin-bottom: 1.5rem;
-            display: inline-block;
+        /* Ensure images maintain aspect ratio */
+        .masonry-item img {
             width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* Modal styles */
+        #galleryModal {
+            backdrop-filter: blur(4px);
+        }
+
+        #modalImage {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
     </style>
 
