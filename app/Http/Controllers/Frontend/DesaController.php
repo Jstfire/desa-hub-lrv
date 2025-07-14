@@ -47,7 +47,7 @@ class DesaController extends Controller
             ->limit($beritaLimit)
             ->get();
 
-        // Get berita utama
+        // Get berita utama (highlight)
         $beritaUtama = Berita::where('desa_id', $desa->id)
             ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
             ->where('is_highlight', 1) // Use 1 instead of true for PostgreSQL compatibility
@@ -55,11 +55,11 @@ class DesaController extends Controller
             ->limit(3)
             ->get();
 
-        // Get layanan publik
-        $layananPublik = LayananPublik::where('desa_id', $desa->id)
-            ->where('is_active', 1) // Use 1 instead of true for PostgreSQL compatibility
-            ->limit(6)
-            ->get();
+        // Get struktur organisasi from ProfilDesa
+        $strukturOrganisasi = ProfilDesa::where('desa_id', $desa->id)
+            ->where('jenis', 'struktur')
+            ->where('is_published', 1)
+            ->first();
 
         // Get galeri based on beranda settings
         $galeriLimit = $beranda && $beranda->show_galeri ? $beranda->jumlah_galeri : 8;
@@ -68,7 +68,7 @@ class DesaController extends Controller
             ->limit($galeriLimit)
             ->get();
 
-        return view('frontend.beranda', compact('desa', 'beranda', 'beritaTerbaru', 'beritaUtama', 'layananPublik', 'galeri'));
+        return view('frontend.beranda', compact('desa', 'beranda', 'beritaTerbaru', 'beritaUtama', 'strukturOrganisasi', 'galeri'));
     }
 
     public function berita($uri)

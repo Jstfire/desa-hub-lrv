@@ -25,22 +25,26 @@ class EditGaleri extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
+        $media = $data['media'] ?? [];
+        unset($data['media']);
+
         $record->update($data);
 
-        // Process media uploads after update
-        if (request()->hasFile('gambar')) {
-            // For multiple images, we don't clear the collection first
-            foreach (request()->file('gambar') as $file) {
-                $record->addMedia($file)
-                    ->toMediaCollection('gambar');
-            }
-        }
+        if (!empty($media)) {
+            $collectionName = $data['jenis'] === 'foto' ? 'foto' : 'video';
 
-        if (request()->hasFile('video')) {
-            // For video, we clear first and then add the new one
-            $record->clearMediaCollection('video');
-            $record->addMediaFromRequest('video')
-                ->toMediaCollection('video');
+            // If it's a single file upload (video), clear the collection first.
+            if ($data['jenis'] === 'video') {
+                $record->clearMediaCollection($collectionName);
+            }
+
+            foreach ($media as $file) {
+                // The file path is relative to the storage/app/public directory
+                if (is_string($file) && str_starts_with($file, 'galeri/media')) {
+                     $record->addMedia(storage_path('app/public/' . $file))
+                        ->toMediaCollection($collectionName);
+                }
+            }
         }
 
         return $record;

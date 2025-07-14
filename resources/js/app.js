@@ -5,20 +5,7 @@ import './tinymce-setup';
 import './alpine';
 const Alpine = window.Alpine;
 
-// Frontend Alpine.js initialization
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if Alpine has already been initialized
-    if (window.alpineInitialized) {
-        console.debug('Alpine.js already initialized, skipping initialization in app.js');
-        return;
-    }
 
-    // For frontend, we can initialize Alpine directly
-    // We'll set the initialization flag to prevent duplicate initialization
-    window.alpineInitialized = true;
-    console.debug('Starting Alpine.js from app.js');
-    Alpine.start();
-});
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 

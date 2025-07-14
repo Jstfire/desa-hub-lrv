@@ -38,19 +38,16 @@ class CreateGaleri extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        $media = $data['media'];
+        unset($data['media']);
+
         $record = static::getModel()::create($data);
 
-        // Process media uploads after creation
-        if (request()->hasFile('gambar')) {
-            foreach (request()->file('gambar') as $file) {
-                $record->addMedia($file)
-                    ->toMediaCollection('gambar');
+        if (!empty($media)) {
+            foreach ($media as $file) {
+                $record->addMedia(storage_path('app/public/' . $file))
+                    ->toMediaCollection($data['jenis'] === 'foto' ? 'foto' : 'video');
             }
-        }
-
-        if (request()->hasFile('video')) {
-            $record->addMediaFromRequest('video')
-                ->toMediaCollection('video');
         }
 
         return $record;

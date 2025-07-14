@@ -5,7 +5,7 @@
     $desa->nama)
 
 @section('content')
-    <!-- Hero Section -->
+    <!-- Section 1: Hero/Welcome Section -->
     <section class="relative bg-primary h-screen overflow-hidden text-white">
         <div class="absolute inset-0 bg-black opacity-20"></div>
         @if ($beranda && $beranda->banner_image)
@@ -13,16 +13,19 @@
                 <img src="{{ asset('storage/' . $beranda->banner_image) }}" alt="Banner" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black opacity-60"></div>
             </div>
+        @else
+            <!-- Default gradient background if no banner -->
+            <div class="absolute inset-0 bg-gradient-to-br from-primary to-secondary"></div>
         @endif
         <div class="relative flex justify-center items-center mx-auto px-4 py-24 h-full text-center container">
             <div>
                 <h1 class="mb-6 font-bold text-4xl md:text-6xl">
-                    {!! $beranda
+                    {!! $beranda && $beranda->judul_welcome
                         ? $beranda->judul_welcome
-                        : 'Selamat Datang di<br>' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama !!}
+                        : 'Selamat Datang di<br>Situs Resmi ' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama !!}
                 </h1>
                 <div class="mx-auto mb-8 max-w-3xl text-xl md:text-2xl">
-                    {!! $beranda
+                    {!! $beranda && $beranda->deskripsi_welcome
                         ? $beranda->deskripsi_welcome
                         : 'Situs resmi ' .
                             ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') .
@@ -44,59 +47,69 @@
         </div>
     </section>
 
-    <!-- Berita Utama -->
-    @if ($beritaUtama->count() > 0 && (!$beranda || $beranda->show_berita))
+    <!-- Section 2: Berita Terbaru -->
+    @if (!$beranda || $beranda->show_berita)
         <section class="bg-white dark:bg-gray-900 py-16">
             <div class="mx-auto px-4 container">
                 <div class="mb-12 text-center">
                     <h2 class="mb-4 font-bold text-gray-800 dark:text-white text-3xl">
-                        {{ $beranda ? $beranda->judul_berita : 'Berita Utama' }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Berita terpilih dan terkini dari {{ $desa->nama }}</p>
+                        {{ $beranda ? $beranda->judul_berita : 'Berita Terbaru' }}</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Informasi terkini dan berita penting dari {{ $desa->nama }}</p>
                 </div>
 
-                <div class="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    @foreach ($beritaUtama as $berita)
-                        <article
-                            class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-shadow">
-                            @if ($berita->gambar_utama)
-                                <img src="{{ asset('storage/' . $berita->gambar_utama) }}" alt="{{ $berita->judul }}"
-                                    class="w-full h-48 object-cover">
-                            @else
-                                <div class="flex justify-center items-center bg-gray-200 dark:bg-gray-700 w-full h-48">
-                                    <i class="text-gray-400 text-4xl fas fa-image"></i>
-                                </div>
-                            @endif
-
-                            <div class="p-6">
-                                <div class="flex items-center mb-3 text-gray-500 dark:text-gray-400 text-sm">
-                                    <i class="mr-2 fas fa-calendar"></i>
-                                    <span>{{ $berita->tanggal_publikasi->format('d M Y') }}</span>
-                                    <span class="mx-2">•</span>
-                                    <i class="mr-2 fas fa-eye"></i>
-                                    <span>{{ $berita->view_count ?? 0 }} views</span>
-                                </div>
-
-                                <h3 class="mb-3 font-bold text-gray-800 dark:text-white text-xl">
-                                    <a href="{{ route('desa.berita.show', [$desa->uri, $berita->slug]) }}"
-                                        class="hover:text-primary transition-colors">
-                                        {{ $berita->judul }}
-                                    </a>
-                                </h3>
-
-                                @if ($berita->excerpt)
-                                    <p class="mb-4 text-gray-600 dark:text-gray-300">
-                                        {{ Str::limit($berita->excerpt, 120) }}
-                                    </p>
+                @if ($beritaUtama->count() > 0)
+                    <div class="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                        @foreach ($beritaUtama as $berita)
+                            <article
+                                class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-shadow">
+                                @if ($berita->gambar_utama)
+                                    <img src="{{ asset('storage/' . $berita->gambar_utama) }}" alt="{{ $berita->judul }}"
+                                        class="w-full h-48 object-cover">
+                                @else
+                                    <div class="flex justify-center items-center bg-gray-200 dark:bg-gray-700 w-full h-48">
+                                        <i class="text-gray-400 text-4xl fas fa-image"></i>
+                                    </div>
                                 @endif
 
-                                <a href="{{ route('desa.berita.show', [$desa->uri, $berita->slug]) }}"
-                                    class="font-semibold text-primary hover:underline">
-                                    Baca Selengkapnya <i class="fa-arrow-right ml-1 fas"></i>
-                                </a>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center mb-3 text-gray-500 dark:text-gray-400 text-sm">
+                                        <i class="mr-2 fas fa-calendar"></i>
+                                        <span>{{ $berita->tanggal_publikasi->format('d M Y') }}</span>
+                                        <span class="mx-2">•</span>
+                                        <i class="mr-2 fas fa-eye"></i>
+                                        <span>{{ $berita->view_count ?? 0 }} views</span>
+                                    </div>
+
+                                    <h3 class="mb-3 font-bold text-gray-800 dark:text-white text-xl">
+                                        <a href="{{ route('desa.berita.show', [$desa->uri, $berita->slug]) }}"
+                                            class="hover:text-primary transition-colors">
+                                            {{ $berita->judul }}
+                                        </a>
+                                    </h3>
+
+                                    @if ($berita->excerpt)
+                                        <p class="mb-4 text-gray-600 dark:text-gray-300">
+                                            {{ Str::limit($berita->excerpt, 120) }}
+                                        </p>
+                                    @endif
+
+                                    <a href="{{ route('desa.berita.show', [$desa->uri, $berita->slug]) }}"
+                                        class="font-semibold text-primary hover:underline">
+                                        Baca Selengkapnya <i class="fa-arrow-right ml-1 fas"></i>
+                                    </a>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="bg-white dark:bg-gray-800 shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                        <div class="mb-4">
+                            <i class="text-gray-400 text-6xl fas fa-newspaper"></i>
+                        </div>
+                        <h3 class="mb-2 font-semibold text-gray-800 dark:text-white text-lg">Belum ada berita yang tersedia</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Berita terbaru akan ditampilkan di sini ketika sudah tersedia.</p>
+                    </div>
+                @endif
 
                 <div class="mt-12 text-center">
                     <a href="{{ route('desa.berita', $desa->uri) }}"
@@ -106,279 +119,442 @@
                 </div>
             </div>
         </section>
-    @endif
-
-    <!-- Layanan Publik -->
-    @if ($layananPublik->count() > 0)
-        <section class="bg-gray-50 dark:bg-gray-800 py-16">
-            <div class="mx-auto px-4 container">
-                <div class="mb-12 text-center">
-                    <h2 class="mb-4 font-bold text-gray-800 dark:text-white text-3xl">Layanan Publik</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Akses mudah ke berbagai layanan publik</p>
-                </div>
-
-                <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    @foreach ($layananPublik as $layanan)
-                        <div class="bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl p-6 rounded-lg transition-shadow">
-                            <div class="flex items-center mb-4">
-                                <div
-                                    class="flex justify-center items-center bg-primary mr-4 rounded-lg w-12 h-12 text-white">
-                                    <i class="fas fa-clipboard-list"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-gray-800 dark:text-white text-lg">{{ $layanan->nama }}</h3>
-                                </div>
-                            </div>
-
-                            @if ($layanan->deskripsi)
-                                <p class="mb-4 text-gray-600 dark:text-gray-300">
-                                    {{ Str::limit($layanan->deskripsi, 100) }}
-                                </p>
-                            @endif
-
-                            @if ($layanan->link)
-                                <a href="{{ $layanan->link }}" target="_blank"
-                                    class="font-semibold text-primary hover:underline">
-                                    Akses Layanan <i class="ml-1 fas fa-external-link-alt"></i>
-                                </a>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="mt-12 text-center">
-                    <a href="{{ route('desa.layanan-publik', $desa->uri) }}"
-                        class="bg-secondary hover:bg-opacity-90 px-8 py-3 rounded-lg font-semibold text-white transition-colors">
-                        Lihat Semua Layanan
-                    </a>
-                </div>
-            </div>
-        </section>
-    @endif
-
-    <!-- Struktur Organisasi -->
-    @if ($beranda && $beranda->show_struktur)
+    @else
         <section class="bg-white dark:bg-gray-900 py-16">
             <div class="mx-auto px-4 container">
-                <div class="mb-12 text-center">
-                    <h2 class="mb-4 font-bold text-gray-800 dark:text-white text-3xl">{{ $beranda->judul_struktur }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Struktur organisasi pemerintahan desa</p>
-                </div>
-
-                <div class="bg-white dark:bg-gray-900 shadow-lg p-6 rounded-lg">
-                    @if ($beranda->gambar_struktur)
-                        <img src="{{ asset('storage/' . $beranda->gambar_struktur) }}" alt="Struktur Organisasi"
-                            class="mx-auto max-w-full h-auto">
-                    @else
-                        <div class="flex flex-col justify-center items-center py-16">
-                            <i class="mb-4 text-gray-400 text-6xl fas fa-sitemap"></i>
-                            <p class="text-gray-600 dark:text-gray-300">Struktur organisasi belum tersedia</p>
-                        </div>
-                    @endif
+                <div class="bg-white dark:bg-gray-800 shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                    <div class="mb-4">
+                        <i class="text-gray-400 text-6xl fas fa-newspaper"></i>
+                    </div>
+                    <h3 class="mb-2 font-semibold text-gray-800 dark:text-white text-lg">Section berita tidak diaktifkan</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Section berita belum diaktifkan atau belum ada berita yang dipublikasikan.</p>
                 </div>
             </div>
         </section>
     @endif
 
-    <!-- Statistik Penduduk -->
-    @if ($beranda && $beranda->show_penduduk)
-        <section class="bg-gray-50 dark:bg-gray-800 py-16">
+    <!-- Section 3: Lokasi Desa -->
+    @if ($beranda && $beranda->show_lokasi)
+        <section class="bg-gray-50 py-16">
             <div class="mx-auto px-4 container">
                 <div class="mb-12 text-center">
-                    <h2 class="mb-4 font-bold text-gray-800 dark:text-white text-3xl">{{ $beranda->judul_penduduk }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Data penduduk per
-                        {{ $beranda->tanggal_data_penduduk ? $beranda->tanggal_data_penduduk->format('d M Y') : now()->format('d M Y') }}
+                    <h2 class="mb-4 font-bold text-gray-800 text-3xl">
+                        {{ $beranda->judul_lokasi ?? 'Lokasi Desa' }}
+                    </h2>
+                    <p class="mx-auto max-w-2xl text-gray-600">
+                        Lokasi {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
                     </p>
                 </div>
 
-                <div class="gap-8 grid grid-cols-1 md:grid-cols-3">
-                    <div class="text-center">
-                        <div
-                            class="flex justify-center items-center bg-primary mx-auto mb-4 rounded-full w-20 h-20 text-white">
-                            <i class="text-3xl fas fa-users"></i>
+                @if ($beranda->embed_map)
+                    <div class="mx-auto max-w-6xl">
+                        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                            {!! $beranda->embed_map !!}
                         </div>
-                        <h3 class="mb-2 font-bold text-gray-800 dark:text-white text-2xl">
-                            {{ number_format($beranda->total_penduduk) }}</h3>
-                        <p class="text-gray-600 dark:text-gray-400">Total Penduduk</p>
                     </div>
-
-                    <div class="text-center">
-                        <div
-                            class="flex justify-center items-center bg-blue-500 mx-auto mb-4 rounded-full w-20 h-20 text-white">
-                            <i class="text-3xl fas fa-male"></i>
+                @else
+                    <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                        <div class="mb-4">
+                            <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
                         </div>
-                        <h3 class="mb-2 font-bold text-gray-800 dark:text-white text-2xl">
-                            {{ number_format($beranda->penduduk_laki) }}</h3>
-                        <p class="text-gray-600 dark:text-gray-400">Laki-laki</p>
+                        <h3 class="mb-2 font-semibold text-gray-800 text-lg">Peta lokasi belum tersedia</h3>
+                        <p class="text-gray-600">Peta lokasi akan ditampilkan di sini ketika sudah dikonfigurasi.</p>
                     </div>
-
-                    <div class="text-center">
-                        <div
-                            class="flex justify-center items-center bg-pink-500 mx-auto mb-4 rounded-full w-20 h-20 text-white">
-                            <i class="text-3xl fas fa-female"></i>
-                        </div>
-                        <h3 class="mb-2 font-bold text-gray-800 dark:text-white text-2xl">
-                            {{ number_format($beranda->penduduk_perempuan) }}</h3>
-                        <p class="text-gray-600 dark:text-gray-400">Perempuan</p>
+                @endif
+            </div>
+        </section>
+    @else
+        <section class="bg-gray-50 py-16">
+            <div class="mx-auto px-4 container">
+                <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                    <div class="mb-4">
+                        <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
                     </div>
+                    <h3 class="mb-2 font-semibold text-gray-800 text-lg">Peta lokasi belum tersedia</h3>
+                    <p class="text-gray-600">Section lokasi belum diaktifkan atau belum dikonfigurasi.</p>
                 </div>
             </div>
         </section>
     @endif
 
-    <!-- APBDesa -->
-    @if ($beranda && $beranda->show_apbdes)
-        <section class="bg-white dark:bg-gray-900 py-16">
+    <!-- Section 4: Highlight Struktur Organisasi -->
+    @if ($beranda && $beranda->show_struktur)
+        <section class="bg-white py-16">
             <div class="mx-auto px-4 container">
                 <div class="mb-12 text-center">
-                    <h2 class="mb-4 font-bold text-gray-800 dark:text-white text-3xl">{{ $beranda->judul_apbdes }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Anggaran Pendapatan dan Belanja Desa</p>
+                    <h2 class="mb-4 font-bold text-gray-800 text-3xl">
+                        {{ $beranda->judul_struktur ?? 'Struktur Organisasi' }}
+                    </h2>
+                    <p class="mx-auto max-w-2xl text-gray-600">
+                        Struktur organisasi {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
+                    </p>
                 </div>
 
-                <div class="gap-8 grid grid-cols-1 md:grid-cols-2">
-                    <div class="bg-white dark:bg-gray-900 shadow-lg p-8 rounded-lg">
-                        <h3 class="mb-6 font-bold text-gray-800 dark:text-white text-2xl">Pendapatan Desa</h3>
-                        <div class="mb-6">
-                            @php
-                                $pendapatanPersentase =
-                                    $beranda->target_pendapatan > 0
-                                        ? min(
-                                            100,
-                                            round(($beranda->pendapatan_desa / $beranda->target_pendapatan) * 100),
-                                        )
-                                        : 0;
-                            @endphp
-                            <div class="flex justify-between mb-2">
-                                <span class="text-gray-600 dark:text-gray-400">Total Pendapatan</span>
-                                <span
-                                    class="font-semibold text-gray-800 dark:text-white">{{ $pendapatanPersentase }}%</span>
-                            </div>
-                            <div class="bg-gray-200 dark:bg-gray-700 rounded-full w-full h-4">
-                                <div class="bg-primary rounded-full h-4" style="width: {{ $pendapatanPersentase }}%">
-                                </div>
-                            </div>
+                @if ($strukturOrganisasi && $strukturOrganisasi->gambar)
+                    <div class="mx-auto max-w-6xl">
+                        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                            <img src="{{ asset('storage/' . $strukturOrganisasi->gambar) }}" 
+                                 alt="Struktur Organisasi {{ $desa->nama }}"
+                                 class="w-full h-auto object-contain">
                         </div>
-
-                        <div class="mt-6 pt-6 border-gray-200 dark:border-gray-700 border-t">
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-gray-800 dark:text-white text-lg">Realisasi</span>
-                                <span class="font-bold text-primary text-2xl">Rp
-                                    {{ number_format($beranda->pendapatan_desa, 0, ',', '.') }}</span>
+                        @if ($strukturOrganisasi->deskripsi)
+                            <div class="mt-6 text-center">
+                                <p class="text-gray-600">{{ $strukturOrganisasi->deskripsi }}</p>
                             </div>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="font-semibold text-gray-600 dark:text-gray-400 text-base">Target</span>
-                                <span class="font-semibold text-gray-600 dark:text-gray-400 text-base">Rp
-                                    {{ number_format($beranda->target_pendapatan, 0, ',', '.') }}</span>
-                            </div>
+                        @endif
+                    </div>
+                @elseif ($beranda->gambar_struktur)
+                    <div class="mx-auto max-w-6xl">
+                        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                            <img src="{{ asset('storage/' . $beranda->gambar_struktur) }}" 
+                                 alt="Struktur Organisasi {{ $desa->nama }}"
+                                 class="w-full h-auto object-contain">
                         </div>
                     </div>
-
-                    <div class="bg-white dark:bg-gray-900 shadow-lg p-8 rounded-lg">
-                        <h3 class="mb-6 font-bold text-gray-800 dark:text-white text-2xl">Belanja Desa</h3>
-                        <div class="mb-6">
-                            @php
-                                $belanjaPersentase =
-                                    $beranda->target_belanja > 0
-                                        ? min(100, round(($beranda->belanja_desa / $beranda->target_belanja) * 100))
-                                        : 0;
-                            @endphp
-                            <div class="flex justify-between mb-2">
-                                <span class="text-gray-600 dark:text-gray-400">Total Belanja</span>
-                                <span class="font-semibold text-gray-800 dark:text-white">{{ $belanjaPersentase }}%</span>
-                            </div>
-                            <div class="bg-gray-200 dark:bg-gray-700 rounded-full w-full h-4">
-                                <div class="bg-secondary rounded-full h-4" style="width: {{ $belanjaPersentase }}%">
-                                </div>
-                            </div>
+                @else
+                    <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                        <div class="mb-4">
+                            <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
                         </div>
-
-                        <div class="mt-6 pt-6 border-gray-200 dark:border-gray-700 border-t">
-                            <div class="flex justify-between items-center">
-                                <span class="font-semibold text-gray-800 dark:text-white text-lg">Realisasi</span>
-                                <span class="font-bold text-secondary text-2xl">Rp
-                                    {{ number_format($beranda->belanja_desa, 0, ',', '.') }}</span>
-                            </div>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="font-semibold text-gray-600 dark:text-gray-400 text-base">Target</span>
-                                <span class="font-semibold text-gray-600 dark:text-gray-400 text-base">Rp
-                                    {{ number_format($beranda->target_belanja, 0, ',', '.') }}</span>
-                            </div>
-                        </div>
+                        <h3 class="mb-2 font-semibold text-gray-800 text-lg">Struktur organisasi belum tersedia</h3>
+                        <p class="text-gray-600">Struktur organisasi akan ditampilkan di sini ketika sudah tersedia.</p>
                     </div>
-                </div>
-            </div>
-        </section>
-    @endif
-
-    <!-- Galeri -->
-    @if ($galeri->count() > 0 && $beranda && $beranda->show_galeri)
-        <section class="bg-gray-50 dark:bg-gray-800 py-16">
-            <div class="mx-auto px-4 container">
-                <div class="mb-12 text-center">
-                    <h2 class="mb-4 font-bold text-gray-800 dark:text-white text-3xl">{{ $beranda->judul_galeri }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Dokumentasi kegiatan dan keindahan desa</p>
-                </div>
-
-                <div class="gap-4 grid grid-cols-2 md:grid-cols-4">
-                    @foreach ($galeri as $item)
-                        <div class="group relative shadow-lg rounded-lg overflow-hidden">
-                            @if ($item->gambar)
-                                <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}"
-                                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300">
-                            @else
-                                <div class="flex justify-center items-center bg-gray-200 dark:bg-gray-700 w-full h-48">
-                                    <i class="text-gray-400 text-4xl fas fa-image"></i>
-                                </div>
-                            @endif
-
-                            <div
-                                class="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="text-white text-center">
-                                    <h4 class="mb-2 font-semibold">{{ $item->judul }}</h4>
-                                    @if ($item->deskripsi)
-                                        <p class="text-sm">{{ Str::limit($item->deskripsi, 50) }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                @endif
 
                 <div class="mt-12 text-center">
-                    <a href="{{ route('desa.galeri', $desa->uri) }}"
-                        class="bg-primary hover:bg-opacity-90 px-8 py-3 rounded-lg font-semibold text-white transition-colors">
-                        Lihat Semua Galeri
+                    <a href="{{ route('desa.profil', $desa->uri) }}"
+                        class="bg-primary hover:bg-primary-dark px-8 py-3 rounded-lg font-semibold text-white transition-colors">
+                        Lihat Profil Lengkap
                     </a>
                 </div>
             </div>
         </section>
-    @endif
-
-    <!-- Peta Lokasi -->
-    @if ($beranda && $beranda->show_lokasi)
-        <section class="bg-gray-50 dark:bg-gray-800 py-16">
+    @else
+        <section class="bg-white py-16">
             <div class="mx-auto px-4 container">
-                <div class="mb-12 text-center">
-                    <h2 class="mb-4 font-bold text-gray-800 dark:text-white text-3xl">{{ $beranda->judul_lokasi }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Peta lokasi dan informasi geografis</p>
-                </div>
-
-                <div class="bg-white dark:bg-gray-900 shadow-lg rounded-lg overflow-hidden">
-                    @if ($beranda->embed_map)
-                        <div class="w-full aspect-video">
-                            {!! $beranda->embed_map !!}
-                        </div>
-                    @else
-                        <div class="flex justify-center items-center bg-gray-200 dark:bg-gray-700 h-96">
-                            <div class="text-center">
-                                <i class="mb-4 text-gray-400 text-6xl fas fa-map-marked-alt"></i>
-                                <p class="text-gray-600 dark:text-gray-300">Peta akan ditampilkan di sini</p>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Integrasi dengan Google Maps</p>
-                            </div>
-                        </div>
-                    @endif
+                <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                    <div class="mb-4">
+                        <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 font-semibold text-gray-800 text-lg">Struktur organisasi belum tersedia</h3>
+                    <p class="text-gray-600">Section struktur organisasi belum diaktifkan atau belum dikonfigurasi.</p>
                 </div>
             </div>
         </section>
     @endif
+
+
+
+    <!-- Section 5: Statistik Penduduk -->
+    @if ($beranda && $beranda->show_penduduk)
+        <section class="bg-gray-50 py-16">
+            <div class="mx-auto px-4 container">
+                <div class="mb-12 text-center">
+                    <h2 class="mb-4 font-bold text-gray-800 text-3xl">
+                        {{ $beranda->judul_penduduk ?? 'Statistik Penduduk' }}</h2>
+                    <p class="mx-auto max-w-2xl text-gray-600">Data kependudukan terkini
+                        {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}</p>
+                </div>
+
+                @if ($beranda->total_penduduk || $beranda->penduduk_laki || $beranda->penduduk_perempuan)
+                    <div class="gap-8 grid md:grid-cols-3">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg p-8 rounded-lg text-white">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="mb-2 text-blue-100">Total Penduduk</p>
+                                    <p class="font-bold text-3xl">{{ number_format($beranda->total_penduduk ?? 0) }}</p>
+                                </div>
+                                <div class="text-blue-200">
+                                    <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-green-500 to-green-600 shadow-lg p-8 rounded-lg text-white">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="mb-2 text-green-100">Laki-laki</p>
+                                    <p class="font-bold text-3xl">{{ number_format($beranda->penduduk_laki ?? 0) }}</p>
+                                </div>
+                                <div class="text-green-200">
+                                    <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-pink-500 to-pink-600 shadow-lg p-8 rounded-lg text-white">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="mb-2 text-pink-100">Perempuan</p>
+                                    <p class="font-bold text-3xl">{{ number_format($beranda->penduduk_perempuan ?? 0) }}</p>
+                                </div>
+                                <div class="text-pink-200">
+                                    <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($beranda->tanggal_data_penduduk)
+                        <div class="mt-8 text-center">
+                            <p class="text-gray-600">Data terakhir diperbarui:
+                                {{ $beranda->tanggal_data_penduduk->format('d F Y') }}</p>
+                        </div>
+                    @endif
+                @else
+                    <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                        <div class="mb-4">
+                            <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="mb-2 font-semibold text-gray-800 text-lg">Data statistik penduduk belum tersedia</h3>
+                        <p class="text-gray-600">Data statistik penduduk akan ditampilkan di sini ketika sudah tersedia.</p>
+                    </div>
+                @endif
+            </div>
+        </section>
+    @else
+        <section class="bg-gray-50 py-16">
+            <div class="mx-auto px-4 container">
+                <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                    <div class="mb-4">
+                        <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 font-semibold text-gray-800 text-lg">Data statistik penduduk belum tersedia</h3>
+                    <p class="text-gray-600">Section statistik penduduk belum diaktifkan atau belum dikonfigurasi.</p>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- Section 6: APBDesa 2025 -->
+    @if ($beranda && $beranda->show_apbdes)
+        <section class="bg-white py-16">
+            <div class="mx-auto px-4 container">
+                <div class="mb-12 text-center">
+                    <h2 class="mb-4 font-bold text-gray-800 text-3xl">
+                        {{ $beranda->judul_apbdes ?? 'APBDesa 2025' }}</h2>
+                    <p class="mx-auto max-w-2xl text-gray-600">Anggaran Pendapatan dan Belanja Desa tahun 2025</p>
+                </div>
+
+                @if ($beranda->pendapatan_desa || $beranda->belanja_desa)
+                    <div class="gap-8 grid md:grid-cols-2">
+                        <!-- Pendapatan Desa -->
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 shadow-lg p-8 rounded-lg">
+                            <div class="flex items-center mb-6">
+                                <div class="bg-green-500 mr-4 p-3 rounded-lg">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800 text-xl">Pendapatan Desa</h3>
+                                    <p class="text-gray-600">Total pendapatan yang diterima</p>
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <p class="font-bold text-green-600 text-3xl">
+                                    Rp {{ number_format($beranda->pendapatan_desa ?? 0, 0, ',', '.') }}
+                                </p>
+                                @if ($beranda->target_pendapatan)
+                                    <p class="mt-1 text-gray-600 text-sm">
+                                        Target: Rp {{ number_format($beranda->target_pendapatan, 0, ',', '.') }}
+                                    </p>
+                                @endif
+                            </div>
+                            @php
+                                $targetPendapatan = $beranda->target_pendapatan ?? $beranda->pendapatan_desa ?? 1;
+                                $persentasePendapatan = $targetPendapatan > 0 ? (($beranda->pendapatan_desa ?? 0) / $targetPendapatan) * 100 : 0;
+                            @endphp
+                            <div class="mb-2">
+                                <div class="flex justify-between mb-1 text-gray-600 text-sm">
+                                    <span>Progress</span>
+                                    <span>{{ number_format($persentasePendapatan, 1) }}%</span>
+                                </div>
+                                <div class="bg-gray-200 rounded-full h-4">
+                                    <div class="bg-gradient-to-r from-green-400 to-green-600 rounded-full h-4 transition-all duration-500" 
+                                         style="width: {{ min($persentasePendapatan, 100) }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Belanja Desa -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg p-8 rounded-lg">
+                            <div class="flex items-center mb-6">
+                                <div class="bg-blue-500 mr-4 p-3 rounded-lg">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800 text-xl">Belanja Desa</h3>
+                                    <p class="text-gray-600">Total belanja yang dikeluarkan</p>
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <p class="font-bold text-blue-600 text-3xl">
+                                    Rp {{ number_format($beranda->belanja_desa ?? 0, 0, ',', '.') }}
+                                </p>
+                                @if ($beranda->target_belanja)
+                                    <p class="mt-1 text-gray-600 text-sm">
+                                        Target: Rp {{ number_format($beranda->target_belanja, 0, ',', '.') }}
+                                    </p>
+                                @endif
+                            </div>
+                            @php
+                                $targetBelanja = $beranda->target_belanja ?? $beranda->pendapatan_desa ?? 1;
+                                $persentaseBelanja = $targetBelanja > 0 ? (($beranda->belanja_desa ?? 0) / $targetBelanja) * 100 : 0;
+                            @endphp
+                            <div class="mb-2">
+                                <div class="flex justify-between mb-1 text-gray-600 text-sm">
+                                    <span>Progress</span>
+                                    <span>{{ number_format($persentaseBelanja, 1) }}%</span>
+                                </div>
+                                <div class="bg-gray-200 rounded-full h-4">
+                                    <div class="bg-gradient-to-r from-blue-400 to-blue-600 rounded-full h-4 transition-all duration-500" 
+                                         style="width: {{ min($persentaseBelanja, 100) }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center">
+                        <p class="text-gray-600">Data APBDesa tahun 2025 - Transparansi anggaran desa</p>
+                    </div>
+                @else
+                    <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                        <div class="mb-4">
+                            <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="mb-2 font-semibold text-gray-800 text-lg">Data APBDesa belum tersedia</h3>
+                        <p class="text-gray-600">Data anggaran pendapatan dan belanja desa akan ditampilkan di sini ketika sudah tersedia.</p>
+                    </div>
+                @endif
+            </div>
+        </section>
+    @else
+        <section class="bg-white py-16">
+            <div class="mx-auto px-4 container">
+                <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                    <div class="mb-4">
+                        <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 font-semibold text-gray-800 text-lg">Data APBDesa belum tersedia</h3>
+                    <p class="text-gray-600">Section APBDesa belum diaktifkan atau belum dikonfigurasi.</p>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- Section 7: Highlight Galeri Desa -->
+    @if ($beranda && $beranda->show_galeri)
+        <section class="bg-gray-50 py-16">
+            <div class="mx-auto px-4 container">
+                <div class="mb-12 text-center">
+                    <h2 class="mb-4 font-bold text-gray-800 text-3xl">
+                        {{ $beranda->judul_galeri ?? 'Galeri Desa' }}</h2>
+                    <p class="mx-auto max-w-2xl text-gray-600">Dokumentasi kegiatan dan keindahan desa</p>
+                </div>
+
+                @if ($galeri && $galeri->count() > 0)
+                    <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                        @foreach ($galeri->take($beranda->jumlah_galeri ?? 6) as $item)
+                            <div class="group bg-white shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-all duration-300">
+                                <div class="relative overflow-hidden">
+                                    <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}"
+                                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                                </div>
+                                <div class="p-4">
+                                    <h3 class="mb-2 font-semibold text-gray-800 group-hover:text-blue-600 text-lg transition-colors">{{ $item->judul }}</h3>
+                                    <p class="text-gray-600 text-sm leading-relaxed">{{ Str::limit($item->deskripsi, 100) }}</p>
+                                    @if ($item->tanggal)
+                                        <p class="mt-2 text-gray-500 text-xs">
+                                            <svg class="inline mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                            {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
+                                        </p>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-12 text-center">
+                        <a href="{{ route('desa.galeri', $desa->uri) }}"
+                            class="inline-flex items-center bg-blue-600 hover:bg-blue-700 hover:shadow-lg px-8 py-3 rounded-lg font-semibold text-white transition-all duration-300">
+                            <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            Lihat Semua Galeri
+                        </a>
+                    </div>
+                @else
+                    <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                        <div class="mb-4">
+                            <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="mb-2 font-semibold text-gray-800 text-lg">Galeri belum tersedia</h3>
+                        <p class="text-gray-600">Foto-foto kegiatan desa akan ditampilkan di sini ketika sudah tersedia.</p>
+                    </div>
+                @endif
+            </div>
+        </section>
+    @else
+        <section class="bg-gray-50 py-16">
+            <div class="mx-auto px-4 container">
+                <div class="bg-white shadow-lg mx-auto p-8 rounded-lg max-w-md text-center">
+                    <div class="mb-4">
+                        <svg class="mx-auto w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 font-semibold text-gray-800 text-lg">Galeri belum tersedia</h3>
+                    <p class="text-gray-600">Section galeri belum diaktifkan atau belum dikonfigurasi.</p>
+                </div>
+            </div>
+        </section>
+    @endif
+
+
 @endsection
