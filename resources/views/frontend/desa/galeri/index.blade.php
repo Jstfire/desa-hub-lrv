@@ -35,9 +35,26 @@
 
         <!-- Gallery Grid -->
         @if ($galeri->count() > 0)
-            <div class="gap-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div class="masonry-grid" data-masonry='{ "itemSelector": ".masonry-item", "columnWidth": ".masonry-sizer", "percentPosition": true, "gutter": 20 }'>
+                <div class="masonry-sizer"></div>
                 @foreach ($galeri as $item)
-                    <x-frontend.desa.components.galeri-card :item="$item" />
+                    <div class="masonry-item group relative mb-5 w-full cursor-pointer break-inside-avoid overflow-hidden rounded-lg shadow-md transition-shadow duration-300 hover:shadow-xl">
+                        <div
+                            onclick="openGalleryModal('{{ $item->getFirstMediaUrl('galeri') ?: 'https://via.placeholder.com/800x600' }}', '{{ $item->judul }}', '{{ $item->deskripsi }}', '{{ $item->jenis }}', '{{ $item->kategori }}', '{{ $item->created_at->translatedFormat('d F Y') }}', '{{ $item->user->name }}', '{{ $item->views }}', '{{ $item->source_url }}')">
+                            <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/50 p-4 text-center text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                <h3 class="text-lg font-bold">{{ $item->judul }}</h3>
+                                <p class="mt-2 text-sm">{{ Str::limit($item->deskripsi, 80) }}</p>
+                            </div>
+                            @if ($item->getFirstMediaUrl('thumbnail'))
+                                <img src="{{ $item->getFirstMediaUrl('thumbnail') }}" alt="{{ $item->judul }}"
+                                    class="h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105">
+                            @else
+                                <img src="https://via.placeholder.com/400x300.png?text=Gambar+Tidak+Tersedia"
+                                    alt="Placeholder"
+                                    class="h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105">
+                            @endif
+                        </div>
+                    </div>
                 @endforeach
             </div>
 
@@ -64,72 +81,108 @@
         @endif
     </div>
 
-    <!-- Video Modal -->
-    <div id="videoModal" class="hidden z-50 fixed inset-0 justify-center items-center">
-        <div class="absolute inset-0 bg-black/80"></div>
-        <div class="z-10 bg-card border border-border mx-4 p-2 rounded-lg w-full max-w-4xl">
-            <div class="flex justify-end mb-2">
-                <button id="closeVideoModal"
-                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 text-muted-foreground">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
+    <!-- Gallery Modal -->
+    <div id="galleryModal" tabindex="-1" aria-hidden="true"
+        class="fixed inset-x-0 top-0 z-[60] h-full w-full flex-col items-center justify-center bg-black/80 p-4 backdrop-blur-sm md:flex hidden">
+        <div class="relative mx-auto flex h-full w-full max-w-7xl flex-col items-center justify-center gap-4 md:flex-row">
+            <!-- Close Button -->
+            <button type="button" onclick="closeGalleryModal()"
+                class="absolute -top-4 right-0 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-gray-300/20 text-white backdrop-blur-sm transition-all duration-300 ease-in-out hover:bg-gray-300/50">
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="2" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+
+            <!-- Image Display -->
+            <div class="relative flex h-full w-full items-center justify-center md:w-3/4">
+                <div id="imageSpinner" class="absolute h-12 w-12 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+                <img id="modalImage" src="" alt="" class="hidden h-auto max-h-full w-auto rounded-lg object-contain">
             </div>
-            <div class="aspect-h-9 aspect-w-16">
-                <div id="videoContainer" class="w-full h-full"></div>
+
+            <!-- Information Panel -->
+            <div
+                class="relative flex h-auto max-h-full w-full flex-col overflow-y-auto rounded-lg bg-background/80 p-6 text-white backdrop-blur-md md:h-auto md:w-1/4">
+                <div id="mediaInfoOnHover" class="absolute inset-0 z-10 flex cursor-pointer flex-col items-center justify-center bg-black/60 p-4 text-center opacity-0 transition-opacity duration-300">
+                    <h3 class="text-lg font-bold">Informasi Media</h3>
+                    <p class="mt-2 text-sm">Arahkan mouse untuk melihat detail</p>
+                </div>
+                <div id="mediaInfoDetails">
+                    <h3 id="modalTitle" class="mb-3 text-2xl font-bold"></h3>
+                    <p id="modalDescription" class="mb-4 text-sm"></p>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-center gap-3">
+                            <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.47 2.118v-.082a2.25 2.25 0 012.25-2.25h15.318a2.25 2.25 0 012.25 2.25v.082a2.25 2.25 0 01-2.47-2.118 3 3 0 00-5.78-1.128a2.25 2.25 0 00-2.322-.165 2.25 2.25 0 00-2.322.165z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 6.375a4.5 4.5 0 017.5-3.062m0 0a4.5 4.5 0 017.5 3.062M12.75 6.375a3.375 3.375 0 01-3.375-3.375V3m3.375 3.375a3.375 3.375 0 00-3.375-3.375V3" />
+                            </svg>
+                            <span id="modalTypeCategory"></span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                            </svg>
+                            <span id="modalDate"></span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                            </svg>
+                            <span id="modalAuthor"></span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639l4.43-4.43a1.012 1.012 0 011.431 0l4.43 4.43a1.012 1.012 0 010 .639l-4.43 4.43a1.012 1.012 0 01-1.431 0l-4.43-4.43z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 12.75h.008v.008h-.008v-.008z" />
+                            </svg>
+                            <span id="modalViews"></span>
+                        </div>
+                        <div id="source-container" class="flex items-center gap-3">
+                            <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                            </svg>
+                            <a id="modalSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="hover:underline">Lihat Sumber</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 @endsection
 
-@section('scripts')
-    <script>
-        // Video modal functionality
-        const videoModal = document.getElementById('videoModal');
-        const videoContainer = document.getElementById('videoContainer');
-        const closeVideoModal = document.getElementById('closeVideoModal');
-        const playButtons = document.querySelectorAll('.play-video-btn');
+@push('styles')
+    <style>
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.25rem;
+        }
 
-        playButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const videoSrc = button.getAttribute('data-src');
-
-                // Check if YouTube or other video source
-                if (videoSrc.includes('youtube.com') || videoSrc.includes('youtu.be')) {
-                    // Extract YouTube ID
-                    let youtubeId = '';
-                    if (videoSrc.includes('youtube.com/watch?v=')) {
-                        youtubeId = videoSrc.split('v=')[1].split('&')[0];
-                    } else if (videoSrc.includes('youtu.be/')) {
-                        youtubeId = videoSrc.split('youtu.be/')[1];
-                    }
-
-                    if (youtubeId) {
-                        videoContainer.innerHTML =
-                            `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                    }
-                } else {
-                    videoContainer.innerHTML =
-                        `<video width="100%" height="100%" controls><source src="${videoSrc}" type="video/mp4">Your browser does not support the video tag.</video>`;
-                }
-
-                videoModal.classList.remove('hidden');
-            });
-        });
-
-        closeVideoModal.addEventListener('click', () => {
-            videoModal.classList.add('hidden');
-            videoContainer.innerHTML = '';
-        });
-
-        // Close modal when clicking outside
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                videoModal.classList.add('hidden');
-                videoContainer.innerHTML = '';
+        @media (min-width: 640px) {
+            .masonry-grid {
+                column-count: 2;
             }
-        });
-    </script>
-@endsection
+        }
+
+        @media (min-width: 768px) {
+            .masonry-grid {
+                column-count: 3;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .masonry-grid {
+                column-count: 4;
+            }
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.25rem;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    @vite('resources/js/gallery.js')
+@endpush

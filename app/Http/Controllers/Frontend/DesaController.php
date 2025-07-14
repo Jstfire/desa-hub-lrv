@@ -63,8 +63,10 @@ class DesaController extends Controller
 
         // Get galeri based on beranda settings
         $galeriLimit = $beranda && $beranda->show_galeri ? $beranda->jumlah_galeri : 8;
-        $galeri = Galeri::where('desa_id', $desa->id)
+        $galeri = Galeri::with('user')
+            ->where('desa_id', $desa->id)
             ->where('is_published', 1) // Use 1 instead of true for PostgreSQL compatibility
+            ->orderBy('published_at', 'desc')
             ->limit($galeriLimit)
             ->get();
 

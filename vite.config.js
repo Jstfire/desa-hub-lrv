@@ -37,7 +37,8 @@ export default defineConfig({
                 'resources/js/tinymce-setup.js',
 
                 // Additional frontend scripts
-                'resources/js/stores/index.js'
+                'resources/js/stores/index.js',
+                'resources/js/gallery.js'
             ],
             refresh: true,
         }),

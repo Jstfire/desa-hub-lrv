@@ -269,7 +269,7 @@ class KontenSeeder extends Seeder
             $isPublished = rand(0, 10) > 2; // 80% chance to be published
             $jenis = rand(0, 10) > 2 ? 'foto' : 'video'; // 80% chance to be photo
 
-            Galeri::create([
+            $galeri = Galeri::create([
                 'desa_id' => $desaId,
                 'user_id' => $adminId,
                 'judul' => "Galeri {$kategori} " . ($i + 1),
@@ -280,6 +280,24 @@ class KontenSeeder extends Seeder
                 'published_at' => now()->subDays(rand(0, 60)),
                 'view_count' => rand(0, 500),
             ]);
+
+            // Add sample media using placeholder images
+            try {
+                if ($jenis === 'foto') {
+                    // Create a sample image URL
+                    $imageUrl = "https://picsum.photos/800/600?random={$i}";
+                    $galeri->addMediaFromUrl($imageUrl)
+                        ->toMediaCollection('foto');
+                } else {
+                    // For video, we'll add a placeholder image as thumbnail
+                    $imageUrl = "https://picsum.photos/800/600?random={$i}&grayscale";
+                    $galeri->addMediaFromUrl($imageUrl)
+                        ->toMediaCollection('foto');
+                }
+            } catch (\Exception $e) {
+                // If adding media fails, continue without media
+                \Log::info("Failed to add media for gallery {$galeri->id}: " . $e->getMessage());
+            }
         }
     }
 

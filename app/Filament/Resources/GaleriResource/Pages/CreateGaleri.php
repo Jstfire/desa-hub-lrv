@@ -38,13 +38,13 @@ class CreateGaleri extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $media = $data['media'];
-        unset($data['media']);
+        $foto = $data['foto'] ?? [];
+        unset($data['foto']);
 
         $record = static::getModel()::create($data);
 
-        if (!empty($media)) {
-            foreach ($media as $file) {
+        if (!empty($foto)) {
+            foreach ($foto as $file) {
                 $record->addMedia(storage_path('app/public/' . $file))
                     ->toMediaCollection($data['jenis'] === 'foto' ? 'foto' : 'video');
             }

@@ -25,12 +25,12 @@ class EditGaleri extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        $media = $data['media'] ?? [];
-        unset($data['media']);
+        $foto = $data['foto'] ?? [];
+        unset($data['foto']);
 
         $record->update($data);
 
-        if (!empty($media)) {
+        if (!empty($foto)) {
             $collectionName = $data['jenis'] === 'foto' ? 'foto' : 'video';
 
             // If it's a single file upload (video), clear the collection first.
@@ -38,9 +38,9 @@ class EditGaleri extends EditRecord
                 $record->clearMediaCollection($collectionName);
             }
 
-            foreach ($media as $file) {
+            foreach ($foto as $file) {
                 // The file path is relative to the storage/app/public directory
-                if (is_string($file) && str_starts_with($file, 'galeri/media')) {
+                if (is_string($file) && str_starts_with($file, 'galeri/')) {
                      $record->addMedia(storage_path('app/public/' . $file))
                         ->toMediaCollection($collectionName);
                 }
