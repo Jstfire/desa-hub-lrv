@@ -98,14 +98,14 @@ class GaleriResource extends Resource
 
                 Section::make('Media')
                     ->schema([
-                        FileUpload::make('media')
+                        FileUpload::make('foto')
                             ->label(fn(callable $get) => $get('jenis') === 'foto' ? 'Upload Foto' : 'Upload Video (MP4)')
                             ->image(fn(callable $get) => $get('jenis') === 'foto')
                             ->acceptedFileTypes(fn(callable $get) => $get('jenis') === 'foto'
                                 ? ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
                                 : ['video/mp4'])
                             ->disk('public')
-                            ->directory('galeri/media')
+                            ->directory('galeri/foto')
                             ->multiple()
                             ->reorderable()
                             ->appendFiles()
@@ -126,10 +126,10 @@ class GaleriResource extends Resource
                     ->circular(false)
                     ->square()
                     ->state(function (Galeri $record): ?string {
-                        if ($record->jenis === 'foto' && $record->getFirstMedia('media')) {
-                            return $record->getFirstMediaUrl('media');
-                        } elseif ($record->jenis === 'video' && $record->getFirstMedia('media')) {
-                            return $record->getFirstMedia('media')->getUrl();
+                        if ($record->jenis === 'foto' && $record->getFirstMedia('foto')) {
+                            return $record->getFirstMediaUrl('foto');
+                        } elseif ($record->jenis === 'video' && $record->getFirstMedia('foto')) {
+                            return $record->getFirstMedia('foto')->getUrl();
                         }
                         return null;
                     }),

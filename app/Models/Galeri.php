@@ -108,6 +108,8 @@ class Galeri extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
+        $this->addMediaCollection('media');
+
         $this->addMediaCollection('foto');
 
         $this->addMediaCollection('video')

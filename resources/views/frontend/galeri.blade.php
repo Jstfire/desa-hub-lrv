@@ -125,10 +125,10 @@
                             <div
                                 class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-shadow duration-300">
                                 @if ($item->jenis === 'foto')
-                                    @if ($item->getFirstMediaUrl('media'))
+                                    @if ($item->getFirstMediaUrl('foto'))
                                         <div class="group relative cursor-pointer"
-                                            onclick="openModal('{{ $item->getFirstMediaUrl('media') }}', '{{ $item->judul }}')">
-                                            <img src="{{ $item->getFirstMediaUrl('media') }}" alt="{{ $item->judul }}"
+                                            onclick="openModal('{{ $item->getFirstMediaUrl('foto') }}', '{{ $item->judul }}')">
+                                            <img src="{{ $item->getFirstMediaUrl('foto') }}" alt="{{ $item->judul }}"
                                                 class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
                                             <div
                                                 class="absolute inset-0 flex justify-center items-center bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300">
@@ -150,10 +150,10 @@
                                         </div>
                                     @endif
                                 @elseif($item->jenis === 'video')
-                                    @if ($item->getFirstMediaUrl('media'))
+                                    @if ($item->getFirstMediaUrl('foto'))
                                         <div class="relative">
                                             <video controls class="w-full h-64 object-cover">
-                                                <source src="{{ $item->getFirstMediaUrl('media') }}" type="video/mp4">
+                                                <source src="{{ $item->getFirstMediaUrl('foto') }}" type="video/mp4">
                                                 Your browser does not support the video tag.
                                             </video>
                                         </div>
