@@ -89,6 +89,16 @@ class PpidResource extends Resource
                             ->label('Publikasikan')
                             ->default(true),
 
+                        Toggle::make('is_active')
+                            ->label('Aktif')
+                            ->default(true),
+
+                        TextInput::make('urutan')
+                            ->label('Urutan')
+                            ->numeric()
+                            ->default(0)
+                            ->required(),
+
                         DateTimePicker::make('published_at')
                             ->label('Tanggal Publikasi')
                             ->default(now())
@@ -148,6 +158,13 @@ class PpidResource extends Resource
                 ToggleColumn::make('is_published')
                     ->label('Dipublikasikan'),
 
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
+
+                TextColumn::make('urutan')
+                    ->label('Urutan')
+                    ->sortable(),
+
                 TextColumn::make('published_at')
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
@@ -163,6 +180,12 @@ class PpidResource extends Resource
                     ->placeholder('Semua Status')
                     ->trueLabel('Dipublikasikan')
                     ->falseLabel('Draft'),
+
+                TernaryFilter::make('is_active')
+                    ->label('Status Aktif')
+                    ->placeholder('Semua')
+                    ->trueLabel('Aktif')
+                    ->falseLabel('Tidak Aktif'),
 
                 SelectFilter::make('desa_id')
                     ->label('Desa/Kelurahan')
@@ -186,7 +209,7 @@ class PpidResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('published_at', 'desc');
+            ->defaultSort('urutan', 'asc');
     }
 
     public static function getRelations(): array

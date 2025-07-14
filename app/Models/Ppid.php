@@ -60,14 +60,18 @@ class Ppid extends Model implements HasMedia
         'kategori',
         'deskripsi',
         'is_published',
+        'is_active',
+        'urutan',
         'published_at',
         'download_count',
     ];
 
     protected $casts = [
         'is_published' => 'boolean',
+        'is_active' => 'boolean',
         'published_at' => 'datetime',
         'download_count' => 'integer',
+        'urutan' => 'integer',
     ];
 
     protected static function boot()

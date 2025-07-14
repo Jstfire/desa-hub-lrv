@@ -346,7 +346,6 @@
 
             // Handle skeleton loading
             const skeleton = document.getElementById('beritaSkeleton');
-            const beritaContainer = document.getElementById('beritaContainer');
 
             // Show real content after simulated loading
             setTimeout(() => {
@@ -414,6 +413,5 @@
             document.getElementById('kategori').addEventListener('change', applyFilters);
             document.getElementById('highlight').addEventListener('change', applyFilters);
         });
-    </script>
     </script>
 @endpush
