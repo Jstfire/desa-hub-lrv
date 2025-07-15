@@ -105,6 +105,8 @@
     </style>
 
     @stack('styles')
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{{ asset('css/custom-swiper.css') }}">
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
@@ -228,104 +230,101 @@
     <footer class="bg-gray-800 dark:bg-gray-900 mt-16 text-white">
         <div class="mx-auto px-4 py-12 container">
             <div class="gap-8 grid grid-cols-1 md:grid-cols-4">
-                <!-- Logo & Info -->
-                <div class="md:col-span-1">
-                    <div class="flex items-center mb-4">
-                        <i class="mr-3 text-primary text-2xl fas fa-home"></i>
-                        <div>
-                            <h3 class="font-bold text-xl">{{ $desa->nama }}</h3>
-                            <p class="text-gray-400">{{ ucfirst($desa->jenis) }}</p>
+                @if (isset($footerSections['section1']))
+                    <div class="md:col-span-1">
+                        <h4 class="mb-4 font-semibold text-lg">{{ $footerSections['section1']->judul }}</h4>
+                        <div class="flex items-center mb-4">
+                            @if (isset($footerSections['section1']) && $footerSections['section1']->hasMedia('logo_desa'))
+                                <img src="{{ $footerSections['section1']->getFirstMediaUrl('logo_desa') }}"
+                                    alt="Logo Desa" class="mr-3 w-auto h-10">
+                            @else
+                                <img src="{{ asset('images/logo_busel.png') }}" alt="Logo Kabupaten Buton Selatan"
+                                    class="mr-3 w-auto h-10">
+                            @endif
+                            <div>
+                                <h3 class="font-bold text-xl">{{ $desa->nama }}</h3>
+                                <p class="text-gray-400">{{ ucfirst($desa->jenis) }}</p>
+                            </div>
                         </div>
+                        @if (isset($footerSections['section1']->konten['alamat']))
+                            <div class="flex items-start mb-2">
+                                <i class="mt-1 mr-2 text-primary fas fa-map-marker-alt"></i>
+                                <span class="text-gray-400">{{ $footerSections['section1']->konten['alamat'] }}</span>
+                            </div>
+                        @endif
                     </div>
-                    @if ($desa->alamat)
-                        <div class="flex items-start mb-2">
-                            <i class="mt-1 mr-2 text-primary fas fa-map-marker-alt"></i>
-                            <span class="text-gray-400">{{ $desa->alamat }}</span>
-                        </div>
-                    @endif
-                </div>
+                @endif
 
-                <!-- Hubungi Kami -->
-                <div class="md:col-span-1">
-                    <h4 class="mb-4 font-semibold text-lg">Hubungi Kami</h4>
-                    <div class="space-y-2">
-                        <div class="flex items-center">
-                            <i class="mr-2 text-primary fas fa-phone"></i>
-                            <span class="text-gray-400">0123-456-789</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="mr-2 text-primary fas fa-envelope"></i>
-                            <span class="text-gray-400">info@{{ $desa - > uri }}.desa.id</span>
-                        </div>
-                        <div class="flex items-center space-x-3 mt-4">
-                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-                                <i class="fab fa-facebook"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-                                <i class="fab fa-youtube"></i>
-                            </a>
+                @if (isset($footerSections['section2']))
+                    <div class="md:col-span-1">
+                        <h4 class="mb-4 font-semibold text-lg">{{ $footerSections['section2']->judul }}</h4>
+                        <div class="space-y-2">
+                            @if (isset($footerSections['section2']->konten['kontak']))
+                                @foreach ($footerSections['section2']->konten['kontak'] as $kontak)
+                                    @if ($kontak['aktif'])
+                                        <div class="flex items-center">
+                                            <i
+                                                class="mr-2 text-primary fas fa-{{ $kontak['tipe'] === 'telepon' ? 'phone' : 'envelope' }}"></i>
+                                            <span class="text-gray-400">{{ $kontak['nilai'] }}</span>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
+                            @if (isset($footerSections['section2']->konten['sosmed']))
+                                <div class="flex items-center space-x-3 mt-4">
+                                    @foreach ($footerSections['section2']->konten['sosmed'] as $sosmed)
+                                        @if ($sosmed['aktif'])
+                                            <a href="{{ $sosmed['url'] }}" target="_blank"
+                                                class="text-gray-400 hover:text-primary transition-colors">
+                                                <i class="fab fa-{{ $sosmed['tipe'] }}"></i>
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                     </div>
-                </div>
+                @endif
 
-                <!-- Tautan Penting -->
-                <div class="md:col-span-1">
-                    <h4 class="mb-4 font-semibold text-lg">Tautan Penting</h4>
-                    <div class="space-y-2">
-                        <a href="#" class="block text-gray-400 hover:text-primary transition-colors">Polsek
-                            Terdekat</a>
-                        <a href="#"
-                            class="block text-gray-400 hover:text-primary transition-colors">Puskesmas</a>
-                        <a href="#" class="block text-gray-400 hover:text-primary transition-colors">Dinsos</a>
-                        <a href="#" class="block text-gray-400 hover:text-primary transition-colors">Damkar</a>
+                @if (isset($footerSections['section3']))
+                    <div class="md:col-span-1">
+                        <h4 class="mb-4 font-semibold text-lg">{{ $footerSections['section3']->judul }}</h4>
+                        @if (isset($footerSections['section3']->konten['nomor_penting']))
+                            <div class="space-y-2">
+                                @foreach ($footerSections['section3']->konten['nomor_penting'] as $nomor)
+                                    @if ($nomor['aktif'])
+                                        <p class="text-gray-400">{{ $nomor['nama'] }}: {{ $nomor['nomor'] }}</p>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
-                </div>
+                @endif
 
-                <!-- Jelajahi -->
-                <div class="md:col-span-1">
-                    <h4 class="mb-4 font-semibold text-lg">Jelajahi</h4>
-                    <div class="space-y-2">
-                        <a href="{{ route('desa.beranda', $desa->uri) }}"
-                            class="block text-gray-400 hover:text-primary transition-colors">Beranda</a>
-                        <a href="{{ route('desa.berita', $desa->uri) }}"
-                            class="block text-gray-400 hover:text-primary transition-colors">Berita</a>
-                        <a href="{{ route('desa.layanan-publik', $desa->uri) }}"
-                            class="block text-gray-400 hover:text-primary transition-colors">Layanan Publik</a>
-                        <a href="{{ route('desa.profil', $desa->uri) }}"
-                            class="block text-gray-400 hover:text-primary transition-colors">Profil</a>
+                @if (isset($footerSections['section4']))
+                    <div class="md:col-span-1">
+                        <h4 class="mb-4 font-semibold text-lg">{{ $footerSections['section4']->judul }}</h4>
+                        @if (isset($footerSections['section4']->konten['link_penting']))
+                            <div class="space-y-2">
+                                @foreach ($footerSections['section4']->konten['link_penting'] as $link)
+                                    @if ($link['aktif'])
+                                        <a href="{{ $link['url'] }}" target="_blank"
+                                            class="block text-gray-400 hover:text-primary transition-colors">{{ $link['nama'] }}</a>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
-                </div>
+                @endif
             </div>
 
-            <div class="mt-8 pt-8 border-gray-700 border-t text-center">
-                <p class="text-gray-400">&copy; 2025. Made with <i class="text-red-500 fas fa-heart"></i> by Jstfire.
-                </p>
-            </div>
+            @if (isset($footerSections['copyright']) && isset($footerSections['copyright']->konten['text']))
+                <div class="mt-8 pt-8 border-gray-700 border-t text-center">
+                    <p class="text-gray-400">{!! $footerSections['copyright']->konten['text'] !!}</p>
+                </div>
+            @endif
         </div>
     </footer>
-
-    <!-- Fixed Buttons -->
-    <!-- Visitor Stats Button -->
-    {{-- <div class="right-4 bottom-4 z-50 fixed">
-        <button id="visitorStatsButton"
-            class="bg-primary hover:bg-opacity-90 shadow-lg p-3 rounded-full text-white transition-all">
-            <i class="fas fa-chart-line"></i>
-        </button>
-    </div>
-
-    <!-- Pengaduan Button -->
-    <div class="bottom-4 left-4 z-50 fixed">
-        <a href="{{ route('desa.pengaduan', $desa->uri) }}"
-            class="inline-block bg-secondary hover:bg-opacity-90 shadow-lg p-3 rounded-full text-white transition-all">
-            <i class="fas fa-comment-dots"></i>
-        </a>
-    </div> --}}
 
     <!-- Visitor Stats Modal -->
     <div id="visitorStatsModal" class="hidden z-50 fixed inset-0 bg-black bg-opacity-50">
@@ -471,6 +470,7 @@
         <x-fixed-buttons :desa="$desa" />
     @endif
 
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     @stack('scripts')
 </body>
 

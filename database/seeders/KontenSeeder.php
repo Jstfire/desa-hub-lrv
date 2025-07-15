@@ -296,7 +296,7 @@ class KontenSeeder extends Seeder
                 }
             } catch (\Exception $e) {
                 // If adding media fails, continue without media
-                \Log::info("Failed to add media for gallery {$galeri->id}: " . $e->getMessage());
+                \Illuminate\Support\Facades\Log::info("Failed to add media for gallery {$galeri->id}: " . $e->getMessage());
             }
         }
     }

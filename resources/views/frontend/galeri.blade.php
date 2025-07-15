@@ -120,51 +120,70 @@
                 @endif
 
                 @if ($galeri->count() > 0)
-                    <!-- Masonry Grid Layout -->
-                    <div class="masonry-grid">
+                    <style>
+                        .masonry-container {
+                            column-count: 1;
+                            column-gap: 1rem;
+                        }
+
+                        @media (min-width: 640px) {
+                            .masonry-container {
+                                column-count: 2;
+                            }
+                        }
+
+                        @media (min-width: 768px) {
+                            .masonry-container {
+                                column-count: 3;
+                            }
+                        }
+
+                        @media (min-width: 1024px) {
+                            .masonry-container {
+                                column-count: 4;
+                            }
+                        }
+
+                        .masonry-item {
+                            break-inside: avoid;
+                            margin-bottom: 1rem;
+                            border-radius: 0.5rem;
+                            overflow: hidden;
+                            cursor: pointer;
+                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                            transition: box-shadow 0.3s ease-in-out;
+                        }
+
+                        .masonry-item:hover {
+                            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+                        }
+
+                        .masonry-item img {
+                            width: 100%;
+                            height: auto;
+                            display: block;
+                        }
+                    </style>
+                    <!-- Vertical Masonry Layout -->
+                    <div class="masonry-container">
                         @foreach ($galeri as $item)
                             @php
                                 $imageUrl = $item->getFirstMediaUrl('foto');
                             @endphp
-                            <div class="masonry-item group bg-white shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-all duration-300 cursor-pointer"
+                            <div class="masonry-item"
                                 onclick="openGalleryModal('{{ $imageUrl }}', '{{ addslashes($item->judul) }}', '{{ addslashes($item->deskripsi ?? '') }}', '{{ $item->published_at ? $item->published_at->format('d M Y') : ($item->created_at ? $item->created_at->format('d M Y') : '') }}', '{{ ucfirst($item->jenis) }}', '{{ $item->kategori ?? '' }}', '{{ $item->user ? $item->user->name : '' }}', '{{ $item->view_count }}')">
-                                <div class="relative overflow-hidden">
-                                    @if ($imageUrl)
-                                        <img src="{{ $imageUrl }}" alt="{{ $item->judul }}"
-                                            class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300">
-                                    @else
-                                        <div class="flex justify-center items-center bg-gray-200 w-full h-64">
-                                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                    @endif
-                                    <!-- Overlay dengan informasi yang muncul saat hover -->
-                                    <div
-                                        class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 p-4 transition-all duration-300">
-                                        <h3
-                                            class="mb-1 font-semibold text-white text-lg transition-transform translate-y-4 group-hover:translate-y-0 duration-300 transform">
-                                            {{ $item->judul }}</h3>
-                                        <p
-                                            class="text-white/90 text-sm leading-relaxed transition-transform translate-y-4 group-hover:translate-y-0 duration-300 delay-75 transform">
-                                            {{ Str::limit($item->deskripsi ?? '', 80) }}</p>
-                                        @if ($item->published_at || $item->created_at)
-                                            <p
-                                                class="mt-2 text-white/80 text-xs transition-transform translate-y-4 group-hover:translate-y-0 duration-300 delay-100 transform">
-                                                <svg class="inline mr-1 w-3 h-3" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                    </path>
-                                                </svg>
-                                                {{ $item->published_at ? $item->published_at->format('d M Y') : $item->created_at->format('d M Y') }}
-                                            </p>
-                                        @endif
+                                @if ($imageUrl)
+                                    <img src="{{ $imageUrl }}" alt="{{ $item->judul }}">
+                                @else
+                                    <div class="flex justify-center items-center bg-gray-200 w-full h-64">
+                                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                            </path>
+                                        </svg>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                         @endforeach
                     </div>
