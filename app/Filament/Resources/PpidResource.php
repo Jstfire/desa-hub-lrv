@@ -13,6 +13,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Set;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -61,16 +64,23 @@ class PpidResource extends Resource
 
                         TextInput::make('judul')
                             ->required()
-                            ->maxLength(255)
-                            ->reactive()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                $set('slug', Str::slug($state));
-                            }),
+                            ->maxLength(255),
 
                         TextInput::make('slug')
                             ->required()
                             ->maxLength(255)
-                            ->unique(Ppid::class, 'slug', ignoreRecord: true),
+                            ->unique(Ppid::class, 'slug', ignoreRecord: true)
+                            ->suffixAction(
+                                Forms\Components\Actions\Action::make('generateSlug')
+                                    ->icon('heroicon-m-arrow-path')
+                                    ->tooltip('Generate Slug dari Judul')
+                                    ->action(function (Forms\Set $set, Forms\Get $get) {
+                                        $judul = $get('judul');
+                                        if ($judul) {
+                                            $set('slug', Str::slug($judul) . '-' . time());
+                                        }
+                                    })
+                            ),
 
                         Select::make('kategori')
                             ->options([
@@ -97,7 +107,43 @@ class PpidResource extends Resource
                         TextInput::make('urutan')
                             ->label('Urutan')
                             ->numeric()
-                            ->default(0)
+                            ->default(function () {
+                                $user = Auth::user();
+                                $desaId = $user->desa_id;
+                                
+                                if ($user->hasRole('superadmin')) {
+                                    // For superadmin, get max urutan across all desa
+                                    $maxUrutan = Ppid::max('urutan') ?? 0;
+                                } else {
+                                    // For desa users, get max urutan for their desa
+                                    $maxUrutan = Ppid::where('desa_id', $desaId)->max('urutan') ?? 0;
+                                }
+                                
+                                return $maxUrutan + 1;
+                            })
+                            ->suffixAction(
+                                Action::make('generateUrutan')
+                                    ->icon('heroicon-m-arrow-path')
+                                    ->tooltip('Generate Urutan Otomatis')
+                                    ->action(function (Set $set, Get $get) {
+                                        $user = Auth::user();
+                                        $desaId = $get('desa_id') ?? $user->desa_id;
+                                        
+                                        if ($user->hasRole('superadmin')) {
+                                            // For superadmin, get max urutan across all desa or for selected desa
+                                            if ($desaId) {
+                                                $maxUrutan = Ppid::where('desa_id', $desaId)->max('urutan') ?? 0;
+                                            } else {
+                                                $maxUrutan = Ppid::max('urutan') ?? 0;
+                                            }
+                                        } else {
+                                            // For desa users, get max urutan for their desa
+                                            $maxUrutan = Ppid::where('desa_id', $desaId)->max('urutan') ?? 0;
+                                        }
+                                        
+                                        $set('urutan', $maxUrutan + 1);
+                                    })
+                            )
                             ->required(),
 
                         DateTimePicker::make('published_at')

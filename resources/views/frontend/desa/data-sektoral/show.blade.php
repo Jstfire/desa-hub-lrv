@@ -119,10 +119,10 @@
                 @endif
 
                 <!-- Data Section -->
-                @if (!empty($data->data) && count($data->data) > 0)
-                    <div class="mb-8">
-                        <h3 class="mb-3 font-semibold text-card-foreground text-xl">Data Statistik</h3>
-
+                <div class="mb-8">
+                    <h3 class="mb-3 font-semibold text-card-foreground text-xl">Data Statistik</h3>
+                    
+                    @if (!empty($data->data) && count($data->data) > 0)
                         <div class="overflow-x-auto">
                             <table class="min-w-full border border-border rounded-lg">
                                 <thead class="bg-muted">
@@ -161,14 +161,24 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                @endif
+                    @else
+                        <div class="text-center py-8 bg-muted rounded-lg border border-border">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-muted-foreground" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <h4 class="mt-2 text-sm font-medium text-foreground">Data statistik belum tersedia</h4>
+                            <p class="mt-1 text-sm text-muted-foreground">Belum ada data statistik yang dipublikasikan untuk item ini.</p>
+                        </div>
+                    @endif
+                </div>
 
                 <!-- File Download Section -->
-                @if ($data->getFirstMediaUrl('dokumen'))
-                    <div class="mt-8 pt-6 border-border border-t">
-                        <h3 class="mb-3 font-semibold text-card-foreground text-xl">Dokumen Pendukung</h3>
-
+                <div class="mt-8 pt-6 border-border border-t">
+                    <h3 class="mb-3 font-semibold text-card-foreground text-xl">Dokumen Pendukung</h3>
+                    
+                    @if ($data->getFirstMediaUrl('dokumen'))
                         <div class="flex justify-between items-center bg-muted p-4 rounded-lg border border-border">
                             <div class="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -200,8 +210,18 @@
                                 Unduh
                             </a>
                         </div>
-                    </div>
-                @endif
+                    @else
+                        <div class="text-center py-8 bg-muted rounded-lg border border-border">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-muted-foreground" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <h4 class="mt-2 text-sm font-medium text-foreground">Dokumen belum tersedia</h4>
+                            <p class="mt-1 text-sm text-muted-foreground">Belum ada dokumen pendukung yang dipublikasikan untuk item ini.</p>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

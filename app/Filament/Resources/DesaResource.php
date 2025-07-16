@@ -21,6 +21,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Tables\Columns\TextColumn as TextCol;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -54,13 +55,7 @@ class DesaResource extends Resource
                         TextInput::make('nama')
                             ->label('Nama Desa')
                             ->required()
-                            ->maxLength(255)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (string $context, $state, callable $set) {
-                                if ($context === 'create') {
-                                    $set('uri', Str::slug($state));
-                                }
-                            }),
+                            ->maxLength(255),
                         Select::make('jenis')
                             ->label('Jenis')
                             ->options([
@@ -74,7 +69,18 @@ class DesaResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->unique(Desa::class, 'uri', ignorable: fn($record) => $record)
-                            ->helperText('URI yang akan digunakan untuk mengakses situs desa (contoh: bangun untuk /bangun)'),
+                            ->helperText('URI yang akan digunakan untuk mengakses situs desa (contoh: bangun untuk /bangun)')
+                            ->suffixAction(
+                                Forms\Components\Actions\Action::make('generateUri')
+                                    ->icon('heroicon-m-arrow-path')
+                                    ->tooltip('Generate URI dari Nama Desa')
+                                    ->action(function (Forms\Set $set, Forms\Get $get) {
+                                        $nama = $get('nama');
+                                        if ($nama) {
+                                            $set('uri', Str::slug($nama) . '-' . time());
+                                        }
+                                    })
+                            ),
                         TextInput::make('kode_kecamatan')
                             ->label('Kode Kecamatan')
                             ->maxLength(10)

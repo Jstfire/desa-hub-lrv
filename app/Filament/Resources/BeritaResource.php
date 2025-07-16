@@ -22,6 +22,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\IconColumn;
@@ -71,19 +72,24 @@ class BeritaResource extends Resource
                         TextInput::make('judul')
                             ->label('Judul')
                             ->required()
-                            ->maxLength(255)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (string $context, $state, callable $set) {
-                                if ($context === 'create') {
-                                    $set('slug', Str::slug($state));
-                                }
-                            }),
+                            ->maxLength(255),
                         TextInput::make('slug')
                             ->label('Slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(Berita::class, 'slug', ignorable: fn($record) => $record)
-                            ->helperText('URL yang akan digunakan untuk mengakses berita'),
+                            ->helperText('URL yang akan digunakan untuk mengakses berita')
+                            ->suffixAction(
+                                Forms\Components\Actions\Action::make('generateSlug')
+                                    ->icon('heroicon-m-arrow-path')
+                                    ->tooltip('Generate Slug dari Judul')
+                                    ->action(function (Forms\Set $set, Forms\Get $get) {
+                                        $judul = $get('judul');
+                                        if ($judul) {
+                                            $set('slug', Str::slug($judul) . '-' . time());
+                                        }
+                                    })
+                            ),
                         Select::make('status')
                             ->label('Status')
                             ->options([

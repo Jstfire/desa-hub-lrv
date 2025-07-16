@@ -16,6 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -56,15 +57,23 @@ class DataSektoralResource extends Resource
                     ->schema([
                         TextInput::make('judul')
                             ->required()
-                            ->maxLength(255)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(fn(string $state, Forms\Set $set) => $set('slug', Str::slug($state) . '-' . time())),
+                            ->maxLength(255),
 
                         TextInput::make('slug')
-                            ->disabled()
-                            ->dehydrated()
+                            ->required()
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(ignoreRecord: true)
+                            ->suffixAction(
+                                Forms\Components\Actions\Action::make('generateSlug')
+                                    ->icon('heroicon-m-arrow-path')
+                                    ->tooltip('Generate Slug dari Judul')
+                                    ->action(function (Forms\Set $set, Forms\Get $get) {
+                                        $judul = $get('judul');
+                                        if ($judul) {
+                                            $set('slug', Str::slug($judul) . '-' . time());
+                                        }
+                                    })
+                            ),
 
                         Select::make('desa_id')
                             ->label('Desa/Kelurahan')
