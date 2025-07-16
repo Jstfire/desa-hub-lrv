@@ -201,9 +201,7 @@ class OperatorResource extends Resource
     public static function canDelete($record): bool
     {
         $user = Auth::user();
-        return $user && $user->hasAnyRole(['superadmin', 'admin_desa']) && 
-               $record->getKey() !== Auth::id();
+        return $user && $user->hasAnyRole(['superadmin', 'admin_desa']) &&
+            $record->getKey() !== Auth::id();
     }
-
-
 }

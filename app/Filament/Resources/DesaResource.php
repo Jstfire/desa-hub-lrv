@@ -301,15 +301,15 @@ class DesaResource extends Resource
         if (!$user) {
             return false;
         }
-        
+
         if ($user->hasRole('superadmin')) {
             return true;
         }
-        
+
         if ($user->hasRole('admin_desa')) {
             return $record->admin_id === $user->getKey();
         }
-        
+
         return false;
     }
 

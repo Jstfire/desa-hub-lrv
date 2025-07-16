@@ -23,20 +23,20 @@ class EditLayananPublik extends EditRecord
     {
         // Handle file uploads
         $icon = $data['icon'] ?? null;
-        
+
         // Remove file fields from data array
         unset($data['icon']);
-        
+
         // Update the record
         $record->update($data);
-        
+
         // Handle icon upload - hapus file lama jika ada file baru
         if ($icon) {
             $record->clearMediaCollection('icon');
             $record->addMediaFromDisk($icon, 'public')
                 ->toMediaCollection('icon');
         }
-        
+
         return $record;
     }
 }

@@ -224,7 +224,7 @@
             </div>
         @else
             <!-- Empty State -->
-            <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+            <div class="flex flex-col justify-center items-center col-span-full py-16 text-center">
                 <div
                     class="flex justify-center items-center bg-gray-200 dark:bg-gray-700 mx-auto mb-6 rounded-full w-24 h-24">
                     <i class="text-gray-400 text-4xl fas fa-newspaper"></i>

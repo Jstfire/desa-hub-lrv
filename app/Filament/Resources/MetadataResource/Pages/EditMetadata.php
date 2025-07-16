@@ -28,27 +28,27 @@ class EditMetadata extends EditRecord
         // Handle file uploads
         $gambar = $data['gambar'] ?? null;
         $lampiran = $data['lampiran'] ?? null;
-        
+
         // Remove file fields from data array
         unset($data['gambar'], $data['lampiran']);
-        
+
         // Update the record
         $record->update($data);
-        
+
         // Handle gambar upload - hapus file lama jika ada file baru
         if ($gambar) {
             $record->clearMediaCollection('gambar');
             $record->addMediaFromDisk($gambar, 'public')
                 ->toMediaCollection('gambar');
         }
-        
+
         // Handle lampiran upload - hapus file lama jika ada file baru
         if ($lampiran) {
             $record->clearMediaCollection('lampiran');
             $record->addMediaFromDisk($lampiran, 'public')
                 ->toMediaCollection('lampiran');
         }
-        
+
         return $record;
     }
 }

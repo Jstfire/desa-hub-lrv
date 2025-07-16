@@ -23,20 +23,20 @@ class EditBerita extends EditRecord
     {
         // Handle file uploads
         $gambar_utama = $data['gambar_utama'] ?? null;
-        
+
         // Remove file fields from data array
         unset($data['gambar_utama']);
-        
+
         // Update the record
         $record->update($data);
-        
+
         // Handle gambar_utama upload - hapus file lama jika ada file baru
         if ($gambar_utama) {
             $record->clearMediaCollection('gambar_utama');
             $record->addMediaFromDisk($gambar_utama, 'public')
                 ->toMediaCollection('gambar_utama');
         }
-        
+
         return $record;
     }
 }

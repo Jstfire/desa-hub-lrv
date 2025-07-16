@@ -39,7 +39,7 @@ class EditGaleri extends EditRecord
             foreach ($foto as $file) {
                 // The file path is relative to the storage/app/public directory
                 if (is_string($file) && str_starts_with($file, 'galeri/')) {
-                     $record->addMedia(storage_path('app/public/' . $file))
+                    $record->addMedia(storage_path('app/public/' . $file))
                         ->toMediaCollection($collectionName);
                 }
             }

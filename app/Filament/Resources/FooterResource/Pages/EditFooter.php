@@ -31,17 +31,17 @@ class EditFooter extends EditRecord
             $logo = $data['konten']['logo'];
             unset($data['konten']['logo']);
         }
-        
+
         // Update the record
         $record->update($data);
-        
+
         // Handle logo upload - hapus file lama jika ada file baru
         if ($logo) {
             $record->clearMediaCollection('logo');
             $record->addMediaFromDisk($logo, 'public')
                 ->toMediaCollection('logo');
         }
-        
+
         return $record;
     }
 }

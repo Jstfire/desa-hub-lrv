@@ -153,6 +153,6 @@ class RoleResource extends Resource
     {
         $user = Auth::user();
         return $user && $user->hasRole(['superadmin']) &&
-               $record->name !== 'superadmin'; // Prevent deletion of superadmin role
+            $record->name !== 'superadmin'; // Prevent deletion of superadmin role
     }
 }

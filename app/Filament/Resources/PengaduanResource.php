@@ -264,15 +264,15 @@ class PengaduanResource extends Resource
     {
         $query = parent::getEloquentQuery();
         $user = Auth::user();
-        
+
         if ($user->hasRole('superadmin')) {
             return $query;
         }
-        
+
         if ($user->hasRole(['admin_desa', 'operator_desa'])) {
             return $query->where('desa_id', $user->desa_id);
         }
-        
+
         return $query;
     }
 

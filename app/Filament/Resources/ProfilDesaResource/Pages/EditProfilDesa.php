@@ -22,13 +22,13 @@ class EditProfilDesa extends EditRecord
     {
         // Handle file uploads
         $documents = $data['documents'] ?? null;
-        
+
         // Remove file fields from data array
         unset($data['documents']);
-        
+
         // Update the record
         $record->update($data);
-        
+
         // Handle documents upload - hapus file lama jika ada file baru
         if ($documents) {
             $record->clearMediaCollection('documents');
@@ -37,7 +37,7 @@ class EditProfilDesa extends EditRecord
                     ->toMediaCollection('documents');
             }
         }
-        
+
         return $record;
     }
 }

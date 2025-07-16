@@ -110,7 +110,7 @@ class PpidResource extends Resource
                             ->default(function () {
                                 $user = Auth::user();
                                 $desaId = $user->desa_id;
-                                
+
                                 if ($user->hasRole('superadmin')) {
                                     // For superadmin, get max urutan across all desa
                                     $maxUrutan = Ppid::max('urutan') ?? 0;
@@ -118,7 +118,7 @@ class PpidResource extends Resource
                                     // For desa users, get max urutan for their desa
                                     $maxUrutan = Ppid::where('desa_id', $desaId)->max('urutan') ?? 0;
                                 }
-                                
+
                                 return $maxUrutan + 1;
                             })
                             ->suffixAction(
@@ -128,7 +128,7 @@ class PpidResource extends Resource
                                     ->action(function (Set $set, Get $get) {
                                         $user = Auth::user();
                                         $desaId = $get('desa_id') ?? $user->desa_id;
-                                        
+
                                         if ($user->hasRole('superadmin')) {
                                             // For superadmin, get max urutan across all desa or for selected desa
                                             if ($desaId) {
@@ -140,7 +140,7 @@ class PpidResource extends Resource
                                             // For desa users, get max urutan for their desa
                                             $maxUrutan = Ppid::where('desa_id', $desaId)->max('urutan') ?? 0;
                                         }
-                                        
+
                                         $set('urutan', $maxUrutan + 1);
                                     })
                             )
@@ -279,57 +279,57 @@ class PpidResource extends Resource
     {
         $query = parent::getEloquentQuery();
         $user = Auth::user();
-        
+
         if ($user->hasRole('superadmin')) {
             return $query;
         }
-        
+
         if ($user->hasAnyRole(['admin_desa', 'operator_desa'])) {
             return $query->where('desa_id', $user->desa_id);
         }
-        
+
         return $query;
     }
-    
+
     public static function canViewAny(): bool
     {
         $user = Auth::user();
         return $user->hasAnyRole(['superadmin', 'admin_desa', 'operator_desa']);
     }
-    
+
     public static function canCreate(): bool
     {
         $user = Auth::user();
         return $user->hasAnyRole(['superadmin', 'admin_desa', 'operator_desa']);
     }
-    
+
     public static function canEdit(Model $record): bool
     {
         $user = Auth::user();
-        
+
         if ($user->hasRole('superadmin')) {
             return true;
         }
-        
+
         if ($user->hasAnyRole(['admin_desa', 'operator_desa'])) {
             return $record->desa_id === $user->desa_id;
         }
-        
+
         return false;
     }
-    
+
     public static function canDelete(Model $record): bool
     {
         $user = Auth::user();
-        
+
         if ($user->hasRole('superadmin')) {
             return true;
         }
-        
+
         if ($user->hasAnyRole(['admin_desa', 'operator_desa'])) {
             return $record->desa_id === $user->desa_id;
         }
-        
+
         return false;
     }
 }

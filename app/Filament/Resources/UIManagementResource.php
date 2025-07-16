@@ -57,7 +57,7 @@ class UIManagementResource extends Resource
                             ->label('Font Family')
                             ->options([
                                 'Inter' => 'Inter',
-                                'Poppins' => 'Poppins', 
+                                'Poppins' => 'Poppins',
                                 'Montserrat' => 'Montserrat',
                                 'Lato' => 'Lato',
                                 'Helvetica' => 'Helvetica',
@@ -142,7 +142,7 @@ class UIManagementResource extends Resource
                     ->options([
                         'Inter' => 'Inter',
                         'Poppins' => 'Poppins',
-                        'Montserrat' => 'Montserrat', 
+                        'Montserrat' => 'Montserrat',
                         'Lato' => 'Lato',
                         'Helvetica' => 'Helvetica',
                     ]),
