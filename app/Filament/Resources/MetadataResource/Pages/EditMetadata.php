@@ -25,26 +25,30 @@ class EditMetadata extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
+        // Handle file uploads
+        $gambar = $data['gambar'] ?? null;
+        $lampiran = $data['lampiran'] ?? null;
+        
+        // Remove file fields from data array
+        unset($data['gambar'], $data['lampiran']);
+        
+        // Update the record
         $record->update($data);
-
-        // Process media uploads after update
-        if (request()->hasFile('gambar')) {
-            // Clear existing media in this collection
+        
+        // Handle gambar upload - hapus file lama jika ada file baru
+        if ($gambar) {
             $record->clearMediaCollection('gambar');
-
-            // Add the new media
-            $record->addMediaFromRequest('gambar')
+            $record->addMediaFromDisk($gambar, 'public')
                 ->toMediaCollection('gambar');
         }
-
-        if (request()->hasFile('lampiran')) {
-            // For multiple files, we don't clear the collection first
-            foreach (request()->file('lampiran') as $file) {
-                $record->addMedia($file)
-                    ->toMediaCollection('lampiran');
-            }
+        
+        // Handle lampiran upload - hapus file lama jika ada file baru
+        if ($lampiran) {
+            $record->clearMediaCollection('lampiran');
+            $record->addMediaFromDisk($lampiran, 'public')
+                ->toMediaCollection('lampiran');
         }
-
+        
         return $record;
     }
 }

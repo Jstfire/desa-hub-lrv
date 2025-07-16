@@ -20,7 +20,7 @@ class BerandaResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
-    protected static ?string $navigationGroup = 'Manajemen Desa';
+    protected static ?string $navigationGroup = 'Kelola Komponen Desa';
 
     protected static ?string $navigationLabel = 'Kelola Beranda';
 
@@ -28,7 +28,7 @@ class BerandaResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Beranda';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -331,12 +331,14 @@ class BerandaResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
     }
 
     public static function canCreate(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin', 'admin_desa']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin', 'admin_desa']);
     }
 
     public static function canEdit($record): bool

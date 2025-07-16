@@ -28,15 +28,13 @@ class PengaduanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
 
-    protected static ?string $navigationGroup = 'Manajemen Desa';
-
-    protected static ?string $navigationLabel = 'Pengaduan';
+    protected static ?string $navigationGroup = 'Kelola Komponen Desa';
+    protected static ?string $navigationLabel = 'Kelola Pengaduan';
+    protected static ?int $navigationSort = 7;
 
     protected static ?string $modelLabel = 'Pengaduan';
 
     protected static ?string $pluralModelLabel = 'Pengaduan';
-
-    protected static ?int $navigationSort = 7;
 
     public static function form(Form $form): Form
     {
@@ -264,24 +262,24 @@ class PengaduanResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
+        $query = parent::getEloquentQuery();
         $user = Auth::user();
-
+        
         if ($user->hasRole('superadmin')) {
-            return parent::getEloquentQuery();
+            return $query;
         }
-
+        
         if ($user->hasRole(['admin_desa', 'operator_desa'])) {
-            return parent::getEloquentQuery()->whereHas('desa', function ($query) use ($user) {
-                $query->where('admin_id', $user->getKey());
-            });
+            return $query->where('desa_id', $user->desa_id);
         }
-
-        return parent::getEloquentQuery()->where('id', 0); // No access
+        
+        return $query;
     }
 
     public static function canViewAny(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
     }
 
     public static function canCreate(): bool
@@ -297,7 +295,7 @@ class PengaduanResource extends Resource
         if ($user->hasRole('superadmin')) return true;
 
         if ($user->hasRole(['admin_desa', 'operator_desa'])) {
-            return $record->desa->admin_id === $user->getKey();
+            return $record->desa_id === $user->desa_id;
         }
 
         return false;
@@ -311,7 +309,7 @@ class PengaduanResource extends Resource
         if ($user->hasRole('superadmin')) return true;
 
         if ($user->hasRole(['admin_desa', 'operator_desa'])) {
-            return $record->desa->admin_id === $user->getKey();
+            return $record->desa_id === $user->desa_id;
         }
 
         return false;

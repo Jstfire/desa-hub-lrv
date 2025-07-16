@@ -25,21 +25,30 @@ class EditPpid extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        $record->update($data);
-
         // Handle file uploads
-        if (request()->hasFile('dokumen')) {
+        $dokumen = $data['dokumen'] ?? null;
+        $thumbnail = $data['thumbnail'] ?? null;
+        
+        // Remove file fields from data array
+        unset($data['dokumen'], $data['thumbnail']);
+        
+        // Update the record
+        $record->update($data);
+        
+        // Handle dokumen upload - hapus file lama jika ada file baru
+        if ($dokumen) {
             $record->clearMediaCollection('dokumen');
-            $record->addMediaFromRequest('dokumen')
+            $record->addMediaFromDisk($dokumen, 'public')
                 ->toMediaCollection('dokumen');
         }
-
-        if (request()->hasFile('thumbnail')) {
+        
+        // Handle thumbnail upload - hapus file lama jika ada file baru
+        if ($thumbnail) {
             $record->clearMediaCollection('thumbnail');
-            $record->addMediaFromRequest('thumbnail')
+            $record->addMediaFromDisk($thumbnail, 'public')
                 ->toMediaCollection('thumbnail');
         }
-
+        
         return $record;
     }
 }

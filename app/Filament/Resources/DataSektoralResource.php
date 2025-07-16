@@ -25,6 +25,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -36,13 +37,11 @@ class DataSektoralResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
 
-    protected static ?string $navigationGroup = 'Konten';
+    protected static ?string $navigationGroup = 'Kelola Komponen Desa';
+    protected static ?string $navigationLabel = 'Kelola Data Sektoral';
+    protected static ?int $navigationSort = 7;
 
     protected static ?string $recordTitleAttribute = 'judul';
-
-    protected static ?string $navigationLabel = 'Data Sektoral';
-
-    protected static ?int $navigationSort = 4;
 
     public static function getNavigationBadge(): ?string
     {
@@ -261,6 +260,58 @@ class DataSektoralResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
-        return \App\Helpers\FilamentResourceHelper::getScopedResourceQuery($query);
+        $user = Auth::user();
+        
+        if ($user->hasRole('superadmin')) {
+            return $query;
+        }
+        
+        if ($user->hasAnyRole(['admin_desa', 'operator_desa'])) {
+            return $query->where('desa_id', $user->desa_id);
+        }
+        
+        return $query;
+    }
+    
+    public static function canViewAny(): bool
+    {
+        $user = Auth::user();
+        return $user->hasAnyRole(['superadmin', 'admin_desa', 'operator_desa']);
+    }
+    
+    public static function canCreate(): bool
+    {
+        $user = Auth::user();
+        return $user->hasAnyRole(['superadmin', 'admin_desa', 'operator_desa']);
+    }
+    
+    public static function canEdit(Model $record): bool
+    {
+        $user = Auth::user();
+        
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+        
+        if ($user->hasAnyRole(['admin_desa', 'operator_desa'])) {
+            return $record->desa_id === $user->desa_id;
+        }
+        
+        return false;
+    }
+    
+    public static function canDelete(Model $record): bool
+    {
+        $user = Auth::user();
+        
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+        
+        if ($user->hasAnyRole(['admin_desa', 'operator_desa'])) {
+            return $record->desa_id === $user->desa_id;
+        }
+        
+        return false;
     }
 }

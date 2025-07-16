@@ -36,15 +36,15 @@ class BeritaResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
-    protected static ?string $navigationGroup = 'Manajemen Desa';
+    protected static ?string $navigationGroup = 'Kelola Komponen Desa';
 
-    protected static ?string $navigationLabel = 'Berita';
+    protected static ?string $navigationLabel = 'Kelola Berita';
 
     protected static ?string $modelLabel = 'Berita';
 
     protected static ?string $pluralModelLabel = 'Berita';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
@@ -278,12 +278,14 @@ class BeritaResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
     }
 
     public static function canCreate(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
     }
 
     public static function canEdit($record): bool

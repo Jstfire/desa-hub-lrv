@@ -33,10 +33,8 @@ class EditGaleri extends EditRecord
         if (!empty($foto)) {
             $collectionName = $data['jenis'] === 'foto' ? 'foto' : 'video';
 
-            // If it's a single file upload (video), clear the collection first.
-            if ($data['jenis'] === 'video') {
-                $record->clearMediaCollection($collectionName);
-            }
+            // Hapus file lama jika ada file baru yang diupload
+            $record->clearMediaCollection($collectionName);
 
             foreach ($foto as $file) {
                 // The file path is relative to the storage/app/public directory

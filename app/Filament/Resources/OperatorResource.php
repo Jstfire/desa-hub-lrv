@@ -2,8 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Resources\OperatorResource\Pages;
 use App\Models\User;
 use App\Models\Desa;
 use Filament\Forms;
@@ -11,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
@@ -22,29 +19,44 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Builder;
 
-class UserResource extends Resource
+class OperatorResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Superadmin Only';
+    protected static ?string $navigationGroup = 'Kelola Komponen Desa';
 
-    protected static ?string $navigationLabel = 'Kelola Seluruh User';
+    protected static ?string $navigationLabel = 'Kelola Operator';
 
-    protected static ?string $modelLabel = 'Pengguna';
+    protected static ?string $modelLabel = 'Operator';
 
-    protected static ?string $pluralModelLabel = 'Pengguna';
+    protected static ?string $pluralModelLabel = 'Operator';
 
     protected static ?int $navigationSort = 1;
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery()->whereHas('roles', function ($query) {
+            $query->where('name', 'operator_desa');
+        });
+
+        // If user is admin_desa, only show operators from their village
+        $user = Auth::user();
+        if ($user && $user->hasRole('admin_desa')) {
+            $query->where('desa_id', $user->desa_id);
+        }
+
+        return $query;
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Informasi Pengguna')
+                Section::make('Informasi Operator')
                     ->schema([
                         TextInput::make('name')
                             ->label('Nama')
@@ -66,27 +78,27 @@ class UserResource extends Resource
                             ->helperText('Minimal 8 karakter. Kosongkan jika tidak ingin mengubah password.'),
                     ])
                     ->columns(2),
-                Section::make('Role dan Akses')
+                Section::make('Penugasan Desa')
                     ->schema([
-                        Select::make('roles')
-                            ->label('Role')
-                            ->relationship('roles', 'name')
-                            ->options(Role::all()->pluck('name', 'id'))
-                            ->multiple()
-                            ->preload()
-                            ->required()
-                            ->helperText('Pilih role untuk menentukan akses pengguna'),
                         Select::make('desa_id')
                             ->label('Desa')
                             ->relationship('desa', 'nama')
-                            ->options(Desa::all()->pluck('nama', 'id'))
+                            ->options(function () {
+                                // If user is admin_desa, only show their village
+                                $user = Auth::user();
+                                if ($user && $user->hasRole('admin_desa')) {
+                                    return Desa::where('id', $user->desa_id)->pluck('nama', 'id');
+                                }
+                                // If superadmin, show all villages
+                                return Desa::all()->pluck('nama', 'id');
+                            })
                             ->searchable()
-                            ->nullable()
-                            ->helperText('Pilih desa untuk admin desa/operator desa'),
+                            ->required()
+                            ->helperText('Pilih desa tempat operator akan bertugas'),
                         Toggle::make('is_active')
                             ->label('Aktif')
                             ->default(true)
-                            ->helperText('Nonaktifkan untuk mencegah pengguna login'),
+                            ->helperText('Nonaktifkan untuk mencegah operator login'),
                     ])
                     ->columns(2),
             ]);
@@ -104,21 +116,10 @@ class UserResource extends Resource
                     ->label('Email')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('roles.name')
-                    ->label('Role')
-                    ->badge()
-                    ->separator(',')
-                    ->color(fn(string $state): string => match ($state) {
-                        'superadmin' => 'danger',
-                        'admin_desa' => 'warning',
-                        'operator_desa' => 'success',
-                        default => 'gray',
-                    }),
                 TextColumn::make('desa.nama')
                     ->label('Desa')
                     ->searchable()
-                    ->sortable()
-                    ->default('N/A'),
+                    ->sortable(),
                 TextColumn::make('is_active')
                     ->label('Status')
                     ->icon(fn(bool $state): string => $state ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
@@ -131,15 +132,11 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('roles')
-                    ->label('Role')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->preload(),
                 SelectFilter::make('desa')
                     ->label('Desa')
                     ->relationship('desa', 'nama')
-                    ->searchable(),
+                    ->searchable()
+                    ->visible(fn() => Auth::user()?->hasRole('superadmin')),
                 TernaryFilter::make('is_active')
                     ->label('Status')
                     ->trueLabel('Aktif')
@@ -176,34 +173,37 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ListOperators::route('/'),
+            'create' => Pages\CreateOperator::route('/create'),
+            'view' => Pages\ViewOperator::route('/{record}'),
+            'edit' => Pages\EditOperator::route('/{record}/edit'),
         ];
     }
 
     public static function canViewAny(): bool
     {
         $user = Auth::user();
-        return $user && $user->hasRole(['superadmin']);
+        return $user && $user->hasAnyRole(['superadmin', 'admin_desa']);
     }
 
     public static function canCreate(): bool
     {
         $user = Auth::user();
-        return $user && $user->hasRole(['superadmin']);
+        return $user && $user->hasAnyRole(['superadmin', 'admin_desa']);
     }
 
     public static function canEdit($record): bool
     {
         $user = Auth::user();
-        return $user && $user->hasRole(['superadmin']);
+        return $user && $user->hasAnyRole(['superadmin', 'admin_desa']);
     }
 
     public static function canDelete($record): bool
     {
         $user = Auth::user();
-        return $user && $user->hasRole(['superadmin']) && $record->getKey() !== Auth::id();
+        return $user && $user->hasAnyRole(['superadmin', 'admin_desa']) && 
+               $record->getKey() !== Auth::id();
     }
+
+
 }

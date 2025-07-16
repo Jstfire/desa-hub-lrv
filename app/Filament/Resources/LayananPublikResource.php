@@ -33,15 +33,15 @@ class LayananPublikResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $navigationGroup = 'Manajemen Desa';
+    protected static ?string $navigationGroup = 'Kelola Komponen Desa';
 
-    protected static ?string $navigationLabel = 'Layanan Publik';
+    protected static ?string $navigationLabel = 'Kelola Layanan Publik';
 
     protected static ?string $modelLabel = 'Layanan Publik';
 
     protected static ?string $pluralModelLabel = 'Layanan Publik';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
@@ -225,12 +225,14 @@ class LayananPublikResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
     }
 
     public static function canCreate(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin', 'admin_desa', 'operator_desa']);
     }
 
     public static function canEdit($record): bool

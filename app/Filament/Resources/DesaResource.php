@@ -35,15 +35,15 @@ class DesaResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
-    protected static ?string $navigationGroup = 'Manajemen Desa';
+    protected static ?string $navigationGroup = 'Superadmin Only';
 
-    protected static ?string $navigationLabel = 'Pengaturan Desa';
+    protected static ?string $navigationLabel = 'Kelola Desa';
 
     protected static ?string $modelLabel = 'Desa';
 
     protected static ?string $pluralModelLabel = 'Desa';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -279,30 +279,37 @@ class DesaResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin', 'admin_desa']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin', 'admin_desa']);
     }
 
     public static function canCreate(): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin']);
     }
 
     public static function canEdit($record): bool
     {
         $user = Auth::user();
-        if (!$user) return false;
-
-        if ($user->hasRole('superadmin')) return true;
-
+        if (!$user) {
+            return false;
+        }
+        
+        if ($user->hasRole('superadmin')) {
+            return true;
+        }
+        
         if ($user->hasRole('admin_desa')) {
             return $record->admin_id === $user->getKey();
         }
-
+        
         return false;
     }
 
     public static function canDelete($record): bool
     {
-        return Auth::user() && Auth::user()->hasRole(['superadmin']);
+        $user = Auth::user();
+        return $user && $user->hasRole(['superadmin']);
     }
 }
