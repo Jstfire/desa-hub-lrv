@@ -1,10 +1,11 @@
-<a href="/">
-    <svg class="size-16" viewbox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M11.395 44.428C4.557 40.198 0 32.632 0 24 0 10.745 10.745 0 24 0a23.891 23.891 0 0113.997 4.502c-.2 17.907-11.097 33.245-26.602 39.926z"
-            fill="#6875F5" />
-        <path
-            d="M14.134 45.885A23.914 23.914 0 0024 48c13.255 0 24-10.745 24-24 0-3.516-.756-6.856-2.115-9.866-4.659 15.143-16.608 27.092-31.75 31.751z"
-            fill="#6875F5" />
-    </svg>
+<a href="/" class="flex flex-col items-center group">
+    <div class="relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+        <img src="{{ asset('images/logo_busel.png') }}" alt="Logo Kabupaten Buton Selatan" class="relative w-20 h-20 object-contain rounded-full bg-white p-2 shadow-lg border-2 border-blue-200 dark:border-blue-700 group-hover:scale-105 transition-transform duration-300">
+    </div>
+    <div class="mt-4 text-center">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">DesaHub</h1>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Kabupaten Buton Selatan</p>
+        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Sistem Web Desa Terintegrasi</p>
+    </div>
 </a>
