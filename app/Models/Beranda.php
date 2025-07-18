@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Beranda extends Model
+class Beranda extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     protected $table = 'berandas';
 
@@ -59,5 +61,14 @@ class Beranda extends Model
     public function desa(): BelongsTo
     {
         return $this->belongsTo(Desa::class);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('banner')
+            ->singleFile();
+
+        $this->addMediaCollection('struktur')
+            ->singleFile();
     }
 }

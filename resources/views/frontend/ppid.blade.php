@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'PPID - ' . $desa->nama)
+@section('title', 'PPID - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="bg-white dark:bg-gray-900 min-h-screen">
@@ -12,7 +12,7 @@
                         PPID
                     </h1>
                     <p class="opacity-90 text-xl">
-                        Pejabat Pengelola Informasi dan Dokumentasi {{ $desa->nama }}
+                        Pejabat Pengelola Informasi dan Dokumentasi {{ $desa->nama_lengkap }}
                     </p>
                 </div>
             </div>

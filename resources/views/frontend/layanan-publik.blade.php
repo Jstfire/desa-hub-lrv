@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Layanan Publik - ' . $desa->nama)
+@section('title', 'Layanan Publik - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="bg-white dark:bg-gray-900 min-h-screen">
@@ -12,7 +12,7 @@
                         Layanan Publik
                     </h1>
                     <p class="opacity-90 text-xl">
-                        Layanan publik yang disediakan oleh {{ $desa->nama }}
+                        Layanan publik yang disediakan oleh {{ $desa->nama_lengkap }}
                     </p>
                 </div>
             </div>

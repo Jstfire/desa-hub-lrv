@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', $desa->nama) - {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}</title>
-    <meta name="description" content="@yield('description', 'Situs resmi ' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama)">
-    <meta name="keywords" content="@yield('keywords', 'desa, kelurahan, ' . $desa->nama . ', pemerintahan')">
+    <title>@yield('title', $desa->nama_lengkap) - {{ $desa->nama_lengkap }}</title>
+    <meta name="description" content="@yield('description', 'Situs resmi ' . $desa->nama_lengkap)">
+    <meta name="keywords" content="@yield('keywords', 'desa, kelurahan, ' . $desa->nama_lengkap . ', pemerintahan')">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
@@ -120,7 +120,7 @@
                         <img src="{{ asset('images/logo_busel.png') }}" alt="Logo" class="mr-3 w-14">
                         <div>
                             <p class="text-gray-500 dark:text-gray-400 text-base">{{ ucfirst($desa->jenis) }}</p>
-                            <h1 class="font-bold text-gray-800 dark:text-white text-2xl">{{ $desa->nama }}</h1>
+                            <h1 class="font-bold text-gray-800 dark:text-white text-2xl">{{ $desa->nama_lengkap }}</h1>
                         </div>
                     </a>
                 </div>
@@ -242,7 +242,7 @@
                                     class="mr-3 w-auto h-10">
                             @endif
                             <div>
-                                <h3 class="font-bold text-xl">{{ $desa->nama }}</h3>
+                                <h3 class="font-bold text-xl">{{ $desa->nama_lengkap }}</h3>
                                 <p class="text-gray-400">{{ ucfirst($desa->jenis) }}</p>
                             </div>
                         </div>

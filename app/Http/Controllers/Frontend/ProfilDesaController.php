@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Enums\ProfilDesaJenis;
 use App\Http\Controllers\Controller;
 use App\Models\ProfilDesa;
 use App\Models\Desa;
@@ -14,13 +15,9 @@ class ProfilDesaController extends Controller
     /**
      * Display the profil page for a specific desa.
      */
-    public function show(Request $request, $jenis = 'tentang')
+    public function show($uri, $jenis = 'tentang')
     {
-        $desa = $request->route('desa');
-
-        if (!$desa) {
-            abort(404, 'Desa tidak ditemukan');
-        }
+        $desa = Desa::where('uri', $uri)->firstOrFail();
 
         // Get all profil data for this desa
         $profil = ProfilDesa::where('desa_id', $desa->id)
@@ -28,58 +25,41 @@ class ProfilDesaController extends Controller
             ->orderBy('urutan')
             ->get();
 
-        // Get the currently requested profile type, or default to first available
-        $currentProfile = ProfilDesa::where('desa_id', $desa->id)
-            ->where('is_published', true)
-            ->where('jenis', $jenis)
-            ->first();
+        // Get the currently requested profile type
+        $currentProfile = $profil->where('jenis', ProfilDesaJenis::from($jenis))->first();
 
-        if (!$profil) {
-            // Create default profil data if none exists
+        // If no profiles exist at all, create temporary default ones for display
+        if ($profil->isEmpty()) {
             $defaultProfiles = [
-                [
-                    'desa_id' => $desa->id,
-                    'jenis' => 'tentang',
-                    'judul' => 'Tentang Desa',
-                    'konten' => 'Informasi tentang desa belum tersedia.',
-                    'urutan' => 1,
-                    'is_published' => false
-                ],
-                [
-                    'desa_id' => $desa->id,
-                    'jenis' => 'visi_misi',
-                    'judul' => 'Visi dan Misi',
-                    'konten' => '<h3>Visi</h3><p>Visi desa belum tersedia.</p><h3>Misi</h3><p>Misi desa belum tersedia.</p>',
-                    'urutan' => 2,
-                    'is_published' => false
-                ],
-                [
-                    'desa_id' => $desa->id,
-                    'jenis' => 'struktur',
-                    'judul' => 'Struktur Organisasi',
-                    'konten' => 'Struktur organisasi desa belum tersedia.',
-                    'urutan' => 3,
-                    'is_published' => false
-                ],
-                [
-                    'desa_id' => $desa->id,
-                    'jenis' => 'monografi',
-                    'judul' => 'Monografi Desa',
-                    'konten' => 'Data monografi desa belum tersedia.',
-                    'urutan' => 4,
-                    'is_published' => false
-                ]
+                ['jenis' => ProfilDesaJenis::TENTANG, 'judul' => 'Tentang Desa', 'konten' => 'Informasi tentang desa belum tersedia.'],
+                ['jenis' => ProfilDesaJenis::VISI_MISI, 'judul' => 'Visi dan Misi', 'konten' => '<h3>Visi</h3><p>Visi desa belum tersedia.</p><h3>Misi</h3><p>Misi desa belum tersedia.</p>'],
+                ['jenis' => ProfilDesaJenis::STRUKTUR, 'judul' => 'Struktur Organisasi', 'konten' => 'Struktur organisasi desa belum tersedia.'],
+                ['jenis' => ProfilDesaJenis::MONOGRAFI, 'judul' => 'Monografi Desa', 'konten' => 'Data monografi desa belum tersedia.'],
             ];
-
-            // Create temporary default profiles for display
-            $profil = collect($defaultProfiles);
-            $currentProfile = (object)$defaultProfiles[0];
-        } else if (!$currentProfile && $profil->count() > 0) {
-            // If specific jenis not found but other profiles exist, use the first one
+            $profil = collect($defaultProfiles)->map(fn($p) => (object)$p);
+            $currentProfile = $profil->where('jenis', ProfilDesaJenis::from($jenis))->first() ?? $profil->first();
+        } elseif (!$currentProfile && $profil->isNotEmpty()) {
+            // If the specific 'jenis' is not found, default to the first available profile
             $currentProfile = $profil->first();
         }
 
-        return view('frontend.profil', compact('desa', 'profil', 'currentProfile', 'jenis'));
+        // Extract different profile types for the view
+        $tentang = $profil->where('jenis', ProfilDesaJenis::TENTANG)->first();
+        $visiMisi = $profil->where('jenis', ProfilDesaJenis::VISI_MISI)->first();
+        $struktur = $profil->where('jenis', ProfilDesaJenis::STRUKTUR)->first();
+        // Monografi can have multiple entries, so it remains a collection
+        $monografi = $profil->where('jenis', ProfilDesaJenis::MONOGRAFI);
+
+        return view('frontend.profil', compact(
+            'desa',
+            'profil',
+            'currentProfile',
+            'jenis',
+            'tentang',
+            'visiMisi',
+            'struktur',
+            'monografi'
+        ));
     }
 
     /**
@@ -103,7 +83,7 @@ class ProfilDesaController extends Controller
         return response()->json([
             'message' => 'Download fitur akan segera tersedia',
             'profil_id' => $profil->id,
-            'desa' => $desa->nama
+            'desa' => $desa->nama_lengkap
         ]);
     }
 }

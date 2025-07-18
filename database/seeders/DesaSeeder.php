@@ -6,6 +6,7 @@ use App\Models\Desa;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 
@@ -114,6 +115,15 @@ class DesaSeeder extends Seeder
             }
 
             $this->command->info($desaData['jenis'] . ' ' . $desaData['nama'] . ' berhasil dibuat.');
+
+            // Tambahkan media
+            $desaModel->addMedia(storage_path('app/seeders/images/placeholder.png'))
+                ->preservingOriginal()
+                ->toMediaCollection('logo', 'public');
+
+            $desaModel->addMedia(storage_path('app/seeders/images/placeholder.png'))
+                ->preservingOriginal()
+                ->toMediaCollection('banner', 'public');
         }
     }
 }

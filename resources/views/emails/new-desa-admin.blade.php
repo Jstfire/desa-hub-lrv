@@ -4,7 +4,7 @@
     Halo {{ $user->name }},
 
     Selamat! Anda telah ditunjuk sebagai **Admin** untuk **{{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }}
-    {{ $desa->nama }}**.
+    {{ $desa->nama_lengkap }}**.
 
     @if ($password)
         **Detail Akun Baru Anda:**

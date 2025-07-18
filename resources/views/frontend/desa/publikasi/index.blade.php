@@ -1,34 +1,32 @@
 @extends('frontend.desa.layouts.main')
 
-@section('title', 'Publikasi - ' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama)
+@section('title', 'Publikasi - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="mx-auto px-4 py-8 container">
         <div class="mb-8">
             <h1 class="mb-2 font-bold text-foreground text-3xl">
-                Publikasi {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
+                Publikasi {{ $desa->nama_lengkap }}
             </h1>
             <p class="text-muted-foreground">
-                Dokumen dan publikasi resmi {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
+                Dokumen dan publikasi resmi {{ $desa->nama_lengkap }}
             </p>
         </div>
 
         <!-- Filter Section -->
-        <div class="bg-card border border-border shadow-sm mb-8 p-4 rounded-lg">
+        <div class="bg-card shadow-sm mb-8 p-4 border border-border rounded-lg">
             <form action="{{ route('desa.publikasi', $desa->uri) }}" method="GET" class="flex flex-wrap gap-4">
                 <div class="w-full md:w-auto">
-                    <label for="search"
-                        class="block mb-1 font-medium text-card-foreground text-sm">Cari</label>
+                    <label for="search" class="block mb-1 font-medium text-card-foreground text-sm">Cari</label>
                     <input type="text" id="search" name="search" value="{{ request('search') }}"
                         placeholder="Cari publikasi..."
-                        class="block bg-background border border-input rounded-md px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full">
+                        class="block bg-background file:bg-transparent disabled:opacity-50 px-3 py-2 border border-input file:border-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2 w-full file:font-medium placeholder:text-muted-foreground text-sm file:text-sm disabled:cursor-not-allowed">
                 </div>
 
                 <div class="w-full md:w-auto">
-                    <label for="kategori"
-                        class="block mb-1 font-medium text-card-foreground text-sm">Kategori</label>
+                    <label for="kategori" class="block mb-1 font-medium text-card-foreground text-sm">Kategori</label>
                     <select id="kategori" name="kategori"
-                        class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        class="flex justify-between items-center bg-background disabled:opacity-50 px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring ring-offset-background focus:ring-offset-2 w-full h-10 placeholder:text-muted-foreground text-sm disabled:cursor-not-allowed">
                         <option value="">Semua Kategori</option>
                         <option value="laporan_keuangan" {{ request('kategori') == 'laporan_keuangan' ? 'selected' : '' }}>
                             Laporan Keuangan</option>
@@ -45,10 +43,9 @@
                 </div>
 
                 <div class="w-full md:w-auto">
-                    <label for="tahun"
-                        class="block mb-1 font-medium text-card-foreground text-sm">Tahun</label>
+                    <label for="tahun" class="block mb-1 font-medium text-card-foreground text-sm">Tahun</label>
                     <select id="tahun" name="tahun"
-                        class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        class="flex justify-between items-center bg-background disabled:opacity-50 px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring ring-offset-background focus:ring-offset-2 w-full h-10 placeholder:text-muted-foreground text-sm disabled:cursor-not-allowed">
                         <option value="">Semua Tahun</option>
                         @for ($i = date('Y'); $i >= 2000; $i--)
                             <option value="{{ $i }}" {{ request('tahun') == $i ? 'selected' : '' }}>
@@ -59,10 +56,10 @@
 
                 <div class="flex items-end w-full md:w-auto">
                     <button type="submit"
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Filter</button>
+                        class="inline-flex justify-center items-center bg-primary hover:bg-primary/90 disabled:opacity-50 px-4 py-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2 h-10 font-medium text-primary-foreground text-sm whitespace-nowrap transition-colors disabled:pointer-events-none">Filter</button>
                     @if (request('search') || request('kategori') || request('tahun'))
                         <a href="{{ route('desa.publikasi', $desa->uri) }}"
-                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 ml-2">Reset</a>
+                            class="inline-flex justify-center items-center bg-secondary hover:bg-secondary/80 disabled:opacity-50 ml-2 px-4 py-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2 h-10 font-medium text-secondary-foreground text-sm whitespace-nowrap transition-colors disabled:pointer-events-none">Reset</a>
                     @endif
                 </div>
             </form>
@@ -71,13 +68,17 @@
         <!-- Layout Toggle -->
         <div class="flex justify-end mb-6">
             <div class="flex space-x-2">
-                <button id="grid-view" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 w-10" aria-label="Tampilan Grid">
+                <button id="grid-view"
+                    class="inline-flex justify-center items-center bg-primary hover:bg-primary/90 disabled:opacity-50 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2 w-10 h-10 font-medium text-primary-foreground text-sm whitespace-nowrap transition-colors disabled:pointer-events-none"
+                    aria-label="Tampilan Grid">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                         <path
                             d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                     </svg>
                 </button>
-                <button id="list-view" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-muted text-muted-foreground hover:bg-muted/80 h-10 w-10" aria-label="Tampilan List">
+                <button id="list-view"
+                    class="inline-flex justify-center items-center bg-muted hover:bg-muted/80 disabled:opacity-50 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2 w-10 h-10 font-medium text-muted-foreground text-sm whitespace-nowrap transition-colors disabled:pointer-events-none"
+                    aria-label="Tampilan List">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
                             d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -93,8 +94,8 @@
                 <x-frontend.desa.components.publikasi-card :item="$item" :desa="$desa" view="grid" />
             @empty
                 <div class="col-span-full py-12 text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-4 w-12 h-12 text-muted-foreground" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-4 w-12 h-12 text-muted-foreground"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
@@ -110,8 +111,8 @@
                 <x-frontend.desa.components.publikasi-card :item="$item" :desa="$desa" view="list" />
             @empty
                 <div class="py-12 text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-4 w-12 h-12 text-muted-foreground" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-4 w-12 h-12 text-muted-foreground"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>

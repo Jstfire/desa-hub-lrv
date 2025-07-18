@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Data Sektoral - ' . $desa->nama)
+@section('title', 'Data Sektoral - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="bg-white dark:bg-gray-900 min-h-screen">
@@ -12,7 +12,7 @@
                         Data Sektoral
                     </h1>
                     <p class="opacity-90 text-xl">
-                        Data dan informasi sektoral {{ $desa->nama }}
+                        Data dan informasi sektoral {{ $desa->nama_lengkap }}
                     </p>
                 </div>
             </div>

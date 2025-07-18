@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
 @section('title', 'Berita')
-@section('description', 'Berita terkini dari ' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama)
+@section('description', 'Berita terkini dari ' . $desa->nama_lengkap)
 
 @section('content')
     <!-- Header -->
@@ -10,7 +10,7 @@
             <div class="text-center">
                 <h1 class="mb-4 font-bold text-4xl">Berita Terkini</h1>
                 <p class="text-xl">Informasi dan berita terbaru dari {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }}
-                    {{ $desa->nama }}</p>
+                    {{ $desa->nama_lengkap }}</p>
             </div>
         </div>
     </section>

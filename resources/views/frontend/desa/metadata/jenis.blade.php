@@ -1,6 +1,6 @@
 @extends('frontend.desa.layouts.main')
 
-@section('title', 'Informasi ' . ucfirst(str_replace('_', ' ', $jenis)) . ' - ' . $desa->nama)
+@section('title', 'Informasi ' . ucfirst(str_replace('_', ' ', $jenis)) . ' - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="bg-white dark:bg-gray-900 py-8">
@@ -9,7 +9,7 @@
                 <div>
                     <h1 class="font-bold text-gray-900 dark:text-white text-2xl">{{ ucfirst(str_replace('_', ' ', $jenis)) }}
                     </h1>
-                    <p class="text-gray-500 dark:text-gray-400">{{ $desa->nama }}</p>
+                    <p class="text-gray-500 dark:text-gray-400">{{ $desa->nama_lengkap }}</p>
                 </div>
             </div>
 

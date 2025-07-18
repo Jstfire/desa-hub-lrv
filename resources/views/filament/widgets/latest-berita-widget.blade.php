@@ -33,7 +33,7 @@
                                 {{ $item->judul }}
                             </p>
                             <p class="text-gray-500 dark:text-gray-400 text-xs">
-                                {{ $item->desa->nama }} • {{ $item->published_at->diffForHumans() }}
+                                {{ $item->desa->nama_lengkap }} • {{ $item->published_at->diffForHumans() }}
                             </p>
                         </div>
 

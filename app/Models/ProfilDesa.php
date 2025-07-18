@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\ProfilDesaJenis;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -26,6 +28,7 @@ class ProfilDesa extends Model implements HasMedia
     protected $casts = [
         'is_published' => 'boolean',
         'urutan' => 'integer',
+        'jenis' => ProfilDesaJenis::class,
     ];
 
     /**
@@ -47,9 +50,9 @@ class ProfilDesa extends Model implements HasMedia
     /**
      * Scope a query to filter by jenis.
      */
-    public function scopeType($query, $type)
+    public function scopeType($query, ProfilDesaJenis $type)
     {
-        return $query->where('jenis', $type);
+        return $query->where('jenis', $type->value);
     }
 
     /**
@@ -58,6 +61,15 @@ class ProfilDesa extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('documents')
-            ->acceptsMimeTypes(['application/pdf', 'image/jpeg', 'image/png', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+            ->acceptsMimeTypes([
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'image/jpeg',
+                'image/png',
+                'image/gif',
+            ]);
     }
 }

@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Galeri - ' . $desa->nama)
+@section('title', 'Galeri - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="bg-white dark:bg-gray-900 min-h-screen">
@@ -12,7 +12,7 @@
                         Galeri
                     </h1>
                     <p class="opacity-90 text-xl">
-                        Dokumentasi kegiatan dan keindahan {{ $desa->nama }}
+                        Dokumentasi kegiatan dan keindahan {{ $desa->nama_lengkap }}
                     </p>
                 </div>
             </div>

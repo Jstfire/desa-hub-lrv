@@ -1,6 +1,6 @@
 @extends('frontend.desa.layouts.main')
 
-@section('title', 'PPID - ' . $desa->nama)
+@section('title', 'PPID - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="bg-background py-8">
@@ -9,7 +9,7 @@
                 <div>
                     <h1 class="font-bold text-foreground text-2xl">Pejabat Pengelola Informasi dan Dokumentasi
                         (PPID)</h1>
-                    <p class="text-muted-foreground">{{ $desa->nama }}</p>
+                    <p class="text-muted-foreground">{{ $desa->nama_lengkap }}</p>
                 </div>
 
                 <div class="flex space-x-2">
@@ -19,8 +19,7 @@
                                 d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                         </svg>
                     </button>
-                    <button id="list-view"
-                        class="bg-muted hover:bg-muted/80 p-2 rounded text-muted-foreground">
+                    <button id="list-view" class="bg-muted hover:bg-muted/80 p-2 rounded text-muted-foreground">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -30,21 +29,20 @@
                 </div>
             </div>
 
-            <div class="bg-card border border-border shadow-sm mb-6 p-6 rounded-lg">
+            <div class="bg-card shadow-sm mb-6 p-6 border border-border rounded-lg">
                 <form action="{{ route('desa.ppid', $desa->uri) }}" method="GET" class="flex md:flex-row flex-col gap-4">
                     <div class="flex-1">
                         <label for="search" class="block mb-1 font-medium text-foreground text-sm">Cari
                             Dokumen</label>
                         <input type="text" id="search" name="search" value="{{ request('search') }}"
                             placeholder="Cari judul atau deskripsi"
-                            class="bg-background border border-input px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 w-full text-foreground placeholder:text-muted-foreground">
+                            class="bg-background px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 w-full text-foreground placeholder:text-muted-foreground">
                     </div>
 
                     <div class="w-full md:w-1/4">
-                        <label for="kategori"
-                            class="block mb-1 font-medium text-foreground text-sm">Kategori</label>
+                        <label for="kategori" class="block mb-1 font-medium text-foreground text-sm">Kategori</label>
                         <select id="kategori" name="kategori"
-                            class="bg-background border border-input px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 w-full text-foreground">
+                            class="bg-background px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 w-full text-foreground">
                             <option value="">Semua Kategori</option>
                             <option value="informasi_berkala"
                                 {{ request('kategori') == 'informasi_berkala' ? 'selected' : '' }}>Informasi Berkala
@@ -75,23 +73,17 @@
             <!-- Grid View (default) -->
             <div id="grid-container" class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 @forelse($ppid as $dokumen)
-                    <div class="bg-card border border-border shadow-sm rounded-lg overflow-hidden">
+                    <div class="bg-card shadow-sm border border-border rounded-lg overflow-hidden">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-3">
                                 @php
                                     $badgeClasses = [
-                                        'informasi_berkala' =>
-                                            'bg-blue-100 text-blue-800',
-                                        'informasi_serta_merta' =>
-                                            'bg-green-100 text-green-800',
-                                        'informasi_setiap_saat' =>
-                                            'bg-yellow-100 text-yellow-800',
-                                        'informasi_dikecualikan' =>
-                                            'bg-red-100 text-red-800',
+                                        'informasi_berkala' => 'bg-blue-100 text-blue-800',
+                                        'informasi_serta_merta' => 'bg-green-100 text-green-800',
+                                        'informasi_setiap_saat' => 'bg-yellow-100 text-yellow-800',
+                                        'informasi_dikecualikan' => 'bg-red-100 text-red-800',
                                     ];
-                                    $badgeClass =
-                                        $badgeClasses[$dokumen->kategori] ??
-                                        'bg-muted text-muted-foreground';
+                                    $badgeClass = $badgeClasses[$dokumen->kategori] ?? 'bg-muted text-muted-foreground';
                                 @endphp
                                 <span class="px-3 py-1 rounded-full font-semibold text-xs {{ $badgeClass }}">
                                     {{ str_replace('_', ' ', ucwords($dokumen->kategori, '_')) }}
@@ -104,8 +96,7 @@
 
                             <p class="mb-4 text-muted-foreground line-clamp-3">{{ $dokumen->deskripsi }}</p>
 
-                            <div
-                                class="flex justify-between items-center mt-4 pt-4 border-border border-t">
+                            <div class="flex justify-between items-center mt-4 pt-4 border-t border-border">
                                 <span class="flex items-center text-muted-foreground text-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 w-4 h-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -127,7 +118,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="col-span-full bg-card border border-border shadow-sm p-6 rounded-lg">
+                    <div class="col-span-full bg-card shadow-sm p-6 border border-border rounded-lg">
                         <p class="text-muted-foreground">Belum ada dokumen PPID yang tersedia.</p>
                     </div>
                 @endforelse
@@ -136,25 +127,20 @@
             <!-- List View (hidden by default) -->
             <div id="list-container" class="hidden space-y-4">
                 @forelse($ppid as $dokumen)
-                    <div class="bg-card border border-border shadow-sm rounded-lg overflow-hidden">
+                    <div class="bg-card shadow-sm border border-border rounded-lg overflow-hidden">
                         <div class="p-6">
                             <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-2 mb-2">
                                         @php
                                             $badgeClasses = [
-                                                'informasi_berkala' =>
-                                                    'bg-blue-100 text-blue-800',
-                                                'informasi_serta_merta' =>
-                                                    'bg-green-100 text-green-800',
-                                                'informasi_setiap_saat' =>
-                                                    'bg-yellow-100 text-yellow-800',
-                                                'informasi_dikecualikan' =>
-                                                    'bg-red-100 text-red-800',
+                                                'informasi_berkala' => 'bg-blue-100 text-blue-800',
+                                                'informasi_serta_merta' => 'bg-green-100 text-green-800',
+                                                'informasi_setiap_saat' => 'bg-yellow-100 text-yellow-800',
+                                                'informasi_dikecualikan' => 'bg-red-100 text-red-800',
                                             ];
                                             $badgeClass =
-                                                $badgeClasses[$dokumen->kategori] ??
-                                                'bg-muted text-muted-foreground';
+                                                $badgeClasses[$dokumen->kategori] ?? 'bg-muted text-muted-foreground';
                                         @endphp
                                         <span class="px-3 py-1 rounded-full font-semibold text-xs {{ $badgeClass }}">
                                             {{ str_replace('_', ' ', ucwords($dokumen->kategori, '_')) }}
@@ -192,7 +178,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="bg-card border border-border shadow-sm p-6 rounded-lg">
+                    <div class="bg-card shadow-sm p-6 border border-border rounded-lg">
                         <p class="text-muted-foreground">Belum ada dokumen PPID yang tersedia.</p>
                     </div>
                 @endforelse

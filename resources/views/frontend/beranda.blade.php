@@ -2,7 +2,7 @@
 
 @section('title', $beranda ? $beranda->judul_welcome : 'Beranda')
 @section('description', 'Selamat datang di situs resmi ' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' .
-    $desa->nama)
+    $desa->nama_lengkap)
 
 @section('content')
     <!-- Section 1: Hero/Welcome Section -->
@@ -22,7 +22,7 @@
                 <h1 class="mb-6 font-bold text-4xl md:text-6xl">
                     {!! $beranda && $beranda->judul_welcome
                         ? $beranda->judul_welcome
-                        : 'Selamat Datang di<br>Situs Resmi ' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama !!}
+                        : 'Selamat Datang di<br>Situs Resmi ' . $desa->nama_lengkap !!}
                 </h1>
                 <div class="mx-auto mb-8 max-w-3xl text-xl md:text-2xl">
                     {!! $beranda && $beranda->deskripsi_welcome
@@ -30,7 +30,7 @@
                         : 'Situs resmi ' .
                             ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') .
                             ' ' .
-                            $desa->nama .
+                            $desa->nama_lengkap .
                             ' yang menyediakan informasi lengkap tentang kegiatan, layanan, dan berita terkini.' !!}
                 </div>
                 <div class="flex sm:flex-row flex-col justify-center gap-4">
@@ -55,7 +55,7 @@
                     <h2 class="mb-4 font-bold text-gray-800 dark:text-white text-3xl">
                         {{ $beranda ? $beranda->judul_berita : 'Berita Terbaru' }}</h2>
                     <p class="text-gray-600 dark:text-gray-400">Informasi terkini dan berita penting dari
-                        {{ $desa->nama }}</p>
+                        {{ $desa->nama_lengkap }}</p>
                 </div>
 
                 @if ($beritaUtama->count() > 0)
@@ -153,7 +153,7 @@
                         {{ $beranda->judul_lokasi ?? 'Lokasi Desa' }}
                     </h2>
                     <p class="mx-auto max-w-2xl text-gray-600">
-                        Lokasi {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
+                        Lokasi {{ $desa->nama_lengkap }}
                     </p>
                 </div>
 
@@ -211,7 +211,7 @@
                         {{ $beranda->judul_struktur ?? 'Struktur Organisasi' }}
                     </h2>
                     <p class="mx-auto max-w-2xl text-gray-600">
-                        Struktur organisasi {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
+                        Struktur organisasi {{ $desa->nama_lengkap }}
                     </p>
                 </div>
 
@@ -219,7 +219,7 @@
                     <div class="mx-auto max-w-6xl">
                         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                             <img src="{{ asset('storage/' . $strukturOrganisasi->gambar) }}"
-                                alt="Struktur Organisasi {{ $desa->nama }}" class="w-full h-auto object-contain">
+                                alt="Struktur Organisasi {{ $desa->nama_lengkap }}" class="w-full h-auto object-contain">
                         </div>
                         @if ($strukturOrganisasi->deskripsi)
                             <div class="mt-6 text-center">
@@ -286,7 +286,7 @@
                     <h2 class="mb-4 font-bold text-gray-800 text-3xl">
                         {{ $beranda->judul_penduduk ?? 'Statistik Penduduk' }}</h2>
                     <p class="mx-auto max-w-2xl text-gray-600">Data kependudukan terkini
-                        {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}</p>
+                        {{ $desa->nama_lengkap }}</p>
                 </div>
 
                 @if ($beranda->total_penduduk || $beranda->penduduk_laki || $beranda->penduduk_perempuan)

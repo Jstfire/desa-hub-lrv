@@ -10,7 +10,7 @@
     - Email: {{ $user->email }}
 
     @if ($user->desa)
-        - Desa: {{ $user->desa->nama }}
+        - Desa: {{ $user->desa->nama_lengkap }}
         - Peran: {{ $user->roles->pluck('name')->implode(', ') }}
     @endif
 

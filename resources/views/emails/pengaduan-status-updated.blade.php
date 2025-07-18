@@ -8,7 +8,7 @@
     **Detail Pengaduan:**
     - **Judul:** {{ $pengaduan->judul }}
     - **Kategori:** {{ $pengaduan->kategori }}
-    - **Desa:** {{ $pengaduan->desa->nama }}
+    - **Desa:** {{ $pengaduan->desa->nama_lengkap }}
     - **Tanggal:** {{ $pengaduan->created_at->format('d F Y, H:i') }}
 
     **Perubahan Status:**
@@ -31,7 +31,7 @@
         {{ $pengaduan->keterangan }}
     @endif
 
-    Jika Anda memiliki pertanyaan lebih lanjut, silakan hubungi kantor desa {{ $pengaduan->desa->nama }}.
+    Jika Anda memiliki pertanyaan lebih lanjut, silakan hubungi kantor desa {{ $pengaduan->desa->nama_lengkap }}.
 
     Terima kasih,<br>
     {{ config('app.name') }}

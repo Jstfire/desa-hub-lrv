@@ -1,13 +1,13 @@
 @extends('frontend.desa.layouts.main')
 
-@section('title', ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama)
+@section('title', $desa->nama_lengkap)
 
 @section('content')
     <!-- Banner Section -->
-    <section class="bg-card border border-border mx-auto mb-12 p-8 px-4 rounded-lg container shadow-sm">
+    <section class="bg-card shadow-sm mx-auto mb-12 p-8 px-4 border border-border rounded-lg container">
         <div class="mx-auto max-w-4xl text-center">
             <h2 class="mb-4 font-bold text-card-foreground text-4xl">
-                Selamat Datang di Situs Resmi {{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }} {{ $desa->nama }}
+                Selamat Datang di Situs Resmi {{ $desa->nama_lengkap }}
             </h2>
             <p class="text-muted-foreground text-lg">
                 {{ $desa->deskripsi ?? 'Website resmi yang menyediakan informasi terkait pemerintahan desa, kegiatan, layanan publik, dan data statistik untuk masyarakat.' }}
@@ -48,7 +48,7 @@
     <!-- Organization Structure -->
     <section class="mb-12">
         <h3 class="mb-6 font-bold text-foreground text-2xl">Struktur Organisasi</h3>
-        <div class="bg-card border border-border shadow-sm p-6 rounded-lg">
+        <div class="bg-card shadow-sm p-6 border border-border rounded-lg">
             <!-- Placeholder for organization structure -->
             <div class="flex justify-center items-center h-64">
                 <p class="text-muted-foreground">Struktur organisasi akan ditampilkan di sini</p>
@@ -60,15 +60,18 @@
     <section class="mb-12">
         <h3 class="mb-6 font-bold text-foreground text-2xl">Jumlah Penduduk</h3>
         <div class="gap-6 grid grid-cols-1 md:grid-cols-3">
-            <div class="bg-card border border-border shadow-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+            <div
+                class="bg-card shadow-sm hover:shadow-md p-6 border border-border rounded-lg text-center transition-shadow">
                 <h4 class="mb-2 text-muted-foreground text-lg">Total Penduduk</h4>
                 <p class="font-bold text-card-foreground text-3xl">5.328</p>
             </div>
-            <div class="bg-card border border-border shadow-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+            <div
+                class="bg-card shadow-sm hover:shadow-md p-6 border border-border rounded-lg text-center transition-shadow">
                 <h4 class="mb-2 text-muted-foreground text-lg">Penduduk Laki-laki</h4>
                 <p class="font-bold text-card-foreground text-3xl">2.756</p>
             </div>
-            <div class="bg-card border border-border shadow-sm p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+            <div
+                class="bg-card shadow-sm hover:shadow-md p-6 border border-border rounded-lg text-center transition-shadow">
                 <h4 class="mb-2 text-muted-foreground text-lg">Penduduk Perempuan</h4>
                 <p class="font-bold text-card-foreground text-3xl">2.572</p>
             </div>
@@ -79,8 +82,8 @@
     <section class="mb-12">
         <h3 class="mb-6 font-bold text-foreground text-2xl">APBDesa 2025</h3>
         <div class="gap-6 grid grid-cols-1 md:grid-cols-2">
-            <div class="bg-card border border-border shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
-                <h4 class="mb-4 text-card-foreground text-lg font-semibold">Pendapatan Desa</h4>
+            <div class="bg-card shadow-sm hover:shadow-md p-6 border border-border rounded-lg transition-shadow">
+                <h4 class="mb-4 font-semibold text-card-foreground text-lg">Pendapatan Desa</h4>
                 <div class="mb-2">
                     <div class="flex justify-between mb-1">
                         <span class="text-muted-foreground">Rp 850.000.000</span>
@@ -91,8 +94,8 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-card border border-border shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
-                <h4 class="mb-4 text-card-foreground text-lg font-semibold">Belanja Desa</h4>
+            <div class="bg-card shadow-sm hover:shadow-md p-6 border border-border rounded-lg transition-shadow">
+                <h4 class="mb-4 font-semibold text-card-foreground text-lg">Belanja Desa</h4>
                 <div class="mb-2">
                     <div class="flex justify-between mb-1">
                         <span class="text-muted-foreground">Rp 650.000.000</span>
@@ -115,10 +118,10 @@
         </div>
 
         <div class="gap-4 grid grid-cols-2 md:grid-cols-4">
-            <div class="bg-muted border border-border rounded-lg h-40 hover:shadow-md transition-shadow"></div>
-            <div class="bg-muted border border-border rounded-lg h-40 hover:shadow-md transition-shadow"></div>
-            <div class="bg-muted border border-border rounded-lg h-40 hover:shadow-md transition-shadow"></div>
-            <div class="bg-muted border border-border rounded-lg h-40 hover:shadow-md transition-shadow"></div>
+            <div class="bg-muted hover:shadow-md border border-border rounded-lg h-40 transition-shadow"></div>
+            <div class="bg-muted hover:shadow-md border border-border rounded-lg h-40 transition-shadow"></div>
+            <div class="bg-muted hover:shadow-md border border-border rounded-lg h-40 transition-shadow"></div>
+            <div class="bg-muted hover:shadow-md border border-border rounded-lg h-40 transition-shadow"></div>
         </div>
     </section>
     </main>
@@ -130,7 +133,7 @@
                 <!-- Section 1: Logo & Location -->
                 <div>
                     <h4 class="mb-4 font-bold text-xl">{{ $desa->jenis == 'desa' ? 'Desa' : 'Kelurahan' }}
-                        {{ $desa->nama }}</h4>
+                        {{ $desa->nama_lengkap }}</h4>
                     <p class="mb-2">{{ $desa->alamat }}</p>
                     <div class="flex justify-center items-center bg-gray-700 mt-4 rounded-lg w-24 h-24">
                         <span>Logo</span>
@@ -161,15 +164,13 @@
 
                     <div class="flex space-x-4 mt-4">
                         <a href="#" class="text-white hover:text-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor"
-                                viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                             </svg>
                         </a>
                         <a href="#" class="text-white hover:text-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor"
-                                viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
                             </svg>
@@ -242,7 +243,8 @@
 
     <!-- Fixed Buttons -->
     <div class="right-6 bottom-6 fixed">
-        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-12 w-12 shadow-lg">
+        <button
+            class="inline-flex justify-center items-center bg-primary hover:bg-primary/90 disabled:opacity-50 shadow-lg rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2 w-12 h-12 font-medium text-primary-foreground text-sm whitespace-nowrap transition-colors disabled:pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -254,7 +256,7 @@
 
     <div class="bottom-6 left-6 fixed">
         <a href="{{ route('desa.pengaduan', $desa->uri) }}"
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-12 w-12 shadow-lg">
+            class="inline-flex justify-center items-center bg-destructive hover:bg-destructive/90 disabled:opacity-50 shadow-lg rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2 w-12 h-12 font-medium text-destructive-foreground text-sm whitespace-nowrap transition-colors disabled:pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"

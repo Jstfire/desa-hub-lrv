@@ -1,6 +1,6 @@
 @extends('frontend.desa.layouts.main')
 
-@section('title', $data->judul . ' - ' . ($desa->jenis == 'desa' ? 'Desa' : 'Kelurahan') . ' ' . $desa->nama)
+@section('title', $data->judul . ' - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="mx-auto px-4 py-8 container">

@@ -77,6 +77,8 @@ class Berita extends Model implements HasMedia
         'view_count',
     ];
 
+    protected $appends = ['gambar_utama'];
+
     protected $casts = [
         'is_published' => 'boolean',
         'published_at' => 'datetime',
@@ -166,5 +168,10 @@ class Berita extends Model implements HasMedia
             ->singleFile();
 
         $this->addMediaCollection('gallery');
+    }
+
+    public function getGambarUtamaAttribute()
+    {
+        return $this->getFirstMediaUrl('thumbnail');
     }
 }

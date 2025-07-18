@@ -165,7 +165,7 @@
                                             <div class="flex-1">
                                                 <h3
                                                     class="mb-2 font-bold text-gray-900 dark:group-hover:text-green-400 dark:text-white group-hover:text-green-600 text-xl transition-colors">
-                                                    {{ $desa->nama }}
+                                                    {{ $desa->nama_lengkap }}
                                                 </h3>
                                                 <p class="mb-3 text-gray-600 dark:text-gray-300 text-sm">
                                                     {{ ucfirst($desa->jenis) }}

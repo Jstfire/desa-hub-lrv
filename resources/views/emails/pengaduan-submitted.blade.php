@@ -8,9 +8,9 @@
     **Detail Pengaduan:**
     - **Judul:** {{ $pengaduan->judul }}
     - **Kategori:** {{ $pengaduan->kategori }}
-    - **Nama Pelapor:** {{ $pengaduan->nama }}
+    - **Nama Pelapor:** {{ $pengaduan->nama_lengkap }}
     - **Kontak:** {{ $pengaduan->telepon }}
-    - **Desa:** {{ $pengaduan->desa->nama }}
+    - **Desa:** {{ $pengaduan->desa->nama_lengkap }}
     - **Tanggal:** {{ $pengaduan->created_at->format('d F Y, H:i') }}
 
     **Deskripsi Pengaduan:**

@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Metadata - ' . $desa->nama)
+@section('title', 'Metadata - ' . $desa->nama_lengkap)
 
 @section('content')
     <div class="bg-white dark:bg-gray-900 min-h-screen">
@@ -16,7 +16,7 @@
                         @endif
                     </h1>
                     <p class="opacity-90 text-xl">
-                        Informasi detail tentang {{ $desa->nama }}
+                        Informasi detail tentang {{ $desa->nama_lengkap }}
                     </p>
                 </div>
             </div>

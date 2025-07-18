@@ -76,6 +76,8 @@ class Desa extends Model implements HasMedia
 
     protected $table = 'desa';
 
+    protected $appends = ['nama_lengkap'];
+
     protected $fillable = [
         'nama',
         'jenis', // 'desa' atau 'kelurahan'
@@ -90,6 +92,11 @@ class Desa extends Model implements HasMedia
         'alamat',
         'deskripsi',
     ];
+
+    public function getNamaLengkapAttribute(): string
+    {
+        return ucfirst($this->jenis) . ' ' . $this->nama;
+    }
 
     /**
      * Get the user that administers the desa.
@@ -198,6 +205,6 @@ class Desa extends Model implements HasMedia
         $this->addMediaCollection('banner')
             ->singleFile();
 
-        $this->addMediaCollection('galeri');
+        $this->addMediaCollection('gallery');
     }
 }

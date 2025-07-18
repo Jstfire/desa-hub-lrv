@@ -110,7 +110,8 @@ class Galeri extends Model implements HasMedia
     {
         $this->addMediaCollection('media');
 
-        $this->addMediaCollection('foto');
+        $this->addMediaCollection('foto')
+            ->singleFile();
 
         $this->addMediaCollection('video')
             ->singleFile();
