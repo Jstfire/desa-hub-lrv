@@ -100,8 +100,6 @@ class DesaSeeder extends Seeder
             }
 
             $this->command->info($desaData['jenis'] . ' ' . $desaData['nama'] . ' berhasil dibuat.');
-
-            // Tambahkan media
         }
     }
 }
