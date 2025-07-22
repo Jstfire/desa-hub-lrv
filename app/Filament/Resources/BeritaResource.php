@@ -72,7 +72,8 @@ class BeritaResource extends Resource
                         TextInput::make('judul')
                             ->label('Judul')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->unique(Berita::class, 'judul', ignoreRecord: true),
                         TextInput::make('slug')
                             ->label('Slug')
                             ->required()

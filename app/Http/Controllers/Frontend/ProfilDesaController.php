@@ -36,7 +36,16 @@ class ProfilDesaController extends Controller
                 ['jenis' => ProfilDesaJenis::STRUKTUR, 'judul' => 'Struktur Organisasi', 'konten' => 'Struktur organisasi desa belum tersedia.'],
                 ['jenis' => ProfilDesaJenis::MONOGRAFI, 'judul' => 'Monografi Desa', 'konten' => 'Data monografi desa belum tersedia.'],
             ];
-            $profil = collect($defaultProfiles)->map(fn($p) => (object)$p);
+            $profil = collect($defaultProfiles)->map(function($p) use ($desa) {
+                $profile = new ProfilDesa();
+                $profile->desa_id = $desa->id;
+                $profile->jenis = $p['jenis'];
+                $profile->judul = $p['judul'];
+                $profile->konten = $p['konten'];
+                $profile->is_published = true;
+                $profile->urutan = 1;
+                return $profile;
+            });
             $currentProfile = $profil->where('jenis', ProfilDesaJenis::from($jenis))->first() ?? $profil->first();
         } elseif (!$currentProfile && $profil->isNotEmpty()) {
             // If the specific 'jenis' is not found, default to the first available profile

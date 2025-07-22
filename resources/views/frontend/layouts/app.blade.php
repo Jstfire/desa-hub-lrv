@@ -120,7 +120,7 @@
                         <img src="{{ asset('images/logo_busel.png') }}" alt="Logo" class="mr-3 w-14">
                         <div>
                             <p class="text-gray-500 dark:text-gray-400 text-base">{{ ucfirst($desa->jenis) }}</p>
-                            <h1 class="font-bold text-gray-800 dark:text-white text-2xl">{{ $desa->nama_lengkap }}</h1>
+                            <h1 class="font-bold text-gray-800 dark:text-white text-2xl">{{ $desa->nama }}</h1>
                         </div>
                     </a>
                 </div>

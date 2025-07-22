@@ -57,7 +57,8 @@ class DataSektoralResource extends Resource
                     ->schema([
                         TextInput::make('judul')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->unique(DataSektoral::class, 'judul', ignoreRecord: true),
 
                         TextInput::make('slug')
                             ->required()

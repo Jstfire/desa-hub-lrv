@@ -64,7 +64,8 @@ class PpidResource extends Resource
 
                         TextInput::make('judul')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->unique(Ppid::class, 'judul', ignoreRecord: true),
 
                         TextInput::make('slug')
                             ->required()

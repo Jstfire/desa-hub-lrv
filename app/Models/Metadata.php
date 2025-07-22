@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Conversions\Conversion;
+use Illuminate\Support\Str;
 /**
  * 
  *
@@ -86,9 +88,21 @@ class Metadata extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('lampiran');
-
         $this->addMediaCollection('gambar')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
             ->singleFile();
+
+        $this->addMediaCollection('lampiran')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Custom file naming based on title
+        $this->addMediaConversion('metadata')
+            ->performOnCollections('lampiran', 'gambar')
+            ->nonQueued();
     }
 }

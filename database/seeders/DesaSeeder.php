@@ -58,21 +58,6 @@ class DesaSeeder extends Seeder
                 'deskripsi' => 'Desa Bangun adalah desa yang terletak di Kecamatan Batauga, Kabupaten Buton Selatan, Provinsi Sulawesi Tenggara.',
                 'is_active' => true,
             ],
-            [
-                'nama' => 'Matanauwe',
-                'jenis' => 'kelurahan',
-                'kode_kecamatan' => '7401021',
-                'kode_desa' => '7401021002',
-                'uri' => 'matanauwe',
-                'admin_id' => $superadmin->id,
-                'operator_id' => null,
-                'font_family' => 'Poppins',
-                'color_primary' => '#3B82F6',
-                'color_secondary' => '#1E40AF',
-                'alamat' => 'Jl. Kelurahan Matanauwe No. 1, Kecamatan Batauga, Kabupaten Buton Selatan, Sulawesi Tenggara',
-                'deskripsi' => 'Kelurahan Matanauwe adalah kelurahan yang terletak di Kecamatan Batauga, Kabupaten Buton Selatan, Provinsi Sulawesi Tenggara.',
-                'is_active' => true,
-            ],
         ];
 
         foreach ($desa as $desaData) {
@@ -117,13 +102,6 @@ class DesaSeeder extends Seeder
             $this->command->info($desaData['jenis'] . ' ' . $desaData['nama'] . ' berhasil dibuat.');
 
             // Tambahkan media
-            $desaModel->addMedia(storage_path('app/seeders/images/placeholder.png'))
-                ->preservingOriginal()
-                ->toMediaCollection('logo', 'public');
-
-            $desaModel->addMedia(storage_path('app/seeders/images/placeholder.png'))
-                ->preservingOriginal()
-                ->toMediaCollection('banner', 'public');
         }
     }
 }

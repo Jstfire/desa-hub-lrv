@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class BerandaResource extends Resource
 {
@@ -82,10 +83,10 @@ class BerandaResource extends Resource
                                 'underline',
                                 'undo',
                             ]),
-                        Forms\Components\FileUpload::make('banner_image')
+                        SpatieMediaLibraryFileUpload::make('banner')
                             ->label('Banner')
+                            ->collection('banner')
                             ->image()
-                            ->directory('beranda/banner')
                             ->maxSize(2048)
                             ->imageEditor()
                             ->imageCropAspectRatio('16:9'),

@@ -159,47 +159,58 @@
                         @else
                             <p>Konten tidak ditemukan.</p>
                         @endif
-                    </div>
-                    <div>
-                        <h3 class="mb-2 font-semibold text-gray-900 dark:text-white text-lg">
-                            Kode Desa
-                        </h3>
-                        <p class="mb-4 text-gray-600 dark:text-gray-300">
-                            {{ $desa->kode_desa }}
-                        </p>
-                    </div>
-                    @if ($desa->kode_kecamatan)
-                        <div>
-                            <h3 class="mb-2 font-semibold text-gray-900 dark:text-white text-lg">
-                                Kode Kecamatan
-                            </h3>
-                            <p class="mb-4 text-gray-600 dark:text-gray-300">
-                                {{ $desa->kode_kecamatan }}
-                            </p>
-                        </div>
-                    @endif
 
-                    @if ($desa->alamat)
-                        <div class="md:col-span-2">
-                            <h3 class="mb-2 font-semibold text-gray-900 dark:text-white text-lg">
-                                Alamat
-                            </h3>
-                            <p class="mb-4 text-gray-600 dark:text-gray-300">
-                                {{ $desa->alamat }}
-                            </p>
-                        </div>
-                    @endif
+                        {{-- Informasi Desa - Hanya tampil di tab Tentang Desa --}}
+                        @if ($jenis == ProfilDesaJenis::TENTANG->value)
+                            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                                <h3 class="mb-6 font-bold text-gray-900 dark:text-white text-xl">
+                                    Informasi Desa
+                                </h3>
+                                <div class="gap-6 grid grid-cols-1 md:grid-cols-2">
+                                    <div>
+                                        <h4 class="mb-2 font-semibold text-gray-900 dark:text-white text-lg">
+                                            Kode Desa
+                                        </h4>
+                                        <p class="mb-4 text-gray-600 dark:text-gray-300">
+                                            {{ $desa->kode_desa }}
+                                        </p>
+                                    </div>
+                                    @if ($desa->kode_kecamatan)
+                                        <div>
+                                            <h4 class="mb-2 font-semibold text-gray-900 dark:text-white text-lg">
+                                                Kode Kecamatan
+                                            </h4>
+                                            <p class="mb-4 text-gray-600 dark:text-gray-300">
+                                                {{ $desa->kode_kecamatan }}
+                                            </p>
+                                        </div>
+                                    @endif
 
-                    @if ($desa->deskripsi)
-                        <div class="md:col-span-2">
-                            <h3 class="mb-2 font-semibold text-gray-900 dark:text-white text-lg">
-                                Deskripsi
-                            </h3>
-                            <p class="mb-4 text-gray-600 dark:text-gray-300">
-                                {{ $desa->deskripsi }}
-                            </p>
-                        </div>
-                    @endif
+                                    @if ($desa->alamat)
+                                        <div class="md:col-span-2">
+                                            <h4 class="mb-2 font-semibold text-gray-900 dark:text-white text-lg">
+                                                Alamat
+                                            </h4>
+                                            <p class="mb-4 text-gray-600 dark:text-gray-300">
+                                                {{ $desa->alamat }}
+                                            </p>
+                                        </div>
+                                    @endif
+
+                                    @if ($desa->deskripsi)
+                                        <div class="md:col-span-2">
+                                            <h4 class="mb-2 font-semibold text-gray-900 dark:text-white text-lg">
+                                                Deskripsi
+                                            </h4>
+                                            <p class="mb-4 text-gray-600 dark:text-gray-300">
+                                                {{ $desa->deskripsi }}
+                                            </p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 

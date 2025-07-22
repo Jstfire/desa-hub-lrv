@@ -62,7 +62,8 @@ class GaleriResource extends Resource
 
                         TextInput::make('judul')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->unique(Galeri::class, 'judul', ignoreRecord: true),
 
                         Textarea::make('deskripsi')
                             ->rows(3),

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Conversions\Conversion;
 use Illuminate\Support\Str;
 
 /**
@@ -118,10 +120,21 @@ class DataSektoral extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('dokumen')
+        $this->addMediaCollection('thumbnail')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
             ->singleFile();
 
-        $this->addMediaCollection('thumbnail')
-            ->singleFile();
+        $this->addMediaCollection('dokumen')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Custom file naming based on title
+        $this->addMediaConversion('data_sektoral')
+            ->performOnCollections('dokumen', 'thumbnail')
+            ->nonQueued();
     }
 }

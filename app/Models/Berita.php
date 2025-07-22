@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Conversions\Conversion;
 use Illuminate\Support\Str;
 
 /**
@@ -165,9 +167,19 @@ class Berita extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('thumbnail')
-            ->singleFile();
+            ->singleFile()
+            ->useDisk('public');
 
-        $this->addMediaCollection('gallery');
+        $this->addMediaCollection('gallery')
+            ->useDisk('public');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Custom file naming based on slug
+        $this->addMediaConversion('berita')
+            ->performOnCollections('thumbnail', 'gallery')
+            ->nonQueued();
     }
 
     public function getGambarUtamaAttribute()

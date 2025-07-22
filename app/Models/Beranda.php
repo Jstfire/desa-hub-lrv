@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Conversions\Conversion;
 
 class Beranda extends Model implements HasMedia
 {
@@ -18,7 +20,6 @@ class Beranda extends Model implements HasMedia
         'desa_id',
         'judul_welcome',
         'deskripsi_welcome',
-        'banner_image',
         'show_berita',
         'judul_berita',
         'jumlah_berita',
@@ -66,9 +67,26 @@ class Beranda extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('banner')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
             ->singleFile();
 
-        $this->addMediaCollection('struktur')
+        $this->addMediaCollection('struktur_organisasi')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
             ->singleFile();
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Custom file naming for banner
+        $this->addMediaConversion('banner')
+            ->performOnCollections('banner')
+            ->nonQueued();
+
+        // Custom file naming for struktur
+        $this->addMediaConversion('struktur')
+            ->performOnCollections('struktur_organisasi')
+            ->nonQueued();
     }
 }

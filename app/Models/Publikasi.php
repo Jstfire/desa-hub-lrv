@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Conversions\Conversion;
 use Illuminate\Support\Str;
 
 /**
@@ -115,9 +117,20 @@ class Publikasi extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('dokumen')
-            ->singleFile();
+            ->useDisk('public')
+            ->acceptsMimeTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
 
         $this->addMediaCollection('thumbnail')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
             ->singleFile();
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Custom file naming based on title
+        $this->addMediaConversion('publikasi')
+            ->performOnCollections('dokumen', 'thumbnail')
+            ->nonQueued();
     }
 }

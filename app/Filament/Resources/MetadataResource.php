@@ -71,7 +71,8 @@ class MetadataResource extends Resource
 
                         TextInput::make('judul')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->unique(Metadata::class, 'judul', ignoreRecord: true),
 
                         TextInput::make('urutan')
                             ->label('Urutan Tampil')

@@ -13,19 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ejecutar el seeder de roles y permisos primero
+        // Menjalankan semua seeder dalam urutan yang benar
+        // Urutan penting: roles & permissions -> desa -> profil desa -> beranda -> safe seeder
         $this->call([
-            Auth\RolesAndPermissionsSeeder::class,
-            DesaSeeder::class, // Seeder untuk data desa
-            BerandaSeeder::class, // Seeder untuk data beranda
-            KontenSeeder::class, // Seeder untuk konten (berita, publikasi, data sektoral)
+            Auth\RolesAndPermissionsSeeder::class, // Roles dan permissions harus pertama
+            DesaSeeder::class,                     // Data desa (diperlukan untuk seeder lainnya)
+            ProfilDesaSeeder::class,               // Profil desa (bergantung pada data desa)
+            BerandaSeeder::class,                  // Data beranda (bergantung pada data desa)
+            SafeSeeder::class,                     // Safe seeder terakhir
         ]);
 
         // User::factory(10)->withPersonalTeam()->create();
-
-        User::factory()->withPersonalTeam()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
     }
 }

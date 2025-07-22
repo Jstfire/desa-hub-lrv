@@ -8,9 +8,9 @@
     <!-- Section 1: Hero/Welcome Section -->
     <section class="relative bg-primary h-screen overflow-hidden text-white">
         <div class="absolute inset-0 bg-black opacity-20"></div>
-        @if ($beranda && $beranda->banner_image)
+        @if ($beranda && $beranda->getFirstMediaUrl('banner'))
             <div class="absolute inset-0">
-                <img src="{{ asset('storage/' . $beranda->banner_image) }}" alt="Banner" class="w-full h-full object-cover">
+                <img src="{{ $beranda->getFirstMediaUrl('banner') }}" alt="Banner" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black opacity-60"></div>
             </div>
         @else

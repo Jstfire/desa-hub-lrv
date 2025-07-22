@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Conversions\Conversion;
 
 /**
  * 
@@ -108,15 +110,27 @@ class Galeri extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('media');
+        $this->addMediaCollection('media')
+            ->useDisk('public');
 
         $this->addMediaCollection('foto')
-            ->singleFile();
+            ->singleFile()
+            ->useDisk('public');
 
         $this->addMediaCollection('video')
-            ->singleFile();
+            ->singleFile()
+            ->useDisk('public');
 
         $this->addMediaCollection('thumbnail')
-            ->singleFile();
+            ->singleFile()
+            ->useDisk('public');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Custom file naming based on title
+        $this->addMediaConversion('galeri')
+            ->performOnCollections('media', 'foto', 'video')
+            ->nonQueued();
     }
 }

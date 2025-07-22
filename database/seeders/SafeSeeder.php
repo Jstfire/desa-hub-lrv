@@ -26,7 +26,6 @@ class SafeSeeder extends Seeder
                 'email' => 'superadmin@desahub.com',
                 'password' => bcrypt('password123'),
                 'email_verified_at' => now(),
-                'is_superadmin' => true,
             ]);
 
             $superadmin->assignRole('superadmin');
