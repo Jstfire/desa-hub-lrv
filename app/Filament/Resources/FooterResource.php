@@ -111,8 +111,8 @@ class FooterResource extends Resource
                                     ->imageResizeTargetHeight('200'),
 
                                 Textarea::make('konten.alamat')
-                                    ->label('Alamat Desa')
-                                    ->rows(3),
+                                     ->label('Alamat Desa')
+                                     ->rows(3),
 
                                 TextInput::make('konten.maps_url')
                                     ->label('URL Google Maps')

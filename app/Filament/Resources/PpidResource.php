@@ -94,7 +94,8 @@ class PpidResource extends Resource
                             ->required(),
 
                         Textarea::make('deskripsi')
-                            ->rows(3)
+                            ->label('Deskripsi')
+                            ->rows(4)
                             ->required(),
 
                         Toggle::make('is_published')

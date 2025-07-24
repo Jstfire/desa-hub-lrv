@@ -115,8 +115,9 @@ class DataSektoralResource extends Resource
                             ->label('Gambar Thumbnail'),
 
                         Textarea::make('deskripsi')
-                            ->rows(3)
-                            ->columnSpanFull(),
+                             ->label('Deskripsi')
+                             ->rows(4)
+                             ->columnSpanFull(),
 
                         Tabs::make('Data Sektoral')
                             ->tabs([

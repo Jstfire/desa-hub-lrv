@@ -20,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
         \App\Providers\FilamentServiceProvider::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
+        // Add CORS middleware
+        $middleware->web(append: [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
+        
         // Registrar nuestro middleware de roles
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckUserRole::class,

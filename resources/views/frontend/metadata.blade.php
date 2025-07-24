@@ -114,8 +114,8 @@
                 @if ($metadata->count() > 0)
                     <div class="mx-auto max-w-4xl">
                         @foreach ($metadata as $item)
-                            <div
-                                class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl mb-8 rounded-lg overflow-hidden transition-shadow duration-300">
+                            <div class="group bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl mb-8 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer"
+                                onclick="window.location.href='{{ route('desa.metadata.preview', ['uri' => $desa->uri, 'id' => $item->id]) }}'">
                                 @if ($item->getFirstMediaUrl('gambar'))
                                     <img src="{{ $item->getFirstMediaUrl('gambar') }}" alt="{{ $item->judul }}"
                                         class="w-full h-64 object-cover">
@@ -123,44 +123,62 @@
 
                                 <div class="p-8">
                                     <div class="flex justify-between items-center mb-4">
-                                        <h2 class="font-bold text-gray-900 dark:text-white text-2xl md:text-3xl">
+                                        <h2
+                                            class="font-bold text-gray-900 dark:text-white group-hover:text-teal-600 text-2xl md:text-3xl transition-colors">
                                             {{ $item->judul }}
                                         </h2>
-                                        <span
-                                            class="inline-flex items-center bg-teal-100 dark:bg-teal-900 px-3 py-1 rounded-full font-medium text-teal-800 dark:text-teal-200 text-sm">
-                                            {{ str_replace('_', ' ', ucwords($item->jenis, '_')) }}
-                                        </span>
+                                        <div class="flex items-center space-x-3">
+                                            <span
+                                                class="inline-flex items-center bg-teal-100 dark:bg-teal-900 px-3 py-1 rounded-full font-medium text-teal-800 dark:text-teal-200 text-sm">
+                                                {{ str_replace('_', ' ', ucwords($item->jenis, '_')) }}
+                                            </span>
+                                            <svg class="w-5 h-5 text-gray-400 group-hover:text-teal-600 transition-colors"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        @if($item->tahun)
+                                            <span class="inline-flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded font-medium text-gray-700 dark:text-gray-300 text-sm">
+                                                <svg class="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                                {{ $item->tahun }}
+                                            </span>
+                                        @endif
                                     </div>
 
                                     <div class="dark:prose-invert max-w-none prose prose-lg">
-                                        {!! $item->konten !!}
+                                        <p class="text-gray-600 dark:text-gray-300">
+                                            {{ Str::limit(strip_tags($item->konten), 200) }}</p>
                                     </div>
 
                                     @if ($item->media->where('collection_name', 'dokumen')->count() > 0)
                                         <div class="mt-6 pt-6 border-gray-200 dark:border-gray-700 border-t">
-                                            <h3 class="mb-4 font-semibold text-gray-900 dark:text-white text-lg">
-                                                Dokumen Terkait
-                                            </h3>
-                                            <div class="space-y-2">
-                                                @foreach ($item->media->where('collection_name', 'dokumen') as $dokumen)
-                                                    <a href="{{ $dokumen->getUrl() }}" target="_blank"
-                                                        class="flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 p-3 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors duration-200">
-                                                        <div class="flex items-center">
-                                                            <svg class="mr-2 w-5 h-5 text-blue-500" fill="none"
-                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                            <div class="flex justify-between items-center">
+                                                <span class="font-semibold text-gray-900 dark:text-white text-sm">
+                                                    {{ $item->media->where('collection_name', 'dokumen')->count() }}
+                                                    Dokumen Terkait
+                                                </span>
+                                                <div class="flex items-center space-x-2" onclick="event.stopPropagation()">
+                                                    @foreach ($item->media->where('collection_name', 'dokumen')->take(1) as $dokumen)
+                                                        <a href="{{ $dokumen->getUrl() }}" target="_blank"
+                                                            onclick="incrementDownload({{ $item->id }})"
+                                                            class="inline-flex items-center bg-blue-100 hover:bg-blue-200 px-3 py-1.5 border border-transparent rounded font-medium text-blue-600 text-xs transition-colors">
+                                                            <svg class="mr-1 w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                                     stroke-width="2"
-                                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                                </path>
                                                             </svg>
-                                                            <span class="font-medium text-gray-900 dark:text-white text-sm">
-                                                                {{ $dokumen->name }}
-                                                            </span>
-                                                        </div>
-                                                        <span class="text-gray-500 dark:text-gray-400 text-xs">
-                                                            {{ round($dokumen->size / 1024, 1) }} KB
-                                                        </span>
-                                                    </a>
-                                                @endforeach
+                                                            Download
+                                                        </a>
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         </div>
                                     @endif
@@ -188,6 +206,25 @@
     </div>
 
     <script>
+        function incrementDownload(metadataId) {
+            fetch(`/api/metadata/${metadataId}/download`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Download tracked successfully');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error tracking download:', error);
+                });
+        }
+
         function applyFilters() {
             const search = document.getElementById('search').value;
             const jenis = document.getElementById('jenis').value;

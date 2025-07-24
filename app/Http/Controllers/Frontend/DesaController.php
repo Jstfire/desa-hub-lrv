@@ -412,6 +412,58 @@ class DesaController extends Controller
         return response()->json($stats);
     }
 
+    public function ppidPreview($uri, $id)
+    {
+        $desa = $this->getDesaByUri($uri);
+        $ppid = Ppid::where('desa_id', $desa->id)
+            ->where('id', $id)
+            ->where('is_active', 1)
+            ->firstOrFail();
+
+        return view('frontend.document-preview', compact('desa', 'ppid'))
+            ->with('type', 'ppid')
+            ->with('item', $ppid);
+    }
+
+    public function publikasiPreview($uri, $id)
+    {
+        $desa = $this->getDesaByUri($uri);
+        $publikasi = Publikasi::where('desa_id', $desa->id)
+            ->where('id', $id)
+            ->where('is_published', 1)
+            ->firstOrFail();
+
+        return view('frontend.document-preview', compact('desa', 'publikasi'))
+            ->with('type', 'publikasi')
+            ->with('item', $publikasi);
+    }
+
+    public function metadataPreview($uri, $id)
+    {
+        $desa = $this->getDesaByUri($uri);
+        $metadata = Metadata::where('desa_id', $desa->id)
+            ->where('id', $id)
+            ->where('is_active', 1)
+            ->firstOrFail();
+
+        return view('frontend.document-preview', compact('desa', 'metadata'))
+            ->with('type', 'metadata')
+            ->with('item', $metadata);
+    }
+
+    public function dataSektoralPreview($uri, $id)
+    {
+        $desa = $this->getDesaByUri($uri);
+        $dataSektoral = DataSektoral::where('desa_id', $desa->id)
+            ->where('id', $id)
+            ->where('is_published', 1)
+            ->firstOrFail();
+
+        return view('frontend.document-preview', compact('desa', 'dataSektoral'))
+            ->with('type', 'data-sektoral')
+            ->with('item', $dataSektoral);
+    }
+
     private function getDesaByUri($uri)
     {
         return Desa::where('uri', $uri)

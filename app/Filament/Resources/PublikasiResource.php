@@ -102,8 +102,9 @@ class PublikasiResource extends Resource
                 Section::make('Detail Publikasi')
                     ->schema([
                         Textarea::make('deskripsi')
-                            ->rows(3)
-                            ->columnSpanFull(),
+                             ->label('Deskripsi')
+                             ->rows(4)
+                             ->columnSpanFull(),
 
                         FileUpload::make('files')
                             ->label('File Publikasi')

@@ -18,7 +18,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
@@ -125,25 +124,10 @@ class BeritaResource extends Resource
                             ->maxLength(500)
                             ->helperText('Ringkasan singkat yang akan ditampilkan di daftar berita')
                             ->columnSpanFull(),
-                        RichEditor::make('konten')
+                        Textarea::make('konten')
                             ->label('Konten')
+                            ->rows(8)
                             ->required()
-                            ->toolbarButtons([
-                                'attachFiles',
-                                'blockquote',
-                                'bold',
-                                'bulletList',
-                                'codeBlock',
-                                'h2',
-                                'h3',
-                                'italic',
-                                'link',
-                                'orderedList',
-                                'redo',
-                                'strike',
-                                'underline',
-                                'undo',
-                            ])
                             ->columnSpanFull(),
                     ]),
                 Section::make('SEO & Metadata')
@@ -154,7 +138,7 @@ class BeritaResource extends Resource
                             ->helperText('Judul untuk SEO (max 60 karakter)'),
                         Textarea::make('meta_description')
                             ->label('Meta Description')
-                            ->rows(2)
+                            ->rows(3)
                             ->maxLength(160)
                             ->helperText('Deskripsi untuk SEO (max 160 karakter)'),
                         TextInput::make('meta_keywords')

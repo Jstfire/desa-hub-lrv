@@ -66,7 +66,9 @@ class GaleriResource extends Resource
                             ->unique(Galeri::class, 'judul', ignoreRecord: true),
 
                         Textarea::make('deskripsi')
-                            ->rows(3),
+                             ->label('Deskripsi')
+                             ->rows(4)
+                             ->columnSpanFull(),
 
                         Select::make('jenis')
                             ->options([

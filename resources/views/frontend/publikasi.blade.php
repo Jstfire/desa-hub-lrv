@@ -131,7 +131,8 @@
                     <div class="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                         @foreach ($publikasi as $item)
                             <div
-                                class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-shadow duration-300">
+                                class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-all duration-300 cursor-pointer group"
+                                onclick="window.location.href='{{ route('desa.publikasi.preview', ['uri' => $desa->uri, 'id' => $item->id]) }}'">
                                 <div class="p-6">
                                     <div class="flex justify-between items-center mb-4">
                                         <span
@@ -143,7 +144,7 @@
                                         </span>
                                     </div>
 
-                                    <h3 class="mb-2 font-semibold text-gray-900 dark:text-white text-xl">
+                                    <h3 class="mb-2 font-semibold text-gray-900 dark:text-white text-xl group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                                         {{ $item->judul }}
                                     </h3>
 
@@ -174,27 +175,22 @@
                                     </div>
 
                                     @if ($item->media->count() > 0)
-                                        <div class="space-y-2 mt-4">
-                                            @foreach ($item->media as $media)
-                                                <a href="{{ $media->getUrl() }}" target="_blank"
-                                                    onclick="incrementDownload({{ $item->id }})"
-                                                    class="flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 p-3 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors duration-200">
-                                                    <div class="flex items-center">
-                                                        <svg class="mr-2 w-5 h-5 text-red-500" fill="none"
-                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                                        </svg>
-                                                        <span class="font-medium text-gray-900 dark:text-white text-sm">
-                                                            {{ $media->name }}
-                                                        </span>
-                                                    </div>
-                                                    <span class="text-gray-500 dark:text-gray-400 text-xs">
-                                                        {{ round($media->size / 1024, 1) }} KB
-                                                    </span>
-                                                </a>
-                                            @endforeach
+                                        <div class="border-t pt-4 mt-4">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $item->media->count() }} Dokumen</span>
+                                                <div class="flex items-center space-x-2" onclick="event.stopPropagation()">
+                                                    @foreach($item->media->take(1) as $media)
+                                                        <a href="{{ $media->getUrl() }}" target="_blank"
+                                                           onclick="incrementDownload({{ $item->id }})"
+                                                           class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-purple-600 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:hover:bg-purple-800 transition-colors">
+                                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                            </svg>
+                                                            Download
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
                                 </div>

@@ -5,8 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProfilDesaResource\Pages;
 use App\Models\ProfilDesa;
 use App\Models\Desa;
+use App\Enums\ProfilDesaJenis;
 use Filament\Forms;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -81,10 +82,9 @@ class ProfilDesaResource extends Resource
 
                 Section::make('Konten')
                     ->schema([
-                        RichEditor::make('konten')
+                        Textarea::make('konten')
                             ->label('Konten')
-                            ->fileAttachmentsDisk('public')
-                            ->fileAttachmentsDirectory('profil-desa/konten-media')
+                            ->rows(8)
                             ->required(),
                     ]),
 
@@ -116,19 +116,25 @@ class ProfilDesaResource extends Resource
 
                 TextColumn::make('jenis')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
-                        'tentang' => 'Tentang Desa',
-                        'visi_misi' => 'Visi & Misi',
-                        'struktur' => 'Struktur Organisasi',
-                        'monografi' => 'Monografi',
-                        default => ucwords(str_replace('_', ' ', $state)),
+                    ->formatStateUsing(function ($state): string {
+                        $value = $state instanceof ProfilDesaJenis ? $state->value : $state;
+                        return match ($value) {
+                            'tentang' => 'Tentang Desa',
+                            'visi_misi' => 'Visi & Misi',
+                            'struktur' => 'Struktur Organisasi',
+                            'monografi' => 'Monografi',
+                            default => ucwords(str_replace('_', ' ', $value)),
+                        };
                     })
-                    ->color(fn(string $state): string => match ($state) {
-                        'tentang' => 'primary',
-                        'visi_misi' => 'success',
-                        'struktur' => 'warning',
-                        'monografi' => 'info',
-                        default => 'gray',
+                    ->color(function ($state): string {
+                        $value = $state instanceof ProfilDesaJenis ? $state->value : $state;
+                        return match ($value) {
+                            'tentang' => 'primary',
+                            'visi_misi' => 'success',
+                            'struktur' => 'warning',
+                            'monografi' => 'info',
+                            default => 'gray',
+                        };
                     }),
 
                 ToggleColumn::make('is_published')

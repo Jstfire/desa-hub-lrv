@@ -154,13 +154,13 @@ class DesaResource extends Resource
                 Section::make('Kontak & Alamat')
                     ->schema([
                         Textarea::make('alamat')
-                            ->label('Alamat')
-                            ->rows(3)
-                            ->columnSpanFull(),
-                        Textarea::make('deskripsi')
-                            ->label('Deskripsi')
-                            ->rows(4)
-                            ->columnSpanFull(),
+                             ->label('Alamat')
+                             ->rows(3)
+                             ->columnSpanFull(),
+                         Textarea::make('deskripsi')
+                             ->label('Deskripsi')
+                             ->rows(5)
+                             ->columnSpanFull(),
                     ]),
                 Section::make('Tampilan & Tema')
                     ->schema([

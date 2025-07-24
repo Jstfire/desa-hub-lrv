@@ -10,6 +10,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\Conversions\Conversion;
 use Illuminate\Support\Str;
+
 /**
  * 
  *
@@ -49,14 +50,18 @@ class Metadata extends Model implements HasMedia
         'desa_id',
         'jenis',
         'judul',
+        'tahun',
         'konten',
         'is_active',
         'urutan',
+        'download_count',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'urutan' => 'integer',
+        'download_count' => 'integer',
+        'tahun' => 'integer',
     ];
 
     /**
@@ -88,21 +93,22 @@ class Metadata extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('gambar')
+        $this->addMediaCollection('dokumen')
             ->useDisk('public')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
-            ->singleFile();
-
-        $this->addMediaCollection('lampiran')
-            ->useDisk('public')
-            ->acceptsMimeTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+            ->acceptsMimeTypes([
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ]);
     }
 
     public function registerMediaConversions(Media $media = null): void
     {
         // Custom file naming based on title
         $this->addMediaConversion('metadata')
-            ->performOnCollections('lampiran', 'gambar')
+            ->performOnCollections('dokumen')
             ->nonQueued();
     }
 }

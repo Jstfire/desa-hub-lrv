@@ -2,14 +2,13 @@
 
 use App\Http\Controllers\Frontend\DesaController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TinyMceController;
+
 use Illuminate\Support\Facades\Route;
 
 // Ruta raíz que redirige - pilih desa
 Route::get('/', [DesaController::class, 'index'])->name('home');
 
-// TinyMCE routes
-Route::post('/tinymce/upload', [TinyMceController::class, 'upload'])->middleware(['auth'])->name('tinymce.upload');
+
 
 // Rutas para panel de control (dashboard)
 // Dashboard adalah panel Filament untuk admin roles - dihandle langsung oleh Filament
@@ -54,6 +53,16 @@ Route::prefix('{uri}')->group(function () {
 
     // PPID
     Route::get('/ppid', [DesaController::class, 'ppid'])->name('desa.ppid');
+    Route::get('/ppid/{id}/preview', [DesaController::class, 'ppidPreview'])->name('desa.ppid.preview');
+
+    // Publikasi Preview
+    Route::get('/publikasi/{id}/preview', [DesaController::class, 'publikasiPreview'])->name('desa.publikasi.preview');
+
+    // Metadata Preview
+    Route::get('/metadata/{id}/preview', [DesaController::class, 'metadataPreview'])->name('desa.metadata.preview');
+
+    // Data Sektoral Preview
+    Route::get('/data-sektoral/{id}/preview', [DesaController::class, 'dataSektoralPreview'])->name('desa.data-sektoral.preview');
 
     // Galeri
     Route::get('/galeri', [DesaController::class, 'galeri'])->name('desa.galeri');

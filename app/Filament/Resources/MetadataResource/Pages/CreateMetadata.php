@@ -17,25 +17,8 @@ class CreateMetadata extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
-    protected function handleRecordCreation(array $data): Model
-    {
-        $record = static::getModel()::create($data);
-
-        // Process media uploads after creation
-        if (request()->hasFile('gambar')) {
-            $record->addMediaFromRequest('gambar')
-                ->toMediaCollection('gambar');
-        }
-
-        if (request()->hasFile('lampiran')) {
-            foreach (request()->file('lampiran') as $file) {
-                $record->addMedia($file)
-                    ->toMediaCollection('lampiran');
-            }
-        }
-
-        return $record;
-    }
+    // SpatieMediaLibraryFileUpload handles media uploads automatically
+    // No need for manual handling
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

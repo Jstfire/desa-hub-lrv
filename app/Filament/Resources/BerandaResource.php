@@ -14,6 +14,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Carbon\Carbon;
+
 
 class BerandaResource extends Resource
 {
@@ -66,23 +68,9 @@ class BerandaResource extends Resource
                             ->default('Selamat Datang di Situs Resmi')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\RichEditor::make('deskripsi_welcome')
+                        Forms\Components\Textarea::make('deskripsi_welcome')
                             ->label('Deskripsi')
-                            ->required()
-                            ->toolbarButtons([
-                                'blockquote',
-                                'bold',
-                                'bulletList',
-                                'h2',
-                                'h3',
-                                'italic',
-                                'link',
-                                'orderedList',
-                                'redo',
-                                'strike',
-                                'underline',
-                                'undo',
-                            ]),
+                            ->required(),
                         SpatieMediaLibraryFileUpload::make('banner')
                             ->label('Banner')
                             ->collection('banner')
@@ -169,7 +157,7 @@ class BerandaResource extends Resource
                         Forms\Components\DatePicker::make('tanggal_data_penduduk')
                             ->label('Tanggal Data Penduduk')
                             ->required()
-                            ->default(now()),
+                            ->default(Carbon::now()),
                     ])
                     ->columns(2),
 

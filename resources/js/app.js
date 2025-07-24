@@ -1,5 +1,4 @@
 import './bootstrap';
-import './tinymce-setup';
 
 // Import our centralized Alpine.js store registration (no default export)
 import './alpine';

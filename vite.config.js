@@ -10,7 +10,6 @@ export default defineConfig({
             output: {
                 manualChunks: {
                     // Split large dependencies into separate chunks
-                    'tinymce': ['tinymce'],
                     'alpine': ['alpinejs'],
                     'charts': ['chart.js'],
                 }
@@ -33,8 +32,7 @@ export default defineConfig({
                 'resources/js/filament-init.js',
                 'resources/js/filament-sidebar-fix.js',
 
-                // TinyMCE setup
-                'resources/js/tinymce-setup.js',
+
 
                 // Additional frontend scripts
                 'resources/js/stores/index.js',
@@ -45,7 +43,6 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            'tinymce': resolve(__dirname, 'node_modules/tinymce'),
             '@': resolve(__dirname, 'resources'),
         },
     },
@@ -53,7 +50,6 @@ export default defineConfig({
     optimizeDeps: {
         include: [
             'alpinejs',
-            'tinymce',
             '@alpinejs/persist',
             '@alpinejs/focus',
             '@alpinejs/collapse',

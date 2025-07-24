@@ -87,8 +87,8 @@ class PengaduanResource extends Resource
                     ->schema([
                         Textarea::make('deskripsi')
                             ->label('Deskripsi Pengaduan')
+                            ->rows(5)
                             ->required()
-                            ->rows(4)
                             ->disabled(fn(string $context): bool => $context === 'edit'),
                         TextInput::make('lampiran')
                             ->label('Lampiran (Link Google Drive)')
@@ -110,7 +110,7 @@ class PengaduanResource extends Resource
                             ->required(),
                         Textarea::make('tanggapan')
                             ->label('Tanggapan')
-                            ->rows(4)
+                            ->rows(5)
                             ->nullable()
                             ->helperText('Tanggapan dari pihak desa'),
                         DateTimePicker::make('tanggal_tanggapan')
@@ -223,8 +223,8 @@ class PengaduanResource extends Resource
                             ->required(),
                         Textarea::make('tanggapan')
                             ->label('Tanggapan')
-                            ->required()
-                            ->rows(4),
+                            ->rows(5)
+                            ->required(),
                     ])
                     ->action(function (array $data, Pengaduan $record): void {
                         $record->update([

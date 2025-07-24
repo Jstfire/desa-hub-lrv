@@ -132,7 +132,8 @@
                     <div class="gap-8 grid grid-cols-1 lg:grid-cols-2">
                         @foreach ($dataSektoral as $data)
                             <div
-                                class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-shadow duration-300">
+                                class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-all duration-300 cursor-pointer group"
+                                onclick="window.location.href='{{ route('desa.data-sektoral.preview', ['uri' => $desa->uri, 'id' => $data->id]) }}'">
                                 @if ($data->getFirstMediaUrl('thumbnail'))
                                     <img src="{{ $data->getFirstMediaUrl('thumbnail') }}" alt="{{ $data->judul }}"
                                         class="w-full h-48 object-cover">
@@ -158,7 +159,7 @@
                                         </span>
                                     </div>
 
-                                    <h3 class="mb-2 font-semibold text-gray-900 dark:text-white text-xl">
+                                    <h3 class="mb-2 font-semibold text-gray-900 dark:text-white text-xl group-hover:text-indigo-600 transition-colors">
                                         {{ $data->judul }}
                                     </h3>
 
@@ -206,7 +207,7 @@
                                     @if ($data->getFirstMediaUrl('dokumen'))
                                         <div class="mb-4">
                                             <a href="{{ $data->getFirstMediaUrl('dokumen') }}" target="_blank"
-                                                onclick="incrementView({{ $data->id }})"
+                                                onclick="event.stopPropagation(); incrementView({{ $data->id }})"
                                                 class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md font-medium text-white text-sm transition-colors duration-200">
                                                 <svg class="mr-2 w-4 h-4" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">

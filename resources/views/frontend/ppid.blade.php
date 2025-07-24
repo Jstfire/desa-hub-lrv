@@ -113,16 +113,22 @@
                     <div class="mx-auto max-w-4xl">
                         @foreach ($ppid as $item)
                             <div
-                                class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl mb-8 rounded-lg overflow-hidden transition-shadow duration-300">
+                                class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl mb-8 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer group"
+                                onclick="window.location.href='{{ route('desa.ppid.preview', ['uri' => $desa->uri, 'id' => $item->id]) }}'">
                                 <div class="p-8">
                                     <div class="flex justify-between items-center mb-4">
-                                        <h2 class="font-bold text-gray-900 dark:text-white text-2xl md:text-3xl">
+                                        <h2 class="font-bold text-gray-900 dark:text-white text-2xl md:text-3xl group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                             {{ $item->judul }}
                                         </h2>
-                                        <span
-                                            class="inline-flex items-center bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full font-medium text-gray-800 dark:text-gray-200 text-sm">
-                                            {{ str_replace('_', ' ', ucwords($item->kategori, '_')) }}
-                                        </span>
+                                        <div class="flex items-center space-x-3">
+                                            <span
+                                                class="inline-flex items-center bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full font-medium text-gray-800 dark:text-gray-200 text-sm">
+                                                {{ str_replace('_', ' ', ucwords($item->kategori, '_')) }}
+                                            </span>
+                                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </div>
                                     </div>
 
                                     <div class="dark:prose-invert max-w-none prose prose-lg">
@@ -137,6 +143,7 @@
                                             <div class="space-y-2">
                                                 @foreach ($item->media->where('collection_name', 'dokumen') as $dokumen)
                                                     <a href="{{ $dokumen->getUrl() }}" target="_blank"
+                                                        onclick="incrementDownload({{ $item->id }})"
                                                         class="flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 p-3 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors duration-200">
                                                         <div class="flex items-center">
                                                             <svg class="mr-2 w-5 h-5 text-blue-500" fill="none"
@@ -234,6 +241,25 @@
     </div>
 
     <script>
+        function incrementDownload(ppidId) {
+            fetch(`/api/ppid/${ppidId}/download`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Download tracked successfully');
+                }
+            })
+            .catch(error => {
+                console.error('Error tracking download:', error);
+            });
+        }
+
         function applyFilters() {
             const search = document.getElementById('search').value;
             const kategori = document.getElementById('kategori').value;

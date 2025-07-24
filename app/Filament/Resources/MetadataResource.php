@@ -7,7 +7,8 @@ use App\Models\Metadata;
 use App\Models\Desa;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -59,13 +60,11 @@ class MetadataResource extends Resource
 
                         Select::make('jenis')
                             ->options([
-                                'profil' => 'Profil Desa',
-                                'struktur_organisasi' => 'Struktur Organisasi',
-                                'visi_misi' => 'Visi & Misi',
-                                'sejarah' => 'Sejarah',
                                 'demografi' => 'Demografi',
-                                'potensi' => 'Potensi',
-                                'lainnya' => 'Lainnya',
+                                'geografis' => 'Geografis',
+                                'ekonomi' => 'Ekonomi',
+                                'sosial' => 'Sosial',
+                                'infrastruktur' => 'Infrastruktur',
                             ])
                             ->required(),
 
@@ -73,6 +72,13 @@ class MetadataResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->unique(Metadata::class, 'judul', ignoreRecord: true),
+
+                        TextInput::make('tahun')
+                            ->label('Tahun')
+                            ->numeric()
+                            ->minValue(1900)
+                            ->maxValue(date('Y') + 10)
+                            ->placeholder('Contoh: 2024'),
 
                         TextInput::make('urutan')
                             ->label('Urutan Tampil')
@@ -84,64 +90,31 @@ class MetadataResource extends Resource
                             ->default(true),
                     ])->columns(2),
 
-                Section::make('Konten')
+                Section::make('Deskripsi')
                     ->schema([
-                        FileUpload::make('gambar')
-                            ->image()
-                            ->disk('public')
-                            ->directory('metadata/gambar')
-                            ->visibility('public')
-                            ->imageResizeMode('cover')
-                            ->imageResizeTargetWidth('1200')
-                            ->imageResizeTargetHeight('800')
-                            ->label('Gambar Utama')
-                            ->afterStateHydrated(function ($component, ?Model $record) {
-                                if ($record && $record->getFirstMediaUrl('gambar')) {
-                                    $component->state($record->getFirstMediaUrl('gambar'));
-                                }
-                            }),
-
-                        RichEditor::make('konten')
+                        Textarea::make('konten')
+                            ->label('Deskripsi')
                             ->required()
-                            ->fileAttachmentsDisk('public')
-                            ->fileAttachmentsDirectory('metadata/attachments')
-                            ->toolbarButtons([
-                                'attachFiles',
-                                'blockquote',
-                                'bold',
-                                'bulletList',
-                                'codeBlock',
-                                'heading',
-                                'italic',
-                                'link',
-                                'orderedList',
-                                'redo',
-                                'strike',
-                                'table',
-                                'undo',
-                            ]),
+                            ->rows(6)
+                            ->columnSpanFull(),
                     ])->columns(1),
 
-                Section::make('Dokumen Pendukung')
+                Section::make('Dokumen Metadata')
                     ->schema([
-                        FileUpload::make('lampiran')
+                        SpatieMediaLibraryFileUpload::make('dokumen')
+                            ->collection('dokumen')
                             ->multiple()
                             ->disk('public')
-                            ->directory('metadata/lampiran')
+                            ->directory('metadata/dokumen')
                             ->visibility('public')
-                            ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png', 'image/jpg'])
-                            ->label('Lampiran (PDF, Word, Image)')
-                            ->afterStateHydrated(function ($component, ?Model $record) {
-                                if ($record) {
-                                    $files = [];
-                                    foreach ($record->getMedia('lampiran') as $media) {
-                                        $files[] = $media->getUrl();
-                                    }
-                                    if (count($files) > 0) {
-                                        $component->state($files);
-                                    }
-                                }
-                            }),
+                            ->acceptedFileTypes([
+                                'application/pdf',
+                                'application/msword',
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'application/vnd.ms-excel',
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            ])
+                            ->label('Dokumen (PDF, Word, Excel)'),
                     ])->collapsed(),
             ]);
     }
@@ -163,14 +136,18 @@ class MetadataResource extends Resource
                     ->badge()
                     ->formatStateUsing(fn(string $state): string => str_replace('_', ' ', ucfirst($state)))
                     ->color(fn(string $state): string => match ($state) {
-                        'profil' => 'primary',
-                        'struktur_organisasi' => 'info',
-                        'visi_misi' => 'success',
-                        'sejarah' => 'danger',
-                        'demografi' => 'warning',
-                        'potensi' => 'purple',
+                        'demografi' => 'primary',
+                        'geografis' => 'info',
+                        'ekonomi' => 'success',
+                        'sosial' => 'warning',
+                        'infrastruktur' => 'purple',
                         default => 'gray',
                     }),
+
+                TextColumn::make('tahun')
+                    ->sortable()
+                    ->badge()
+                    ->color('gray'),
 
                 TextColumn::make('urutan')
                     ->sortable(),
@@ -196,13 +173,11 @@ class MetadataResource extends Resource
 
                 SelectFilter::make('jenis')
                     ->options([
-                        'profil' => 'Profil Desa',
-                        'struktur_organisasi' => 'Struktur Organisasi',
-                        'visi_misi' => 'Visi & Misi',
-                        'sejarah' => 'Sejarah',
                         'demografi' => 'Demografi',
-                        'potensi' => 'Potensi',
-                        'lainnya' => 'Lainnya',
+                        'geografis' => 'Geografis',
+                        'ekonomi' => 'Ekonomi',
+                        'sosial' => 'Sosial',
+                        'infrastruktur' => 'Infrastruktur',
                     ]),
             ])
             ->actions([

@@ -18,7 +18,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\RichEditor;
+
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Tables\Columns\TextColumn as TextCol;
@@ -94,20 +94,10 @@ class LayananPublikResource extends Resource
                             ->maxSize(1024)
                             ->imageEditor()
                             ->nullable(),
-                        RichEditor::make('konten')
+                        Textarea::make('konten')
                             ->label('Konten Detail')
+                            ->rows(8)
                             ->nullable()
-                            ->toolbarButtons([
-                                'bold',
-                                'bulletList',
-                                'italic',
-                                'link',
-                                'orderedList',
-                                'redo',
-                                'strike',
-                                'underline',
-                                'undo',
-                            ])
                             ->columnSpanFull(),
                     ]),
                 Hidden::make('user_id')
