@@ -17,7 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
@@ -118,15 +118,20 @@ class BeritaResource extends Resource
                             ->maxSize(2048)
                             ->imageEditor()
                             ->columnSpanFull(),
-                        Textarea::make('excerpt')
+                        TinyEditor::make('excerpt')
                             ->label('Ringkasan')
-                            ->rows(3)
-                            ->maxLength(500)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('simple')
                             ->helperText('Ringkasan singkat yang akan ditampilkan di daftar berita')
                             ->columnSpanFull(),
-                        Textarea::make('konten')
+                        TinyEditor::make('konten')
                             ->label('Konten')
-                            ->rows(8)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
                             ->required()
                             ->columnSpanFull(),
                     ]),
@@ -136,10 +141,12 @@ class BeritaResource extends Resource
                             ->label('Meta Title')
                             ->maxLength(60)
                             ->helperText('Judul untuk SEO (max 60 karakter)'),
-                        Textarea::make('meta_description')
+                        TinyEditor::make('meta_description')
                             ->label('Meta Description')
-                            ->rows(3)
-                            ->maxLength(160)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('minimal')
                             ->helperText('Deskripsi untuk SEO (max 160 karakter)'),
                         TextInput::make('meta_keywords')
                             ->label('Meta Keywords')

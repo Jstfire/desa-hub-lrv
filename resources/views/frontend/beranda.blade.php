@@ -160,7 +160,7 @@
                 @if ($beranda->embed_map)
                     <div class="mx-auto max-w-6xl">
                         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                            {!! $beranda->embed_map !!}
+                            {!! $beranda->processed_embed_map !!}
                         </div>
                     </div>
                 @else

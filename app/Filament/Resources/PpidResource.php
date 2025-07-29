@@ -11,7 +11,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Set;
@@ -93,9 +93,13 @@ class PpidResource extends Resource
                             ])
                             ->required(),
 
-                        Textarea::make('deskripsi')
+                        TinyEditor::make('deskripsi')
                             ->label('Deskripsi')
-                            ->rows(4)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull()
                             ->required(),
 
                         Toggle::make('is_published')

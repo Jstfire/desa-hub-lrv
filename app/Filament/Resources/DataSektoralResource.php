@@ -13,7 +13,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Actions\Action;
@@ -114,10 +114,14 @@ class DataSektoralResource extends Resource
                             ->imageResizeTargetHeight('450')
                             ->label('Gambar Thumbnail'),
 
-                        Textarea::make('deskripsi')
-                             ->label('Deskripsi')
-                             ->rows(4)
-                             ->columnSpanFull(),
+                        TinyEditor::make('deskripsi')
+                            ->label('Deskripsi')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull()
+                            ->required(),
 
                         Tabs::make('Data Sektoral')
                             ->tabs([

@@ -7,7 +7,7 @@ use App\Models\ProfilDesa;
 use App\Models\Desa;
 use App\Enums\ProfilDesaJenis;
 use Filament\Forms;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -82,9 +82,13 @@ class ProfilDesaResource extends Resource
 
                 Section::make('Konten')
                     ->schema([
-                        Textarea::make('konten')
+                        TinyEditor::make('konten')
                             ->label('Konten')
-                            ->rows(8)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull()
                             ->required(),
                     ]),
 

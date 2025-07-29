@@ -18,7 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Actions\Action;
@@ -153,14 +153,20 @@ class DesaResource extends Resource
                     ->columns(2),
                 Section::make('Kontak & Alamat')
                     ->schema([
-                        Textarea::make('alamat')
-                             ->label('Alamat')
-                             ->rows(3)
-                             ->columnSpanFull(),
-                         Textarea::make('deskripsi')
-                             ->label('Deskripsi')
-                             ->rows(5)
-                             ->columnSpanFull(),
+                        TinyEditor::make('alamat')
+                            ->label('Alamat')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('simple')
+                            ->columnSpanFull(),
+                        TinyEditor::make('deskripsi')
+                            ->label('Deskripsi')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull(),
                     ]),
                 Section::make('Tampilan & Tema')
                     ->schema([

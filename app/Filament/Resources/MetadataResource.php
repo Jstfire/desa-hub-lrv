@@ -8,7 +8,7 @@ use App\Models\Desa;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -92,10 +92,13 @@ class MetadataResource extends Resource
 
                 Section::make('Deskripsi')
                     ->schema([
-                        Textarea::make('konten')
+                        TinyEditor::make('konten')
                             ->label('Deskripsi')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
                             ->required()
-                            ->rows(6)
                             ->columnSpanFull(),
                     ])->columns(1),
 

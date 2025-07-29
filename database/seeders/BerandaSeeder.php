@@ -30,7 +30,7 @@ class BerandaSeeder extends Seeder
                     'jumlah_berita' => 6,
                     'show_lokasi' => true,
                     'judul_lokasi' => 'Lokasi ' . ucfirst($desa->jenis),
-                    'embed_map' => '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31762.409987989005!2d122.65182999839071!3d-5.669510928463184!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2da46a5f8e906a49%3A0xa5091ff05123fa62!2sBangun%2C%20Kec.%20Sampolawa%2C%20Kabupaten%20Buton%2C%20Sulawesi%20Tenggara!5e0!3m2!1sid!2sid!4v1753144713998!5m2!1sid!2sid" width="1000" height="700" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
+                    'embed_map' => '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31762.409987989005!2d122.65182999839071!3d-5.669510928463184!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2da46a5f8e906a49%3A0xa5091ff05123fa62!2sBangun%2C%20Kec.%20Sampolawa%2C%20Kabupaten%20Buton%2C%20Sulawesi%20Tenggara!5e0!3m2!1sid!2sid!4v1753144713998!5m2!1sid!2sid" width="1000" height="700" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>',
                     'show_struktur' => true,
                     'judul_struktur' => 'Struktur Pemerintahan',
                     'show_penduduk' => true,

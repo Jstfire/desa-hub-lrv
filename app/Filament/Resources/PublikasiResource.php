@@ -11,7 +11,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Form;
@@ -101,10 +101,13 @@ class PublikasiResource extends Resource
 
                 Section::make('Detail Publikasi')
                     ->schema([
-                        Textarea::make('deskripsi')
-                             ->label('Deskripsi')
-                             ->rows(4)
-                             ->columnSpanFull(),
+                        TinyEditor::make('deskripsi')
+                            ->label('Deskripsi')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull(),
 
                         FileUpload::make('files')
                             ->label('File Publikasi')

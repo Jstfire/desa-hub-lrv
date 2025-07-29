@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -85,9 +85,13 @@ class PengaduanResource extends Resource
                     ->columns(2),
                 Section::make('Detail Pengaduan')
                     ->schema([
-                        Textarea::make('deskripsi')
+                        TinyEditor::make('deskripsi')
                             ->label('Deskripsi Pengaduan')
-                            ->rows(5)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull()
                             ->required()
                             ->disabled(fn(string $context): bool => $context === 'edit'),
                         TextInput::make('lampiran')
@@ -108,9 +112,13 @@ class PengaduanResource extends Resource
                             ])
                             ->default('pending')
                             ->required(),
-                        Textarea::make('tanggapan')
+                        TinyEditor::make('tanggapan')
                             ->label('Tanggapan')
-                            ->rows(5)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull()
                             ->nullable()
                             ->helperText('Tanggapan dari pihak desa'),
                         DateTimePicker::make('tanggal_tanggapan')
@@ -221,9 +229,13 @@ class PengaduanResource extends Resource
                                 'rejected' => 'Ditolak',
                             ])
                             ->required(),
-                        Textarea::make('tanggapan')
+                        TinyEditor::make('tanggapan')
                             ->label('Tanggapan')
-                            ->rows(5)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull()
                             ->required(),
                     ])
                     ->action(function (array $data, Pengaduan $record): void {

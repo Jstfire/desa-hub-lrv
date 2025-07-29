@@ -8,7 +8,7 @@ use App\Models\Footer;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -110,9 +110,13 @@ class FooterResource extends Resource
                                     ->imageResizeTargetWidth('200')
                                     ->imageResizeTargetHeight('200'),
 
-                                Textarea::make('konten.alamat')
-                                     ->label('Alamat Desa')
-                                     ->rows(3),
+                                TinyEditor::make('konten.alamat')
+                                    ->label('Alamat Desa')
+                                    ->fileAttachmentsDisk('public')
+                                    ->fileAttachmentsVisibility('public')
+                                    ->fileAttachmentsDirectory('uploads')
+                                    ->profile('default')
+                                    ->columnSpanFull(),
 
                                 TextInput::make('konten.maps_url')
                                     ->label('URL Google Maps')

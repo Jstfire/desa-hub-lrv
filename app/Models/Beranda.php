@@ -89,4 +89,28 @@ class Beranda extends Model implements HasMedia
             ->performOnCollections('struktur_organisasi')
             ->nonQueued();
     }
+
+    /**
+     * Get the processed embed map with proper sandbox attributes
+     */
+    public function getProcessedEmbedMapAttribute(): ?string
+    {
+        if (!$this->embed_map) {
+            return null;
+        }
+
+        $processed = $this->embed_map;
+        
+        // Remove existing sandbox attribute if present
+        $processed = preg_replace('/\s*sandbox="[^"]*"/i', '', $processed);
+        
+        // Add proper sandbox attributes to iframe for Google Maps
+        $processed = preg_replace(
+            '/<iframe([^>]*)>/i',
+            '<iframe$1 sandbox="allow-scripts allow-same-origin allow-popups allow-forms">',
+            $processed
+        );
+
+        return $processed;
+    }
 }

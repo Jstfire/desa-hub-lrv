@@ -17,7 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
@@ -69,10 +69,12 @@ class LayananPublikResource extends Resource
                             ->label('Nama Layanan')
                             ->required()
                             ->maxLength(255),
-                        Textarea::make('deskripsi')
+                        TinyEditor::make('deskripsi')
                             ->label('Deskripsi')
-                            ->rows(3)
-                            ->maxLength(500)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('simple')
                             ->helperText('Penjelasan singkat tentang layanan ini'),
                         TextInput::make('link')
                             ->label('Link Layanan')
@@ -94,9 +96,12 @@ class LayananPublikResource extends Resource
                             ->maxSize(1024)
                             ->imageEditor()
                             ->nullable(),
-                        Textarea::make('konten')
+                        TinyEditor::make('konten')
                             ->label('Konten Detail')
-                            ->rows(8)
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
                             ->nullable()
                             ->columnSpanFull(),
                     ]),

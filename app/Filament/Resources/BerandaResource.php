@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Carbon\Carbon;
 
 
@@ -68,8 +69,13 @@ class BerandaResource extends Resource
                             ->default('Selamat Datang di Situs Resmi')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\Textarea::make('deskripsi_welcome')
+                        TinyEditor::make('deskripsi_welcome')
                             ->label('Deskripsi')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull()
                             ->required(),
                         SpatieMediaLibraryFileUpload::make('banner')
                             ->label('Banner')
@@ -109,9 +115,14 @@ class BerandaResource extends Resource
                             ->default('Lokasi Desa')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\Textarea::make('embed_map')
+                        TinyEditor::make('embed_map')
                             ->label('Embed Google Maps')
-                            ->placeholder('<iframe src="https://www.google.com/maps/embed?..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull()
+                            ->placeholder('<iframe src="https://www.google.com/maps/embed?..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>')
                             ->required(),
                     ]),
 

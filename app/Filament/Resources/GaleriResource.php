@@ -11,7 +11,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -65,10 +65,13 @@ class GaleriResource extends Resource
                             ->maxLength(255)
                             ->unique(Galeri::class, 'judul', ignoreRecord: true),
 
-                        Textarea::make('deskripsi')
-                             ->label('Deskripsi')
-                             ->rows(4)
-                             ->columnSpanFull(),
+                        TinyEditor::make('deskripsi')
+                            ->label('Deskripsi')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
+                            ->fileAttachmentsDirectory('uploads')
+                            ->profile('default')
+                            ->columnSpanFull(),
 
                         Select::make('jenis')
                             ->options([
