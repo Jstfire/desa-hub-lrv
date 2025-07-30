@@ -41,7 +41,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'public/storage',
+            'url' => env('APP_URL').'desa-hub-lrv/public/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
