@@ -106,7 +106,7 @@ class Beranda extends Model implements HasMedia
         
         // Add proper sandbox attributes to iframe for Google Maps
         $processed = preg_replace(
-            '/<iframe([^>]*)>/i',
+            '/<iframe([^>]*?)>/i',
             '<iframe$1 sandbox="allow-scripts allow-same-origin allow-popups allow-forms">',
             $processed
         );
