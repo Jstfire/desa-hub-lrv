@@ -10,6 +10,7 @@ use App\Observers\DesaObserver;
 use App\Observers\PengaduanObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,5 +34,9 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Desa::observe(DesaObserver::class);
         Pengaduan::observe(PengaduanObserver::class);
+
+        if(env('APP_ENV', 'production') == 'production') { // use https only if env is production 
+            URL::forceScheme('https'); 
+        }
     }
 }
