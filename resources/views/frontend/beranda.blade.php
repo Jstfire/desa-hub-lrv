@@ -64,7 +64,10 @@
                             <article
                                 class="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-shadow">
                                 @if ($berita->gambar_utama)
-                                    <img src="{{ asset('storage/' . $berita->gambar_utama) }}" alt="{{ $berita->judul }}"
+                                    @php
+                                $gambar_utama_storage = 'storage/' . $berita->gambar_utama;
+                            @endphp
+                            <img src="{{ asset($gambar_utama_storage) }}" alt="{{ $berita->judul }}"
                                         class="w-full h-48 object-cover">
                                 @else
                                     <div class="flex justify-center items-center bg-gray-200 dark:bg-gray-700 w-full h-48">
@@ -218,7 +221,10 @@
                 @if ($strukturOrganisasi && $strukturOrganisasi->gambar)
                     <div class="mx-auto max-w-6xl">
                         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                            <img src="{{ asset('storage/' . $strukturOrganisasi->gambar) }}"
+                            @php
+                        $struktur_organisasi_storage = 'storage/' . $strukturOrganisasi->gambar;
+                    @endphp
+                    <img src="{{ asset($struktur_organisasi_storage) }}"
                                 alt="Struktur Organisasi {{ $desa->nama_lengkap }}" class="w-full h-auto object-contain">
                         </div>
                         @if ($strukturOrganisasi->deskripsi)
@@ -230,7 +236,10 @@
                 @elseif ($beranda->gambar_struktur)
                     <div class="mx-auto max-w-6xl">
                         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                            <img src="{{ asset('storage/' . $beranda->gambar_struktur) }}"
+                            @php
+                        $gambar_struktur_storage = 'storage/' . $beranda->gambar_struktur;
+                    @endphp
+                    <img src="{{ asset($gambar_struktur_storage) }}"
                                 alt="Struktur Organisasi {{ $desa->nama }}" class="w-full h-auto object-contain">
                         </div>
                     </div>

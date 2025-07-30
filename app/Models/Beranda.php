@@ -100,10 +100,10 @@ class Beranda extends Model implements HasMedia
         }
 
         $processed = $this->embed_map;
-        
+
         // Remove existing sandbox attribute if present
         $processed = preg_replace('/\s*sandbox="[^"]*"/i', '', $processed);
-        
+
         // Add proper sandbox attributes to iframe for Google Maps
         $processed = preg_replace(
             '/<iframe([^>]*?)>/i',

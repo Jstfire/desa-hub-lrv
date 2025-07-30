@@ -34,9 +34,9 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Desa::observe(DesaObserver::class);
         Pengaduan::observe(PengaduanObserver::class);
-
-        if(env('APP_ENV', 'production') == 'production') { // use https only if env is production 
-            URL::forceScheme('https'); 
+        // dd($this->app->environment('production'));
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
         }
     }
 }
