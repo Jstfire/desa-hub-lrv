@@ -20,6 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         \App\Providers\FilamentServiceProvider::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies('*');
+
         // Add CORS middleware
         $middleware->web(append: [
             \Illuminate\Http\Middleware\HandleCors::class,
