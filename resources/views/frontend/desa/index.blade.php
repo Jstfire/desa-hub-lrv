@@ -3,34 +3,157 @@
 @section('title', $desa->nama_lengkap)
 
 @section('content')
-    <!-- Banner Section -->
-    <section class="bg-card shadow-sm mx-auto mb-12 p-8 px-4 border border-border rounded-lg container">
-        <div class="mx-auto max-w-4xl text-center">
-            <h2 class="mb-4 font-bold text-card-foreground text-4xl">
-                Selamat Datang di Situs Resmi {{ $desa->nama_lengkap }}
-            </h2>
-            <p class="text-muted-foreground text-lg">
-                {{ $desa->deskripsi ?? 'Website resmi yang menyediakan informasi terkait pemerintahan desa, kegiatan, layanan publik, dan data statistik untuk masyarakat.' }}
-            </p>
+    <!-- Hero Section with Gradient Background -->
+    <section class="relative bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-20 overflow-hidden">
+        <div class="absolute inset-0 bg-grid-white/[0.02] dark:bg-grid-white/[0.01]"></div>
+        <div class="relative mx-auto px-4 container">
+            <div class="mx-auto max-w-4xl text-center">
+                <h1 class="mb-6 font-bold text-foreground text-4xl md:text-5xl lg:text-6xl animate-fade-in">
+                    Selamat Datang di <span class="text-primary">{{ $desa->nama_lengkap }}</span>
+                </h1>
+                <p class="mx-auto mb-8 max-w-2xl text-muted-foreground text-lg md:text-xl animate-fade-in-delay">
+                    {{ $desa->deskripsi ?? 'Website resmi yang menyediakan informasi terkait pemerintahan desa, kegiatan, layanan publik, dan data statistik untuk masyarakat.' }}
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 animate-fade-in-delay-2">
+                    <a href="{{ route('desa.layanan-publik', $desa->uri) }}" 
+                       class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 px-6 py-3 rounded-lg font-medium text-primary-foreground transition-all hover:shadow-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Layanan Publik
+                    </a>
+                    <a href="{{ route('desa.pengaduan', $desa->uri) }}" 
+                       class="inline-flex items-center gap-2 bg-background hover:bg-accent px-6 py-3 border border-border hover:border-primary rounded-lg font-medium text-foreground transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                        </svg>
+                        Sampaikan Aspirasi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats Section -->
+    <section class="py-12">
+        <div class="mx-auto px-4 container">
+            <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                <!-- Total Penduduk -->
+                <div class="group relative bg-card hover:bg-accent border border-border hover:border-primary p-6 rounded-xl transition-all duration-300 hover:shadow-lg overflow-hidden">
+                    <div class="absolute -right-4 -top-4 bg-primary/10 rounded-full w-24 h-24 transition-transform group-hover:scale-110"></div>
+                    <div class="relative">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="bg-primary/10 p-2 rounded-lg">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-medium text-muted-foreground">Total Penduduk</h3>
+                        </div>
+                        <p class="font-bold text-foreground text-3xl">5.328</p>
+                        <p class="text-muted-foreground text-sm">Jiwa</p>
+                    </div>
+                </div>
+
+                <!-- Laki-laki -->
+                <div class="group relative bg-card hover:bg-accent border border-border hover:border-blue-500 p-6 rounded-xl transition-all duration-300 hover:shadow-lg overflow-hidden">
+                    <div class="absolute -right-4 -top-4 bg-blue-500/10 rounded-full w-24 h-24 transition-transform group-hover:scale-110"></div>
+                    <div class="relative">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="bg-blue-500/10 p-2 rounded-lg">
+                                <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-medium text-muted-foreground">Laki-laki</h3>
+                        </div>
+                        <p class="font-bold text-foreground text-3xl">2.756</p>
+                        <p class="text-muted-foreground text-sm">51.7%</p>
+                    </div>
+                </div>
+
+                <!-- Perempuan -->
+                <div class="group relative bg-card hover:bg-accent border border-border hover:border-pink-500 p-6 rounded-xl transition-all duration-300 hover:shadow-lg overflow-hidden">
+                    <div class="absolute -right-4 -top-4 bg-pink-500/10 rounded-full w-24 h-24 transition-transform group-hover:scale-110"></div>
+                    <div class="relative">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="bg-pink-500/10 p-2 rounded-lg">
+                                <svg class="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-medium text-muted-foreground">Perempuan</h3>
+                        </div>
+                        <p class="font-bold text-foreground text-3xl">2.572</p>
+                        <p class="text-muted-foreground text-sm">48.3%</p>
+                    </div>
+                </div>
+
+                <!-- Kepala Keluarga -->
+                <div class="group relative bg-card hover:bg-accent border border-border hover:border-amber-500 p-6 rounded-xl transition-all duration-300 hover:shadow-lg overflow-hidden">
+                    <div class="absolute -right-4 -top-4 bg-amber-500/10 rounded-full w-24 h-24 transition-transform group-hover:scale-110"></div>
+                    <div class="relative">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="bg-amber-500/10 p-2 rounded-lg">
+                                <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                </svg>
+                            </div>
+                            <h3 class="font-medium text-muted-foreground">Kepala Keluarga</h3>
+                        </div>
+                        <p class="font-bold text-foreground text-3xl">1.426</p>
+                        <p class="text-muted-foreground text-sm">KK</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Latest News Section -->
-    <section class="mx-auto mb-12 px-4 container">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="font-bold text-foreground text-2xl">Berita Terbaru</h3>
-            <a href="{{ route('desa.berita', $desa->uri) }}"
-                class="text-primary hover:text-primary/80 transition-colors">Lihat Semua</a>
-        </div>
-
-        <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            @forelse($beritaTerbaru as $berita)
-                <x-frontend.desa.components.berita-card :item="$berita" :desa="$desa" view="grid" />
-            @empty
-                <div class="col-span-3 py-12 text-center">
-                    <p class="text-muted-foreground">Belum ada berita yang dipublikasikan.</p>
+    <section class="py-16 bg-muted/30">
+        <div class="mx-auto px-4 container">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="mb-2 font-bold text-foreground text-3xl">Berita Terbaru</h2>
+                    <p class="text-muted-foreground">Informasi dan kegiatan terkini dari {{ $desa->nama_lengkap }}</p>
                 </div>
-            @endforelse
+                <a href="{{ route('desa.berita', $desa->uri) }}" 
+                   class="hidden md:inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors">
+                    Lihat Semua
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7-7"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                @forelse($beritaTerbaru as $berita)
+                    <x-frontend.desa.components.berita-card :item="$berita" :desa="$desa" view="grid" />
+                @empty
+                    <div class="col-span-3 py-12 text-center">
+                        <div class="mx-auto mb-4 bg-muted rounded-full w-20 h-20 flex items-center justify-center">
+                            <svg class="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-muted-foreground mb-4">Belum ada berita yang dipublikasikan.</p>
+                        <a href="{{ route('desa.berita', $desa->uri) }}" 
+                           class="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium">
+                            Kembali ke halaman berita
+                        </a>
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="mt-8 text-center md:hidden">
+                <a href="{{ route('desa.berita', $desa->uri) }}" 
+                   class="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium">
+                    Lihat Semua Berita
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
         </div>
     </section>
 

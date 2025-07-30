@@ -14,7 +14,7 @@
                 <div class="hidden sm:flex space-x-8 sm:-my-px sm:ms-10">
                     @auth
                         @if (auth()->user()->hasRole(['superadmin', 'admin_desa', 'operator_desa']))
-                            <x-nav-link href="/dashboard" :active="request()->is('dashboard*')">
+                            <x-nav-link href="{{ route('dashboard') }}" :active="request()->is('dashboard*')">
                                 {{ __('Panel Admin') }}
                             </x-nav-link>
                         @endif

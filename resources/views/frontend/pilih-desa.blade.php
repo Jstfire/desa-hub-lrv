@@ -149,7 +149,7 @@
                         @if ($desas->count() > 0)
                             <div class="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                                 @foreach ($desas as $desa)
-                                    <a href="/{{ $desa->uri }}"
+                                    <a href="{{ route('desa.beranda', $desa->uri) }}"
                                         class="group block bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl p-6 border border-gray-200 dark:border-gray-700 rounded-xl transition-all hover:-translate-y-1 duration-300 transform"
                                         data-spa-ignore>
                                         <div class="flex items-start space-x-4">
@@ -210,7 +210,7 @@
                                 <p class="mx-auto mb-8 max-w-md text-gray-600 dark:text-gray-300">
                                     Saat ini belum ada desa atau kelurahan yang terdaftar dalam sistem DesaHub.
                                 </p>
-                                <a href="/dashboard"
+                                <a href="{{ route('dashboard') }}"
                                     class="inline-flex items-center space-x-2 bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-medium text-white transition-colors">
                                     <x-heroicon-o-plus class="w-5 h-5" />
                                     <span>Tambah Desa</span>

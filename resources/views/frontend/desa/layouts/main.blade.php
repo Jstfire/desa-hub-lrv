@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id" x-data="{
     theme: localStorage.getItem('theme') || 'system',
+    mobileMenuOpen: false,
     init() {
         this.setTheme(this.theme, false);
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
@@ -18,7 +19,7 @@
             document.documentElement.classList.toggle('dark', newTheme === 'dark');
         }
     }
-}" x-init="init()">
+}" x-init="init()" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">

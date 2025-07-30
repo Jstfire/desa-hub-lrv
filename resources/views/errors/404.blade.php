@@ -38,7 +38,7 @@
 
             <!-- Actions -->
             <div class="flex sm:flex-row flex-col justify-center gap-4">
-                <a href="{{ url('/') }}"
+                <a href="{{ route('home') }}"
                     class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium text-white transition-colors">
                     Kembali ke Beranda
                 </a>
