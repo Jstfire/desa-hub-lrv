@@ -69,9 +69,22 @@ return [
         'directory' => null,   // Example: 'tmp'                      | Default: 'livewire-tmp'
         'middleware' => null,  // Example: 'throttle:5,1'             | Default: 'throttle:60,1'
         'preview_mimes' => [   // Supported file types for temporary pre-signed file URLs...
-            'png', 'gif', 'bmp', 'svg', 'wav', 'mp4',
-            'mov', 'avi', 'wmv', 'mp3', 'm4a',
-            'jpg', 'jpeg', 'mpga', 'webp', 'wma',
+            'png',
+            'gif',
+            'bmp',
+            'svg',
+            'wav',
+            'mp4',
+            'mov',
+            'avi',
+            'wmv',
+            'mp3',
+            'm4a',
+            'jpg',
+            'jpeg',
+            'mpga',
+            'webp',
+            'wma',
         ],
         'max_upload_time' => 5, // Max duration (in minutes) before an upload is invalidated...
         'cleanup' => true, // Should cleanup temporary uploads older than 24 hrs...
@@ -127,20 +140,7 @@ return [
     |
     */
 
-    'asset_url' => env('LIVEWIRE_ASSET_URL', null),
-
-    /*
-    |---------------------------------------------------------------------------
-    | Script Base Path
-    |---------------------------------------------------------------------------
-    |
-    | This value sets the base path for Livewire's JavaScript assets. Similar to
-    | livewire-tables configuration, you can use environment variable to set
-    | different paths for different environments.
-    |
-    */
-
-    'script_base_path' => env('LIVEWIRE_SCRIPT_BASE_PATH', 'vendor/livewire'),
+    'asset_url' => env('LIVEWIRE_BASE_PATH', null),
 
     /*
     |---------------------------------------------------------------------------
