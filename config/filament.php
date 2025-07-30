@@ -59,6 +59,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Assets Base URL
+    |--------------------------------------------------------------------------
+    |
+    | This is the base URL that will be used to serve Filament's assets.
+    | This is useful when deploying to subdirectories or different domains.
+    |
+    */
+
+    'assets_base_url' => env('FILAMENT_BASE_URL', null),
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache Path
     |--------------------------------------------------------------------------
     |
