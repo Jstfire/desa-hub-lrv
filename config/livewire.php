@@ -131,6 +131,19 @@ return [
 
     /*
     |---------------------------------------------------------------------------
+    | Script Base Path
+    |---------------------------------------------------------------------------
+    |
+    | This value sets the base path for Livewire's JavaScript assets. Similar to
+    | livewire-tables configuration, you can use environment variable to set
+    | different paths for different environments.
+    |
+    */
+
+    'script_base_path' => env('LIVEWIRE_SCRIPT_BASE_PATH', 'vendor/livewire'),
+
+    /*
+    |---------------------------------------------------------------------------
     | Navigate (SPA mode)
     |---------------------------------------------------------------------------
     |
