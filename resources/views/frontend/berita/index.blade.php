@@ -165,10 +165,7 @@
                             class="bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl rounded-lg overflow-hidden transition-shadow berita-item">
                             <div class="berita-image">
                                 @if ($item->gambar_utama)
-                                    @php
-                                $gambar_utama_storage = 'storage/' . $item->gambar_utama;
-                            @endphp
-                            <img src="{{ asset($gambar_utama_storage) }}" alt="{{ $item->judul }}"
+                                    <img src="{{ asset('storage/' . $item->gambar_utama) }}" alt="{{ $item->judul }}"
                                         class="w-full h-48 object-cover">
                                 @else
                                     <div class="flex justify-center items-center bg-gray-200 dark:bg-gray-700 w-full h-48">
